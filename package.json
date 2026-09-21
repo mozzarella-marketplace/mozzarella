@@ -1,0 +1,31 @@
+{
+  "name": "mozzarella",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "oxlint",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.13",
+    "lucide-react": "^0.468.0",
+    "next": "^15.5.4",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "tailwindcss": "^4.1.13",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.6",
+    "@types/react": "^19.0.3",
+    "@types/react-dom": "^19.0.2",
+    "oxfmt": "^0.13.0",
+    "oxlint": "^0.13.0",
+    "typescript": "^5.7.2"
+  }
+}
