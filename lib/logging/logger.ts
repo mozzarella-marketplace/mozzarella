@@ -1,6 +1,6 @@
 export type LogContext = Readonly<Record<string, string | number | boolean>>;
 
-const logLevels = {
+export const logLevels = {
   info: "info",
   warn: "warn",
   error: "error",
