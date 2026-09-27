@@ -29,6 +29,19 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in a browser.
 
+## Database
+
+Create a Supabase PostgreSQL project and add its connection strings to `.env.local`. Use the transaction pooler URL for `DATABASE_URL` and the direct connection URL for `DIRECT_URL`; `.env.example` shows their expected forms. Prisma CLI commands load `.env.local` first, then `.env`, through `prisma.config.ts`.
+
+```bash
+npm run db:generate
+npm run db:migrate:dev -- --name <migration-name>
+npm run db:migrate:deploy
+npm run db:status
+```
+
+The schema starts without product models. Create migrations as domain models are introduced in their respective feature work. `GET /api/health/database` runs a read-only query to verify the configured connection.
+
 ## Error handling
 
 Use `tryCatch` and `tryCatchAsync` from `lib/utils/try-catch.ts` instead of writing `try`/`catch` blocks. Both return `[null, value]` on success or `[error, null]` on failure; non-`Error` thrown values become `Error` instances. Handle the error explicitly at the call site.

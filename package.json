@@ -6,13 +6,19 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
+    "db:generate": "prisma generate",
+    "db:migrate:dev": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:status": "prisma migrate status",
     "lint": "oxlint",
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@prisma/client": "6.12.0",
     "@tailwindcss/postcss": "^4.1.13",
+    "dotenv": "^18.0.4",
     "lucide-react": "^0.468.0",
     "next": "^15.5.4",
     "react": "^19.1.1",
@@ -26,6 +32,7 @@
     "@types/react-dom": "^19.0.2",
     "oxfmt": "^0.13.0",
     "oxlint": "^0.13.0",
+    "prisma": "6.12.0",
     "typescript": "^5.7.2"
   }
 }

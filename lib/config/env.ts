@@ -1,12 +1,16 @@
 import { z } from "zod";
 
+export const nodeEnvironmentSchema = z.enum([
+  "development",
+  "test",
+  "production",
+]);
+
 const environmentSchema = z.object({
-  NODE_ENV: z
-
-    .enum(["development", "test", "production"])
-
-    .default("development"),
+  NODE_ENV: nodeEnvironmentSchema.default("development"),
   NEXT_PUBLIC_APP_URL: z.string().url().optional(),
+  DATABASE_URL: z.string().url().optional(),
+  DIRECT_URL: z.string().url().optional(),
 });
 
 export type Environment = z.infer<typeof environmentSchema>;
