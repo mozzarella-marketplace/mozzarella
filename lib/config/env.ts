@@ -7,6 +7,7 @@ const environmentSchema = z.object({
 
     .default("development"),
   NEXT_PUBLIC_APP_URL: z.string().url().optional(),
+  DATABASE_URL: z.string().url().optional(),
 });
 
 export type Environment = z.infer<typeof environmentSchema>;

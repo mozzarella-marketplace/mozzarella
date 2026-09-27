@@ -1,3 +1,5 @@
+import { UserStoryWorkspace } from "@/components/UserStoryWorkspace";
+
 export default function Home() {
-  return null;
+  return <UserStoryWorkspace sessionId="example-session-id" />;
 }
