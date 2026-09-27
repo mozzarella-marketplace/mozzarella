@@ -29,6 +29,17 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in a browser.
 
+## Error handling
+
+Use `tryCatch` and `tryCatchAsync` from `lib/utils/try-catch.ts` instead of writing `try`/`catch` blocks. Both return `[null, value]` on success or `[error, null]` on failure; non-`Error` thrown values become `Error` instances. Handle the error explicitly at the call site.
+
+```ts
+const [error, value] = tryCatch(() => parseInput(input));
+const [requestError, response] = await tryCatchAsync(() => fetch(url));
+```
+
+`tryCatchAsync` also accepts a promise directly. Both helpers accept an optional `onFinally` cleanup callback; the async helper awaits it, and cleanup errors propagate.
+
 ## Quality scripts
 
 - `npm run build` builds the production application.

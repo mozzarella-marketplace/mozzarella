@@ -33,6 +33,7 @@ Do not add folders or abstractions without a concrete need. Do not create `compo
 - Implement product features only when requested, using the existing architecture and only the code required by the feature.
 - Do not leave dead code, commented-out implementations, abandoned abstractions, duplicate implementations, or unused configuration in the repository.
 - Prefer simple, readable, explicit code over clever abstractions or implicit magic.
+- Use `tryCatch` and `tryCatchAsync` from `lib/utils/try-catch.ts` for synchronous and asynchronous exception handling instead of writing new `try`/`catch` blocks. Check the returned `[error, value]` tuple and handle failures explicitly. Pass cleanup as `onFinally` when needed; errors from cleanup still propagate. Keep native `try`/`catch`/`finally` only inside the helpers themselves.
 - Use descriptive names, focused functions, and shallow control flow. Avoid unnecessary type assertions, duplication, and `any`.
 - Keep business logic separate from UI concerns and domain logic separate from infrastructure concerns.
 - Before adding a dependency, confirm the existing platform or installed dependencies cannot provide the capability.
