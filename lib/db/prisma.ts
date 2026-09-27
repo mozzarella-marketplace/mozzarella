@@ -1,12 +1,16 @@
 import "server-only";
-import { PrismaClient, type Prisma } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { env, nodeEnvironmentSchema, type Environment } from "@/lib/config/env";
+import { logLevels } from "@/lib/logging/logger";
 
 const prismaLogLevels = {
-  [nodeEnvironmentSchema.enum.development]: ["warn", "error"],
-  [nodeEnvironmentSchema.enum.test]: ["error"],
-  [nodeEnvironmentSchema.enum.production]: ["error"],
-} satisfies Record<Environment["NODE_ENV"], Prisma.LogLevel[]>;
+  [nodeEnvironmentSchema.enum.development]: [logLevels.warn, logLevels.error],
+  [nodeEnvironmentSchema.enum.test]: [logLevels.error],
+  [nodeEnvironmentSchema.enum.production]: [logLevels.error],
+} satisfies Record<
+  Environment["NODE_ENV"],
+  (typeof logLevels.warn | typeof logLevels.error)[]
+>;
 
 const globalForPrisma = globalThis as typeof globalThis & {
   prisma?: PrismaClient;
