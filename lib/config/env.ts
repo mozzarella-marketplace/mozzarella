@@ -9,8 +9,7 @@ export const nodeEnvironmentSchema = z.enum([
 const environmentSchema = z.object({
   NODE_ENV: nodeEnvironmentSchema.default("development"),
   NEXT_PUBLIC_APP_URL: z.string().url().optional(),
-  DATABASE_URL: z.string().url().optional(),
-  DIRECT_URL: z.string().url().optional(),
+  DATABASE_URL: z.string().url(),
 });
 
 export type Environment = z.infer<typeof environmentSchema>;

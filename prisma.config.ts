@@ -1,9 +1,10 @@
-import { config } from "dotenv";
+import "./lib/config/load-env";
 import { defineConfig } from "prisma/config";
-
-config({ path: [".env.local", ".env"] });
+import { env } from "./lib/config/env";
 
 export default defineConfig({
-  earlyAccess: true,
   schema: "prisma/schema.prisma",
+  datasource: {
+    url: env.DATABASE_URL,
+  },
 });

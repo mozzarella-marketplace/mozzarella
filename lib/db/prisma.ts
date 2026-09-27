@@ -1,5 +1,6 @@
 import "server-only";
-import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "@/prisma/generated/prisma/client";
 import { env, nodeEnvironmentSchema, type Environment } from "@/lib/config/env";
 import { logLevels } from "@/lib/logging/logger";
 
@@ -16,9 +17,15 @@ const globalForPrisma = globalThis as typeof globalThis & {
   prisma?: PrismaClient;
 };
 
+const adapter = new PrismaPg({
+  connectionString: env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
+});
+
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
+    adapter,
     log: prismaLogLevels[env.NODE_ENV],
   });
 
