@@ -9,9 +9,15 @@
     "lint": "oxlint",
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "postinstall": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:seed": "prisma db seed"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "^7.10.0",
     "@tailwindcss/postcss": "^4.1.13",
     "lucide-react": "^0.468.0",
     "next": "^15.5.4",
@@ -26,6 +32,8 @@
     "@types/react-dom": "^19.0.2",
     "oxfmt": "^0.13.0",
     "oxlint": "^0.13.0",
+    "prisma": "^7.10.0",
+    "tsx": "^4.23.15",
     "typescript": "^5.7.2"
   }
 }

@@ -10,6 +10,10 @@ on:
 jobs:
   quality:
     runs-on: ubuntu-latest
+    env:
+      # Placeholders that satisfy Prisma generation and env validation; CI never connects to them.
+      DATABASE_URL: postgresql://mozzarella:mozzarella@localhost:5432/mozzarella
+      DIRECT_URL: postgresql://mozzarella:mozzarella@localhost:5432/mozzarella
 
     steps:
       - name: Check out repository
