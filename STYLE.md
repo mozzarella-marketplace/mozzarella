@@ -26,6 +26,7 @@ This document defines Mozzarella's permanent frontend conventions. Product scree
 ## Typography
 
 - Choose a legible Hebrew typeface with a clear, contemporary shape and a complete Latin character set.
+- The interface uses Rubik (Hebrew and Latin subsets), loaded with `next/font` in `app/layout.tsx` and exposed through the `--font-rubik` variable.
 - Establish a small type scale with distinct roles for headings, body text, labels, and code.
 - Keep body text comfortable to read and avoid using condensed or decorative faces for instructional content.
 
