@@ -18,9 +18,11 @@ Use Next.js App Router, TypeScript in strict mode, Tailwind CSS, Oxlint, Oxfmt, 
 - `consts/`: fixed application and domain constants
 - `lib/`: shared utilities and application helpers
 - `lib/config/`: centralized environment and deployment configuration
+- `lib/db/`: the Prisma Client entry point; `lib/generated/prisma/` holds the generated client and is ignored by Git
 - `lib/i18n/`: translation resources and i18n helpers
 - `lib/logging/`: the application/server logging entry point
 - `types/`: shared application and domain types
+- `prisma/`: the Prisma schema, migrations, and seed data
 - `public/`: static assets
 
 Do not add folders or abstractions without a concrete need. Do not create `components/ui` or a custom UI library unless a feature requires it.
@@ -65,7 +67,7 @@ Use logical CSS properties such as `margin-inline`, `padding-inline`, and `inset
 ## Configuration, constants, types, and validation
 
 - Define environment variable names and local setup guidance in `.env.example`; use `.env.local` for machine-specific values. `.env.local` is ignored by Git and must never be committed.
-- Read environment variables only through `lib/config/env.ts`, which validates them with Zod at startup. Do not access `process.env` elsewhere.
+- Read environment variables only through `lib/config/env.ts`, which validates them with Zod at startup. Do not access `process.env` elsewhere. The only exception is `prisma.config.ts`, which runs outside the application and reads `DIRECT_URL` through Prisma's `env()` helper for the Prisma CLI.
 - To add an environment variable, document it in `.env.example` when it is safe to show, add it to the Zod schema, expose only the typed parsed value needed by the application, and document whether it is server-only or browser-safe.
 - Only variables intentionally prefixed with `NEXT_PUBLIC_` may be exposed to browser bundles. Secrets, tokens, passwords, private URLs, and personal data must remain server-only and must never be logged or exposed to client-side code.
 - `NODE_ENV` is managed by the framework/runtime and is validated by the schema; do not treat it as arbitrary application configuration or duplicate it as a project constant.

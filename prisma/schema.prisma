@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum CustomerCategory {
+  smallBusiness
+  ticketingSystems
+  managementAndData
+}
+
+enum DifficultyLevel {
+  beginner
+  intermediate
+  advanced
+}
+
+enum ProgrammingLanguage {
+  java
+  csharp
+}
+
+model Customer {
+  id               String              @id @default(cuid())
+  name             String
+  role             String
+  businessName     String              @map("business_name")
+  city             String
+  avatar           String
+  category         CustomerCategory
+  domain           String
+  language         ProgrammingLanguage
+  difficulty       DifficultyLevel
+  rewardCoins      Int                 @map("reward_coins")
+  topic            String
+  iterationCount   Int                 @map("iteration_count")
+  estimatedMinutes Int                 @map("estimated_minutes")
+  summary          String
+  isFeatured       Boolean             @default(false) @map("is_featured")
+  isActive         Boolean             @default(true) @map("is_active")
+  createdAt        DateTime            @default(now()) @map("created_at")
+  updatedAt        DateTime            @updatedAt @map("updated_at")
+
+  @@index([isActive])
+  @@map("customers")
+}
