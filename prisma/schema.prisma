@@ -1,0 +1,23 @@
+enum UserRole {
+  student
+  teacher
+}
+
+model User {
+  id             String   @id @default(cuid())
+  keycloakUserId String   @unique @map("keycloak_user_id")
+  classId        String   @map("class_id")
+  userId         String   @map("user_id")
+  role           UserRole
+
+  @@unique([classId, userId])
+  @@index([classId])
+  @@map("users")
+}
+
+model Class {
+  id        String   @id @default(cuid())
+  classId   String   @unique @map("class_id")
+
+  @@map("classes")
+}

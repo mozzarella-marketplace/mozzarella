@@ -1,0 +1,67 @@
+{
+    "realm": "mozzarella",
+    "enabled": true,
+    "sslRequired": "external",
+    "registrationAllowed": false,
+    "registrationEmailAsUsername": false,
+    "loginWithEmailAllowed": false,
+    "duplicateEmailsAllowed": false,
+    "resetPasswordAllowed": false,
+    "editUsernameAllowed": false,
+    "rememberMe": false,
+    "verifyEmail": false,
+    "bruteForceProtected": true,
+    "requiredActions": [
+        {
+            "alias": "VERIFY_PROFILE",
+            "name": "Verify Profile",
+            "providerId": "VERIFY_PROFILE",
+            "enabled": false,
+            "defaultAction": false,
+            "priority": 10,
+            "config": {}
+        }
+    ],
+    "roles": {
+        "realm": [
+            {
+                "name": "student"
+            },
+            {
+                "name": "teacher"
+            }
+        ]
+    },
+    "clients": [
+        {
+            "clientId": "nextjs",
+            "enabled": true,
+            "protocol": "openid-connect",
+            "publicClient": false,
+            "clientAuthenticatorType": "client-secret",
+            "standardFlowEnabled": true,
+            "implicitFlowEnabled": false,
+            "directAccessGrantsEnabled": true,
+            "serviceAccountsEnabled": false,
+            "fullScopeAllowed": false,
+            "redirectUris": [],
+            "webOrigins": [],
+            "defaultClientScopes": [
+                "roles"
+            ],
+            "optionalClientScopes": [],
+            "attributes": {
+                "pkce.code.challenge.method": "S256"
+            }
+        }
+    ],
+    "scopeMappings": [
+        {
+            "client": "nextjs",
+            "roles": [
+                "student",
+                "teacher"
+            ]
+        }
+    ]
+}

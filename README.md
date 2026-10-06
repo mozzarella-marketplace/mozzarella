@@ -21,6 +21,14 @@ npm install
 
 Copy `.env.example` to `.env.local` only when local deployment configuration is needed. `.env.local` is ignored by Git and must never contain values that are committed or shared. Environment variables are validated centrally by `lib/config/env.ts`.
 
+## Login endpoint
+
+`POST /api/auth/login` accepts JSON with `classId` and `userId`, each exactly four hexadecimal characters. The server normalizes them to uppercase and sends `<classId>-<userId>` as both the username and password to Keycloak using a confidential client's Direct Access Grant.
+
+Configure `KEYCLOAK_ISSUER`, `KEYCLOAK_CLIENT_ID`, and `KEYCLOAK_CLIENT_SECRET` in the ignored `.env.local` (an existing `.env` is also loaded by Next.js). These are server-only variables; never prefix them with `NEXT_PUBLIC_`. The local issuer is `http://localhost:8080/realms/mozzarella`, and the client is `nextjs`. The issuer determines the token endpoint. Keycloak must be running with Direct Access Grants enabled on that client.
+
+Successful requests return the validated Keycloak token response with `Cache-Control: no-store`. Invalid input returns `400`; rejected authentication returns a generic `401`. Missing configuration, connection failures/timeouts, or invalid successful token responses return a generic `503`. The variables may be omitted for builds that do not use login; provided values are validated centrally. No sessions, cookies, database access, or custom authenticator are implemented. Tokens and credentials are never logged. Knowing the identifier pair is currently sufficient to authenticate an existing account with matching credentials; this endpoint does not verify class membership or provide an additional identity factor.
+
 ## Local development
 
 ```bash
