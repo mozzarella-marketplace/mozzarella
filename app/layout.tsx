@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { FC, ReactNode } from "react";
 import "./globals.css";
 import { defaultLocale, getLocaleConfig } from "@/consts/locales";
 import { env } from "@/lib/config/env";
@@ -15,14 +16,10 @@ export const metadata: Metadata = {
     : undefined,
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang={defaultLocale} dir={locale.direction}>
-      <body>{children}</body>
-    </html>
-  );
-}
+const RootLayout: FC<Readonly<{ children: ReactNode }>> = ({ children }) => (
+  <html lang={defaultLocale} dir={locale.direction}>
+    <body>{children}</body>
+  </html>
+);
+
+export default RootLayout;
