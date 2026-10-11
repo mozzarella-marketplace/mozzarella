@@ -12,8 +12,8 @@ export const marketplaceGridClassName = "grid gap-content content:grid-cols-2";
 
 const categories = Object.values(CustomerCategory);
 
-function matchesQuery(customer: CustomerSummary, normalizedQuery: string) {
-  return [
+const matchesQuery = (customer: CustomerSummary, normalizedQuery: string) =>
+  [
     customer.name,
     customer.role,
     customer.businessName,
@@ -21,7 +21,6 @@ function matchesQuery(customer: CustomerSummary, normalizedQuery: string) {
     customer.domain,
     customer.topic,
   ].some((field) => field.toLowerCase().includes(normalizedQuery));
-}
 
 function FilterChip({
   isSelected,

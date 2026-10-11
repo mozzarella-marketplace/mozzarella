@@ -20,19 +20,17 @@ const customerSummarySelection = {
   isFeatured: true,
 } as const satisfies Record<keyof CustomerSummary, true>;
 
-export function getActiveCustomers(): Promise<CustomerSummary[]> {
-  return prisma.customer.findMany({
+export const getActiveCustomers = (): Promise<CustomerSummary[]> =>
+  prisma.customer.findMany({
     where: { isActive: true },
     select: customerSummarySelection,
     orderBy: [{ isFeatured: "desc" }, { createdAt: "asc" }],
   });
-}
 
-export function getActiveCustomer(
+export const getActiveCustomer = (
   customerId: string,
-): Promise<CustomerSummary | null> {
-  return prisma.customer.findFirst({
+): Promise<CustomerSummary | null> =>
+  prisma.customer.findFirst({
     where: { id: customerId, isActive: true },
     select: customerSummarySelection,
   });
-}
