@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { z } from "zod";
 import { CustomerAvatar } from "@/components/customer-avatar";
 import { CustomerTags } from "@/components/customer-tags";
 import { getActiveCustomer } from "@/lib/customers";
@@ -11,7 +12,13 @@ export default async function CustomerPage({
   params: Promise<{ customerId: string }>;
 }) {
   const { customerId } = await params;
-  const customer = await getActiveCustomer(customerId);
+  const parsedCustomerId = z.string().uuid().safeParse(customerId);
+
+  if (!parsedCustomerId.success) {
+    notFound();
+  }
+
+  const customer = await getActiveCustomer(parsedCustomerId.data);
 
   if (!customer) {
     notFound();
