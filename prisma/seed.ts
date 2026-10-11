@@ -1,9 +1,10 @@
 import { prisma } from "../lib/db/prisma";
 import type { CustomerSummary } from "../types/customer";
 
+// Fixed UUIDs keep the seed idempotent: re-running it updates these rows instead of adding new ones.
 const mockCustomers: CustomerSummary[] = [
   {
-    id: "seed-bakery",
+    id: "00000000-0000-4000-8000-000000000001",
     name: "דני",
     role: "בעלים",
     businessName: "מאפיית דני",
@@ -22,7 +23,7 @@ const mockCustomers: CustomerSummary[] = [
     isFeatured: true,
   },
   {
-    id: "seed-cinema",
+    id: "00000000-0000-4000-8000-000000000002",
     name: "מיכל",
     role: "מנהלת",
     businessName: "קולנוע השכונה",
@@ -41,7 +42,7 @@ const mockCustomers: CustomerSummary[] = [
     isFeatured: false,
   },
   {
-    id: "seed-pet-care",
+    id: "00000000-0000-4000-8000-000000000003",
     name: "רועי",
     role: "מייסד",
     businessName: "Happy Paws",
@@ -60,7 +61,7 @@ const mockCustomers: CustomerSummary[] = [
     isFeatured: false,
   },
   {
-    id: "seed-green-delivery",
+    id: "00000000-0000-4000-8000-000000000004",
     name: "תמר",
     role: "מנהלת",
     businessName: "שליחויות ירוקות",
@@ -79,7 +80,7 @@ const mockCustomers: CustomerSummary[] = [
     isFeatured: false,
   },
   {
-    id: "seed-clinic",
+    id: "00000000-0000-4000-8000-000000000005",
     name: "נועה",
     role: "מנהלת",
     businessName: "מרפאת השכונה",
@@ -98,7 +99,7 @@ const mockCustomers: CustomerSummary[] = [
     isFeatured: false,
   },
   {
-    id: "seed-grocery",
+    id: "00000000-0000-4000-8000-000000000006",
     name: "אבי",
     role: "בעלים",
     businessName: "המכולת של אבי",
