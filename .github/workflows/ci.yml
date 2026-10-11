@@ -11,7 +11,8 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     env:
-      # Placeholders that satisfy Prisma generation and env validation; CI never connects to them.
+      # Placeholders only: install, typecheck, and build need these variables to exist, but CI never
+      # connects to a database. Real connection strings are configured per environment in Vercel.
       DATABASE_URL: postgresql://mozzarella:mozzarella@localhost:5432/mozzarella
       DIRECT_URL: postgresql://mozzarella:mozzarella@localhost:5432/mozzarella
 
