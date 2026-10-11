@@ -1,3 +1,4 @@
+import type { FC, ReactNode } from "react";
 import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
 import "./globals.css";
@@ -23,11 +24,11 @@ export const metadata: Metadata = {
     : undefined,
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+const RootLayout: FC<
+  Readonly<{
+    children: ReactNode;
+  }>
+> = ({ children }) => {
   return (
     <html
       lang={defaultLocale}
@@ -41,4 +42,6 @@ export default function RootLayout({
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

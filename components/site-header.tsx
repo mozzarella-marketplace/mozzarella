@@ -1,8 +1,9 @@
+import type { FC } from "react";
 import { Pizza } from "lucide-react";
 import Link from "next/link";
 import { getMessages } from "@/lib/i18n/messages";
 
-export function SiteHeader() {
+export const SiteHeader: FC = () => {
   const { brand, navigation } = getMessages();
 
   return (
@@ -47,4 +48,4 @@ export function SiteHeader() {
       </div>
     </header>
   );
-}
+};

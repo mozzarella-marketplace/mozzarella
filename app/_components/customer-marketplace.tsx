@@ -1,7 +1,7 @@
 "use client";
 
 import { Search } from "lucide-react";
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode, type FC } from "react";
 import { CustomerCategory } from "@/lib/generated/prisma/enums";
 import { getMessages } from "@/lib/i18n/messages";
 import type { CustomerSummary } from "@/types/customer";
@@ -22,15 +22,11 @@ const matchesQuery = (customer: CustomerSummary, normalizedQuery: string) =>
     customer.topic,
   ].some((field) => field.toLowerCase().includes(normalizedQuery));
 
-function FilterChip({
-  isSelected,
-  onSelect,
-  children,
-}: {
+const FilterChip: FC<{
   isSelected: boolean;
   onSelect: () => void;
   children: ReactNode;
-}) {
+}> = ({ isSelected, onSelect, children }) => {
   return (
     <button
       type="button"
@@ -45,13 +41,11 @@ function FilterChip({
       {children}
     </button>
   );
-}
+};
 
-export function CustomerMarketplace({
-  customers,
-}: {
+export const CustomerMarketplace: FC<{
   customers: CustomerSummary[];
-}) {
+}> = ({ customers }) => {
   const { marketplace } = getMessages();
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] =
@@ -137,4 +131,4 @@ export function CustomerMarketplace({
       )}
     </div>
   );
-}
+};

@@ -1,3 +1,4 @@
+import type { FC } from "react";
 import { getMessages } from "@/lib/i18n/messages";
 import type { CustomerSummary, DifficultyLevel } from "@/types/customer";
 
@@ -7,11 +8,9 @@ const difficultyStyles = {
   advanced: "bg-accent-soft text-accent-foreground",
 } satisfies Record<DifficultyLevel, string>;
 
-export function CustomerTags({
-  customer,
-}: {
+export const CustomerTags: FC<{
   customer: Pick<CustomerSummary, "domain" | "language" | "difficulty">;
-}) {
+}> = ({ customer }) => {
   const { marketplace } = getMessages();
 
   return (
@@ -29,4 +28,4 @@ export function CustomerTags({
       </li>
     </ul>
   );
-}
+};

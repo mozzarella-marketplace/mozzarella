@@ -1,3 +1,4 @@
+import type { FC } from "react";
 import { getMessages } from "@/lib/i18n/messages";
 import { marketplaceGridClassName } from "./customer-marketplace";
 import { MarketplaceHero } from "./marketplace-hero";
@@ -5,7 +6,7 @@ import { MarketplaceHero } from "./marketplace-hero";
 const placeholderCardCount = 4;
 const pulseClassName = "animate-pulse motion-reduce:animate-none";
 
-export function MarketplaceSkeleton() {
+export const MarketplaceSkeleton: FC = () => {
   const { marketplace } = getMessages();
 
   return (
@@ -60,4 +61,4 @@ export function MarketplaceSkeleton() {
       </ul>
     </div>
   );
-}
+};

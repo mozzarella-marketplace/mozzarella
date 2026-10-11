@@ -1,3 +1,4 @@
+import type { FC } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { z } from "zod";
@@ -6,11 +7,9 @@ import { CustomerTags } from "@/components/customer-tags";
 import { getActiveCustomer } from "@/lib/customers";
 import { getMessages } from "@/lib/i18n/messages";
 
-export default async function CustomerPage({
-  params,
-}: {
+const CustomerPage: FC<{
   params: Promise<{ customerId: string }>;
-}) {
+}> = async ({ params }) => {
   const { customerId } = await params;
   const parsedCustomerId = z.string().uuid().safeParse(customerId);
 
@@ -55,4 +54,6 @@ export default async function CustomerPage({
       </article>
     </main>
   );
-}
+};
+
+export default CustomerPage;

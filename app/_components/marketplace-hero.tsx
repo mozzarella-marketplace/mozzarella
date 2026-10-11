@@ -1,15 +1,11 @@
-import type { ReactNode } from "react";
+import type { ReactNode, FC } from "react";
 import { getMessages } from "@/lib/i18n/messages";
 
-export function MarketplaceHero({
-  opportunityCount,
-  filters,
-  search,
-}: {
+export const MarketplaceHero: FC<{
   opportunityCount?: number;
   filters?: ReactNode;
   search?: ReactNode;
-}) {
+}> = ({ opportunityCount, filters, search }) => {
   const { marketplace } = getMessages();
 
   return (
@@ -39,4 +35,4 @@ export function MarketplaceHero({
       {search && <div className="w-full content:max-w-sm">{search}</div>}
     </section>
   );
-}
+};

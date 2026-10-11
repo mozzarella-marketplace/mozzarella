@@ -1,3 +1,4 @@
+import type { FC } from "react";
 import { ArrowRight, Braces, Clock, Coins, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { CustomerAvatar } from "@/components/customer-avatar";
@@ -8,7 +9,9 @@ import type { CustomerSummary } from "@/types/customer";
 const actionBaseClassName =
   "inline-flex items-center gap-2 rounded-control px-content py-2 text-label font-semibold transition-colors duration-standard ease-standard focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transition-none";
 
-export function CustomerCard({ customer }: { customer: CustomerSummary }) {
+export const CustomerCard: FC<{ customer: CustomerSummary }> = ({
+  customer,
+}) => {
   const { marketplace } = getMessages();
   const actionClassName = customer.isFeatured
     ? "bg-primary text-primary-foreground hover:bg-primary/90"
@@ -84,4 +87,4 @@ export function CustomerCard({ customer }: { customer: CustomerSummary }) {
       </div>
     </article>
   );
-}
+};

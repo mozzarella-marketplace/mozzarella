@@ -1,6 +1,7 @@
+import type { FC } from "react";
 import { getMessages } from "@/lib/i18n/messages";
 
-export function SiteFooter() {
+export const SiteFooter: FC = () => {
   const { brand } = getMessages();
 
   return (
@@ -10,4 +11,4 @@ export function SiteFooter() {
       </p>
     </footer>
   );
-}
+};

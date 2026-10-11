@@ -1,4 +1,5 @@
-export function CustomerAvatar({ avatar }: { avatar: string }) {
+import type { FC } from "react";
+export const CustomerAvatar: FC<{ avatar: string }> = ({ avatar }) => {
   return (
     <span
       aria-hidden="true"
@@ -7,4 +8,4 @@ export function CustomerAvatar({ avatar }: { avatar: string }) {
       {avatar}
     </span>
   );
-}
+};

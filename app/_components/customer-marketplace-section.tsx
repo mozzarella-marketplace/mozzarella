@@ -1,3 +1,4 @@
+import type { FC } from "react";
 import { connection } from "next/server";
 import { getActiveCustomers } from "@/lib/customers";
 import { CustomerEmptyState } from "./customer-empty-state";
@@ -5,7 +6,7 @@ import { CustomerMarketplace } from "./customer-marketplace";
 import { MarketplaceHero } from "./marketplace-hero";
 import { PedagogyBanner } from "./pedagogy-banner";
 
-export async function CustomerMarketplaceSection() {
+export const CustomerMarketplaceSection: FC = async () => {
   await connection();
   const customers = await getActiveCustomers();
 
@@ -24,4 +25,4 @@ export async function CustomerMarketplaceSection() {
       <PedagogyBanner avatars={customers.map((customer) => customer.avatar)} />
     </div>
   );
-}
+};

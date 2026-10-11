@@ -1,9 +1,10 @@
+import type { FC } from "react";
 import { Lightbulb } from "lucide-react";
 import { getMessages } from "@/lib/i18n/messages";
 
 const visibleAvatarCount = 4;
 
-export function PedagogyBanner({ avatars }: { avatars: string[] }) {
+export const PedagogyBanner: FC<{ avatars: string[] }> = ({ avatars }) => {
   const { marketplace } = getMessages();
 
   return (
@@ -42,4 +43,4 @@ export function PedagogyBanner({ avatars }: { avatars: string[] }) {
       </div>
     </aside>
   );
-}
+};

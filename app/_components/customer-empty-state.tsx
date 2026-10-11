@@ -1,7 +1,8 @@
+import type { FC } from "react";
 import { Users } from "lucide-react";
 import { getMessages } from "@/lib/i18n/messages";
 
-export function CustomerEmptyState() {
+export const CustomerEmptyState: FC = () => {
   const { marketplace } = getMessages();
 
   return (
@@ -13,4 +14,4 @@ export function CustomerEmptyState() {
       <p className="text-muted">{marketplace.emptyState.description}</p>
     </div>
   );
-}
+};

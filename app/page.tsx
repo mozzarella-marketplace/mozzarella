@@ -1,8 +1,8 @@
-import { Suspense } from "react";
+import { Suspense, type FC } from "react";
 import { CustomerMarketplaceSection } from "./_components/customer-marketplace-section";
 import { MarketplaceSkeleton } from "./_components/marketplace-skeleton";
 
-export default function Home() {
+const Home: FC = () => {
   return (
     <main className="mx-auto max-w-content px-page-inline py-section">
       <Suspense fallback={<MarketplaceSkeleton />}>
@@ -10,4 +10,6 @@ export default function Home() {
       </Suspense>
     </main>
   );
-}
+};
+
+export default Home;
