@@ -54,6 +54,7 @@ There must be no dead code. Remove unused variables, imports, functions, constan
 ## React conventions
 
 - Use named function declarations for components. Do not use `React.FC`.
+- Use arrow functions assigned to `const` for all other functions, including helpers, utilities, and object methods.
 - Do not add `: JSX.Element` return annotations unless there is a specific reason.
 - Prefer composition over large monolithic components.
 - Keep components focused on presentation and interaction, and move reusable business logic outside components.
