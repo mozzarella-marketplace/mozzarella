@@ -8,11 +8,10 @@ declare global {
   var prismaClient: PrismaClient | undefined;
 }
 
-function createPrismaClient() {
-  return new PrismaClient({
+const createPrismaClient = () =>
+  new PrismaClient({
     adapter: new PrismaPg({ connectionString: env.DATABASE_URL }),
   });
-}
 
 export const prisma = globalThis.prismaClient ?? createPrismaClient();
 

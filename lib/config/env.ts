@@ -12,7 +12,7 @@ const environmentSchema = z.object({
 
 export type Environment = z.infer<typeof environmentSchema>;
 
-function parseEnvironment(): Environment {
+const parseEnvironment = (): Environment => {
   const result = environmentSchema.safeParse(process.env);
 
   if (!result.success) {
@@ -22,6 +22,6 @@ function parseEnvironment(): Environment {
   }
 
   return result.data;
-}
+};
 
 export const env = parseEnvironment();

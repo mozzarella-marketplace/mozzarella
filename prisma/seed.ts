@@ -119,7 +119,7 @@ const mockCustomers: CustomerSummary[] = [
   },
 ];
 
-async function seedCustomers() {
+const seedCustomers = async () => {
   for (const customer of mockCustomers) {
     await prisma.customer.upsert({
       where: { id: customer.id },
@@ -127,6 +127,6 @@ async function seedCustomers() {
       update: customer,
     });
   }
-}
+};
 
 seedCustomers().finally(() => prisma.$disconnect());
