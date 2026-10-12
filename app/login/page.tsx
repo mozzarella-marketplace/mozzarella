@@ -35,7 +35,7 @@ const Index: NextPage = () => (
       </div>
       <div className="flex justify-around items-center font-semibold gap-8">
         <div className="flex gap-2 items-center">
-          <BriefcaseBusiness className="size-4 fill-accent-2 mt-1"  />
+          <BriefcaseBusiness className="size-4 fill-accent-2 mt-1" />
           לקוחות עסקיים אמיתיים
         </div>
         <div className="flex gap-2 items-center">

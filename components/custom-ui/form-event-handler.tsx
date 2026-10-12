@@ -12,7 +12,7 @@ export const FormEventHandler = ({
 }) => {
   const { formState } = useFormContext();
   const { pending } = useFormStatus();
-  
+
   useEffect(() => {
     const onBeforeUnload = (e: BeforeUnloadEvent) => {
       if (formState.isDirty) {
