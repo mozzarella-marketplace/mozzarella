@@ -6,12 +6,13 @@ const environmentSchema = z.object({
     .enum(["development", "test", "production"])
 
     .default("development"),
+  DATABASE_URL: z.string().url(),
   NEXT_PUBLIC_APP_URL: z.string().url().optional(),
 });
 
 export type Environment = z.infer<typeof environmentSchema>;
 
-function parseEnvironment(): Environment {
+const parseEnvironment = (): Environment => {
   const result = environmentSchema.safeParse(process.env);
 
   if (!result.success) {
@@ -21,6 +22,6 @@ function parseEnvironment(): Environment {
   }
 
   return result.data;
-}
+};
 
 export const env = parseEnvironment();
