@@ -7,7 +7,7 @@ const code = z
 
 export const loginSchema = z.object({
   "class-code": code,
-  "user-code": code,
+  "student-code": code,
 });
 
 export type LoginSchema = z.infer<typeof loginSchema>;

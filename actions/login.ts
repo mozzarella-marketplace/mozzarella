@@ -18,7 +18,7 @@ export const loginAction = async (
   }
   //TODO: actual login in and all
   logger.info(
-    `Logged in as user - [${result.data["user-code"]}], class code: [${result.data["class-code"]}}]`,
+    `Logged in as user - [${result.data["student-code"]}], class code: [${result.data["class-code"]}}]`,
   );
 
   redirect("/");

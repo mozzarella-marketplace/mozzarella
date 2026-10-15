@@ -19,7 +19,7 @@ export const LoginForm = () => {
     resolver: zodResolver(loginSchema),
     defaultValues: {
       "class-code": "",
-      "user-code": "",
+      "student-code": "",
     },
   });
 
@@ -51,7 +51,7 @@ export const LoginForm = () => {
             />
             <ControlledField
               Icon={IdCard}
-              name="user-code"
+              name="student-code"
               title={
                 <div className="w-full flex justify-between">
                   <FormLabel className="font-bold">קוד תלמיד אישי</FormLabel>
