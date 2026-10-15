@@ -1,5 +1,7 @@
-import type { FC } from "react";
+import { NextPage } from "next";
 
-const Home: FC = () => null;
+const Index: NextPage = () => {
+  return <div>main</div>;
+};
 
-export default Home;
+export default Index;
