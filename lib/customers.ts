@@ -10,21 +10,18 @@ const customerSummarySelection = {
   avatar: true,
   category: true,
   domain: true,
-  language: true,
   difficulty: true,
   rewardCoins: true,
   topic: true,
-  iterationCount: true,
   estimatedMinutes: true,
   summary: true,
-  isFeatured: true,
 } as const satisfies Record<keyof CustomerSummary, true>;
 
 export const getActiveCustomers = (): Promise<CustomerSummary[]> =>
   prisma.customer.findMany({
     where: { isActive: true },
     select: customerSummarySelection,
-    orderBy: [{ isFeatured: "desc" }, { createdAt: "asc" }],
+    orderBy: { createdAt: "asc" },
   });
 
 export const getActiveCustomer = (

@@ -27,9 +27,7 @@ export const heMessages = {
       ticketingSystems: "מערכות כרטיסים",
       managementAndData: "ניהול ונתונים",
     },
-    featured: "פופולרי עכשיו",
     coins: (count: number) => `${count} מטבעות`,
-    guaranteedReward: "תשלום מובטח",
     customerByline: (role: string, businessName: string, city: string) =>
       `${role}, ${businessName} • ${city}`,
     quoted: (text: string) => `״${text}״`,
@@ -38,12 +36,6 @@ export const heMessages = {
       intermediate: "רמה בינונית",
       advanced: "מתקדם",
     },
-    languages: {
-      java: "Java",
-      csharp: "C#",
-    },
-    iterations: (count: number) =>
-      count === 1 ? "איטרציה אחת" : `${count} איטרציות`,
     estimatedMinutes: (minutes: number) => `~${minutes} דק׳ עבודה`,
     talkAction: (name: string) => `לדבר עם ${name}`,
     loading: "הלקוחות נטענים…",

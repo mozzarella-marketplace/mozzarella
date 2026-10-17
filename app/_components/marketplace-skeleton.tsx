@@ -48,7 +48,6 @@ export const MarketplaceSkeleton: FC = () => {
             </div>
             <div className="flex gap-2">
               <div className="h-6 w-20 rounded-control bg-neutral-soft" />
-              <div className="h-6 w-12 rounded-control bg-neutral-soft" />
               <div className="h-6 w-16 rounded-control bg-neutral-soft" />
             </div>
             <div className="h-20 rounded-tile bg-background" />

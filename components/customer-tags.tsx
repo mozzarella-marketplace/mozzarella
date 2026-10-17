@@ -9,7 +9,7 @@ const difficultyStyles = {
 } satisfies Record<DifficultyLevel, string>;
 
 export const CustomerTags: FC<{
-  customer: Pick<CustomerSummary, "domain" | "language" | "difficulty">;
+  customer: Pick<CustomerSummary, "domain" | "difficulty">;
 }> = ({ customer }) => {
   const { marketplace } = getMessages();
 
@@ -17,9 +17,6 @@ export const CustomerTags: FC<{
     <ul className="flex flex-wrap gap-2 text-caption font-medium">
       <li className="rounded-control bg-neutral-soft px-2 py-1">
         {customer.domain}
-      </li>
-      <li dir="ltr" className="rounded-control bg-neutral-soft px-2 py-1">
-        {marketplace.languages[customer.language]}
       </li>
       <li
         className={`rounded-control px-2 py-1 font-semibold ${difficultyStyles[customer.difficulty]}`}
