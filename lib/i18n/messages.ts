@@ -6,6 +6,5 @@ const messagesByLocale: Partial<Record<Locale, Messages>> = {
   he: heMessages,
 };
 
-export function getMessages(locale: Locale = defaultLocale): Messages {
-  return messagesByLocale[locale] ?? messagesByLocale[defaultLocale]!;
-}
+export const getMessages = (locale: Locale = defaultLocale): Messages =>
+  messagesByLocale[locale] ?? messagesByLocale[defaultLocale]!;
