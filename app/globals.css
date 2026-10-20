@@ -109,3 +109,12 @@ body {
   font-size: var(--text-body);
   line-height: var(--token-font-line-height-body);
 }
+
+/* Tiptap renders its placeholder as a data attribute on the empty first paragraph. */
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: inline-start;
+  height: 0;
+  color: var(--color-muted);
+  pointer-events: none;
+}
