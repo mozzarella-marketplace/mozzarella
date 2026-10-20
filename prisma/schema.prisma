@@ -11,6 +11,7 @@ model UserStory {
   id        String   @id @default(cuid())
   sessionId String   @unique
   content   String
+  language  ProgrammingLanguage?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
