@@ -46,6 +46,7 @@ type TextStyleOption = { key: string; value: string | null };
 
 type UserStoryEditorProps = {
   labelId: string;
+  initialContent: string;
   onChange: (update: { html: string; isEmpty: boolean }) => void;
 };
 
@@ -271,12 +272,14 @@ const EditorToolbar: FC<{ editor: Editor }> = ({ editor }) => {
 
 export const UserStoryEditor: FC<UserStoryEditorProps> = ({
   labelId,
+  initialContent,
   onChange,
 }) => {
   const messages = getMessages().userStory;
   const editor = useEditor({
     // Rendering on the server would cause a hydration mismatch in the App Router.
     immediatelyRender: false,
+    content: initialContent,
     extensions: [
       StarterKit,
       TextStyle,

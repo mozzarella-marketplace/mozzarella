@@ -26,6 +26,7 @@ type SaveStatus = "idle" | "saving" | "saved" | "error";
 
 type UserStoryWorkspaceProps = {
   sessionId: string;
+  savedContent: string | null;
 };
 
 const programmingLanguages = Object.values(ProgrammingLanguage);
@@ -34,10 +35,11 @@ const specRowClassName = "rounded-panel bg-foreground-1 p-content";
 
 export const UserStoryWorkspace: FC<UserStoryWorkspaceProps> = ({
   sessionId,
+  savedContent,
 }) => {
   const messages = getMessages();
-  const [content, setContent] = useState("");
-  const [isContentEmpty, setIsContentEmpty] = useState(true);
+  const [content, setContent] = useState(savedContent ?? "");
+  const [isContentEmpty, setIsContentEmpty] = useState(!savedContent);
   const [status, setStatus] = useState<SaveStatus>("idle");
   const [language, setLanguage] = useState<ProgrammingLanguage>();
 
@@ -115,6 +117,7 @@ export const UserStoryWorkspace: FC<UserStoryWorkspaceProps> = ({
           </Label>
           <UserStoryEditor
             labelId="user-story-content-label"
+            initialContent={savedContent ?? ""}
             onChange={({ html, isEmpty }) => {
               setContent(html);
               setIsContentEmpty(isEmpty);
