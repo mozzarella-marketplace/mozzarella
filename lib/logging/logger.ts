@@ -8,7 +8,7 @@ const logLevels = {
 
 type LogLevel = (typeof logLevels)[keyof typeof logLevels];
 
-function writeLog(level: LogLevel, message: string, context?: LogContext) {
+const writeLog = (level: LogLevel, message: string, context?: LogContext) => {
   const output = context ? [message, context] : [message];
 
   if (level === logLevels.info) {
@@ -18,16 +18,13 @@ function writeLog(level: LogLevel, message: string, context?: LogContext) {
   } else {
     console.error(...output);
   }
-}
+};
 
 export const logger = {
-  info(message: string, context?: LogContext) {
-    writeLog(logLevels.info, message, context);
-  },
-  warn(message: string, context?: LogContext) {
-    writeLog(logLevels.warn, message, context);
-  },
-  error(message: string, context?: LogContext) {
-    writeLog(logLevels.error, message, context);
-  },
+  info: (message: string, context?: LogContext) =>
+    writeLog(logLevels.info, message, context),
+  warn: (message: string, context?: LogContext) =>
+    writeLog(logLevels.warn, message, context),
+  error: (message: string, context?: LogContext) =>
+    writeLog(logLevels.error, message, context),
 };

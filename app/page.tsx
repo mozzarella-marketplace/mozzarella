@@ -1,5 +1,8 @@
 import { UserStoryWorkspace } from "@/components/UserStoryWorkspace";
+import { NextPage } from "next";
 
-export default function Home() {
+const Index: NextPage = () => {
   return <UserStoryWorkspace sessionId="example-session-id" />;
-}
+};
+
+export default Index;

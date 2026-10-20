@@ -12,6 +12,5 @@ export type TextDirection = (typeof localeConfig)[Locale]["direction"];
 
 export const defaultLocale: Locale = "he";
 
-export function getLocaleConfig(locale: Locale = defaultLocale) {
-  return localeConfig[locale];
-}
+export const getLocaleConfig = (locale: Locale = defaultLocale) =>
+  localeConfig[locale];

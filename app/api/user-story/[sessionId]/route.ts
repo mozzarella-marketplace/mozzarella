@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { prisma } from "@/lib/db/prismaClient";
+import { prisma } from "@/lib/db/prisma";
 import { logger } from "@/lib/logging/logger";
 
 const saveUserStoryBodySchema = z.object({
