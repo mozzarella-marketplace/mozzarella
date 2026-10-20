@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { ProgrammingLanguage } from "@/lib/generated/prisma/enums";
 import { prisma } from "@/lib/db/prisma";
 import { logger } from "@/lib/logging/logger";
 
 const saveUserStoryBodySchema = z.object({
   content: z.string().trim().min(1),
+  language: z.enum(ProgrammingLanguage).nullable(),
 });
 
 export async function PUT(
@@ -18,13 +20,13 @@ export async function PUT(
     return NextResponse.json({ error: "invalid_request" }, { status: 400 });
   }
 
-  const { content } = parsed.data;
+  const { content, language } = parsed.data;
 
   try {
     const userStory = await prisma.userStory.upsert({
       where: { sessionId },
-      update: { content },
-      create: { sessionId, content },
+      update: { content, language },
+      create: { sessionId, content, language },
     });
 
     return NextResponse.json({ updatedAt: userStory.updatedAt });

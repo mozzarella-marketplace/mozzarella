@@ -27,6 +27,7 @@ type SaveStatus = "idle" | "saving" | "saved" | "error";
 type UserStoryWorkspaceProps = {
   sessionId: string;
   savedContent: string | null;
+  savedLanguage: ProgrammingLanguage | null;
 };
 
 const programmingLanguages = Object.values(ProgrammingLanguage);
@@ -36,12 +37,15 @@ const specRowClassName = "rounded-panel bg-foreground-1 p-content";
 export const UserStoryWorkspace: FC<UserStoryWorkspaceProps> = ({
   sessionId,
   savedContent,
+  savedLanguage,
 }) => {
   const messages = getMessages();
   const [content, setContent] = useState(savedContent ?? "");
   const [isContentEmpty, setIsContentEmpty] = useState(!savedContent);
   const [status, setStatus] = useState<SaveStatus>("idle");
-  const [language, setLanguage] = useState<ProgrammingLanguage>();
+  const [language, setLanguage] = useState<ProgrammingLanguage | undefined>(
+    savedLanguage ?? undefined,
+  );
 
   const isSaveDisabled = isContentEmpty || status === "saving";
 
@@ -52,7 +56,7 @@ export const UserStoryWorkspace: FC<UserStoryWorkspaceProps> = ({
       const response = await fetch(`/api/user-story/${sessionId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content }),
+        body: JSON.stringify({ content, language: language ?? null }),
       });
 
       setStatus(response.ok ? "saved" : "error");
@@ -79,13 +83,14 @@ export const UserStoryWorkspace: FC<UserStoryWorkspaceProps> = ({
           </Label>
           <Select
             value={language}
-            onValueChange={(value) =>
+            onValueChange={(value) => {
               setLanguage(
                 programmingLanguages.find(
                   (programmingLanguage) => programmingLanguage === value,
                 ),
-              )
-            }
+              );
+              setStatus("idle");
+            }}
           >
             <SelectTrigger
               id="user-story-language"

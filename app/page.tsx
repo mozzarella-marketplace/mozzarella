@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 const Index: FC = async () => {
   const userStory = await prisma.userStory.findUnique({
     where: { sessionId },
-    select: { content: true },
+    select: { content: true, language: true },
   });
 
   return (
@@ -18,6 +18,7 @@ const Index: FC = async () => {
       <UserStoryWorkspace
         sessionId={sessionId}
         savedContent={userStory?.content ?? null}
+        savedLanguage={userStory?.language ?? null}
       />
     </main>
   );
