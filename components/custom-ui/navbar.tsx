@@ -7,7 +7,7 @@ import { StudentData } from "@/types/student";
 import { usePathname } from "next/navigation";
 import { Circle } from "lucide-react";
 
-const buttonsClassName = "rounded-lg px-4 py-1.5";
+const buttonsClassName = "rounded-lg px-4 py-1";
 
 const navigationButtons = [
   {
@@ -36,11 +36,11 @@ export const Navbar = ({ studentData }: { studentData: StudentData }) => {
       <div className={cn(buttonsClassName, "flex gap-2 items-center py-0")}>
         <img src="./solve.png" alt="solve-icon" className="h-6" />
         <div>
-          <p className="text-primary-1 text-lg font-bold">סולב</p>
+          <p className="text-primary-1 text-xl font-bold">סולב</p>
           <p className="text-sm">פותרים בעיות</p>
         </div>
       </div>
-      <Separator orientation="vertical" className="opacity-70" />
+      <Separator orientation="vertical" className="opacity-70 my-2" />
       {navigationButtons.map(({ displayName, href }) => (
         <Link
           key={href}
