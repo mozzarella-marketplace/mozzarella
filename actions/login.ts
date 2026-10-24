@@ -1,9 +1,14 @@
 "use server";
 
+import { defaultLocale } from "@/consts/locales";
+import { getMessages } from "@/lib/i18n/messages";
 import { logger } from "@/lib/logging/logger";
 import { ServerErrors } from "@/types/errors";
-import { loginSchema } from "@/types/schemas";
+import { createLoginSchema } from "@/types/schemas";
 import { redirect } from "next/navigation";
+
+const loginMessages = getMessages(defaultLocale).login;
+const loginSchema = createLoginSchema(loginMessages.validation);
 
 export const loginAction = async (
   prevState: ServerErrors | undefined,
@@ -13,7 +18,7 @@ export const loginAction = async (
 
   if (!result.success) {
     return {
-      message: "יש שגיאות בטופס, נסה שוב לאחר תיקונם",
+      message: loginMessages.validation.formError,
     };
   }
   //TODO: actual login in and all

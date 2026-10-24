@@ -1,13 +1,18 @@
 import z from "zod";
+import type { Messages } from "@/lib/i18n/messages";
 
-const code = z
-  .string("שדה חובה")
-  .length(4, "קוד בעל 4 תווים")
-  .regex(/^[0-9A-F]*$/, "מספרים ואותיות A-F בלבד");
+export const createLoginSchema = (
+  validationMessages: Messages["login"]["validation"],
+) => {
+  const code = z
+    .string(validationMessages.required)
+    .length(4, validationMessages.length)
+    .regex(/^[0-9A-F]*$/, validationMessages.format);
 
-export const loginSchema = z.object({
-  "class-code": code,
-  "student-code": code,
-});
+  return z.object({
+    "class-code": code,
+    "student-code": code,
+  });
+};
 
-export type LoginSchema = z.infer<typeof loginSchema>;
+export type LoginSchema = z.infer<ReturnType<typeof createLoginSchema>>;
