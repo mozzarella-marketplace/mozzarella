@@ -4,7 +4,7 @@ import Link from "next/link";
 import { getMessages } from "@/lib/i18n/messages";
 
 export const SiteHeader: FC = () => {
-  const { brand, navigation } = getMessages();
+  const { app, brand, navigation } = getMessages();
 
   return (
     <header className="border-b border-border bg-background">
@@ -18,7 +18,7 @@ export const SiteHeader: FC = () => {
           </span>
           <span className="flex flex-col leading-tight">
             <span className="text-title font-extrabold text-primary">
-              {brand.name}
+              {app.title}
             </span>
             <span className="text-caption text-muted">{brand.tagline}</span>
           </span>

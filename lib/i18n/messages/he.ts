@@ -29,7 +29,6 @@ export const heMessages = {
     },
   },
   brand: {
-    name: "מוצרלה",
     tagline: "פותרים בעיות",
     copyright: "© מוצרלה (Mozzarella) • לא כותבים קוד. פותרים בעיות.",
   },
