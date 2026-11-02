@@ -11,10 +11,10 @@ export const MarketplaceHero: FC<{
   return (
     <section
       aria-labelledby="marketplace-title"
-      className="flex flex-col gap-section rounded-panel border border-border bg-linear-to-bl from-secondary via-surface to-secondary p-content content:flex-row content:items-end content:justify-between content:p-section"
+      className="flex flex-col gap-section rounded-panel border border-border bg-linear-to-bl from-secondary via-background to-secondary p-content content:flex-row content:items-end content:justify-between content:p-section"
     >
       <div className="flex flex-col gap-control">
-        <p className="inline-flex items-center gap-2 self-start rounded-pill bg-surface px-3 py-1 text-caption font-semibold shadow-panel">
+        <p className="inline-flex items-center gap-2 self-start rounded-pill bg-background px-3 py-1 text-caption font-semibold shadow-panel">
           <span aria-hidden="true" className="size-2 rounded-pill bg-success" />
           <span className="text-secondary-foreground">
             {marketplace.status}

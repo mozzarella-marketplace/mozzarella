@@ -103,7 +103,7 @@ export const CustomerMarketplace: FC<{
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={marketplace.searchPlaceholder}
-              className="w-full rounded-tile border border-border bg-surface py-control ps-11 pe-content text-label shadow-panel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              className="w-full rounded-tile border border-border bg-background py-control ps-11 pe-content text-label shadow-panel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             />
           </div>
         }
@@ -111,7 +111,7 @@ export const CustomerMarketplace: FC<{
       {visibleCustomers.length === 0 ? (
         <div
           role="status"
-          className="flex flex-col items-center gap-control rounded-panel border border-dashed border-border bg-surface px-content py-section text-center"
+          className="flex flex-col items-center gap-control rounded-panel border border-dashed border-border bg-background px-content py-section text-center"
         >
           <h2 className="font-semibold">
             {marketplace.searchEmptyState.title}

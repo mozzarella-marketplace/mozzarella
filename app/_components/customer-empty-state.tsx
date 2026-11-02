@@ -6,7 +6,7 @@ export const CustomerEmptyState: FC = () => {
   const { marketplace } = getMessages();
 
   return (
-    <div className="flex flex-col items-center gap-control rounded-panel border border-dashed border-border bg-surface px-content py-section text-center">
+    <div className="flex flex-col items-center gap-control rounded-panel border border-dashed border-border bg-background px-content py-section text-center">
       <span className="flex size-14 items-center justify-center rounded-tile bg-secondary text-primary">
         <Users aria-hidden="true" className="size-7" />
       </span>

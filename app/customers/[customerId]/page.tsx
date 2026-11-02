@@ -33,7 +33,7 @@ const CustomerPage: FC<{
       >
         {customers.backToMarketplace}
       </Link>
-      <article className="flex flex-col gap-content rounded-panel border border-border bg-surface p-content shadow-panel content:p-section">
+      <article className="flex flex-col gap-content rounded-panel border border-border bg-background p-content shadow-panel content:p-section">
         <div className="flex items-start gap-control">
           <CustomerAvatar avatar={customer.avatar} />
           <div className="flex flex-col gap-1">
@@ -48,7 +48,7 @@ const CustomerPage: FC<{
           </div>
         </div>
         <CustomerTags customer={customer} />
-        <blockquote className="rounded-tile bg-background px-content py-control text-muted italic">
+        <blockquote className="rounded-tile bg-background-1 px-content py-control text-muted italic">
           <p>{marketplace.quoted(customer.summary)}</p>
         </blockquote>
       </article>

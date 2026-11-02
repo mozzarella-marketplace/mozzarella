@@ -26,7 +26,7 @@ export const MarketplaceSkeleton: FC = () => {
         search={
           <div
             aria-hidden="true"
-            className={`h-12 rounded-tile bg-surface shadow-panel ${pulseClassName}`}
+            className={`h-12 rounded-tile bg-background shadow-panel ${pulseClassName}`}
           />
         }
       />
@@ -34,7 +34,7 @@ export const MarketplaceSkeleton: FC = () => {
         {Array.from({ length: placeholderCardCount }, (_, index) => (
           <li
             key={index}
-            className={`flex flex-col gap-content rounded-panel border border-border bg-surface p-content shadow-panel ${pulseClassName}`}
+            className={`flex flex-col gap-content rounded-panel border border-border bg-background p-content shadow-panel ${pulseClassName}`}
           >
             <div className="flex items-start justify-between gap-control">
               <div className="flex grow items-center gap-control">
@@ -50,7 +50,7 @@ export const MarketplaceSkeleton: FC = () => {
               <div className="h-6 w-20 rounded-control bg-neutral-soft" />
               <div className="h-6 w-16 rounded-control bg-neutral-soft" />
             </div>
-            <div className="h-20 rounded-tile bg-background" />
+            <div className="h-20 rounded-tile bg-background-1" />
             <div className="flex items-center justify-between">
               <div className="h-4 w-40 rounded-control bg-neutral-soft" />
               <div className="h-9 w-28 rounded-control bg-secondary" />

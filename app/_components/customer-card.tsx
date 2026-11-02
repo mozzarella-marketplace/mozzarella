@@ -15,7 +15,7 @@ export const CustomerCard: FC<{ customer: CustomerSummary }> = ({
   const { marketplace } = getMessages();
 
   return (
-    <article className="flex w-full flex-col gap-content rounded-panel border border-border bg-surface p-content shadow-panel">
+    <article className="flex w-full flex-col gap-content rounded-panel border border-border bg-background p-content shadow-panel">
       <div className="flex items-start justify-between gap-control">
         <div className="flex min-w-0 items-start gap-control">
           <CustomerAvatar avatar={customer.avatar} />
@@ -36,7 +36,7 @@ export const CustomerCard: FC<{ customer: CustomerSummary }> = ({
         </p>
       </div>
       <CustomerTags customer={customer} />
-      <blockquote className="grow rounded-tile bg-background px-content py-control text-label text-muted italic">
+      <blockquote className="grow rounded-tile bg-background-1 px-content py-control text-label text-muted italic">
         <p>{marketplace.quoted(customer.summary)}</p>
       </blockquote>
       <div className="flex flex-wrap items-center justify-between gap-control">

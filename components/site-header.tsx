@@ -7,7 +7,7 @@ export const SiteHeader: FC = () => {
   const { brand, navigation } = getMessages();
 
   return (
-    <header className="border-b border-border bg-surface">
+    <header className="border-b border-border bg-background">
       <div className="mx-auto flex max-w-content flex-wrap items-center gap-x-section gap-y-control px-page-inline py-control">
         <Link
           href="/"

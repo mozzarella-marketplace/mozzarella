@@ -31,7 +31,7 @@ export const PedagogyBanner: FC<{ avatars: string[] }> = ({ avatars }) => {
           {avatars.slice(0, visibleAvatarCount).map((avatar, index) => (
             <li
               key={index}
-              className="flex size-9 items-center justify-center rounded-pill border-2 border-secondary bg-surface"
+              className="flex size-9 items-center justify-center rounded-pill border-2 border-secondary bg-background"
             >
               {avatar}
             </li>
