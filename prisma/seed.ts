@@ -15,7 +15,6 @@ const mockCustomers: CustomerSummary[] = [
     difficulty: "beginner",
     rewardCoins: 80,
     topic: "חישוב הכנסות",
-    estimatedMinutes: 30,
     summary:
       "אני צריך עזרה דחופה עם המכירות של המאפייה. בסוף כל יום יש לי ערימות קבלות ואני לא יודע כמה באמת הרווחתי אחרי הוצאות הקמח והחשמל.",
   },
@@ -31,7 +30,6 @@ const mockCustomers: CustomerSummary[] = [
     difficulty: "intermediate",
     rewardCoins: 120,
     topic: "תנאים ולוגיקה",
-    estimatedMinutes: 45,
     summary:
       "אני מנסה לעשות קצת סדר במערכת הכרטיסים שלנו, במיוחד בחישוב ההנחות המורכבות לחיילים, אזרחים ותיקים וילדים בסופי שבוע.",
   },
@@ -47,7 +45,6 @@ const mockCustomers: CustomerSummary[] = [
     difficulty: "advanced",
     rewardCoins: 180,
     topic: "מבני נתונים",
-    estimatedMinutes: 90,
     summary:
       "המספרה והפנסיון גדלו מהר מדי. יש לי יותר מדי לקוחות ואני צריך דרך ממוחשבת לנהל את התיקים, הגזעים ותאריכי החיסונים הקריטיים.",
   },
@@ -63,7 +60,6 @@ const mockCustomers: CustomerSummary[] = [
     difficulty: "intermediate",
     rewardCoins: 150,
     topic: "לולאות וחישובים",
-    estimatedMinutes: 60,
     summary:
       "אנחנו רוצים לחשב את המסלול הזול והמהיר ביותר למשלוח חבילות ברחבי העיר, בהתאם לעומסי התנועה ולמרחק שכל שליח עובר.",
   },
@@ -79,7 +75,6 @@ const mockCustomers: CustomerSummary[] = [
     difficulty: "intermediate",
     rewardCoins: 110,
     topic: "מערכים וחיפוש",
-    estimatedMinutes: 40,
     summary:
       "תורים במרפאה נקבעים לפעמים באותה שעה. אני צריכה כלי שבודק אם שעה פנויה לפני שקובעים תור חדש.",
   },
@@ -95,7 +90,6 @@ const mockCustomers: CustomerSummary[] = [
     difficulty: "beginner",
     rewardCoins: 70,
     topic: "משתנים וקלט/פלט",
-    estimatedMinutes: 25,
     summary:
       "מוצרים נגמרים מהמדפים בלי שאני שם לב. אני רוצה לדעת מראש אילו מוצרים צריך להזמין מחדש.",
   },

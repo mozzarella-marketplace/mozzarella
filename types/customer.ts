@@ -18,6 +18,5 @@ export type CustomerSummary = Pick<
   | "difficulty"
   | "rewardCoins"
   | "topic"
-  | "estimatedMinutes"
   | "summary"
 >;

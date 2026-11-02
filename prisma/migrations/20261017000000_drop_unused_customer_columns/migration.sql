@@ -1,5 +1,6 @@
 -- AlterTable
-ALTER TABLE "customers" DROP COLUMN "is_featured",
+ALTER TABLE "customers" DROP COLUMN "estimated_minutes",
+DROP COLUMN "is_featured",
 DROP COLUMN "iteration_count",
 DROP COLUMN "language";
 
