@@ -1,5 +1,5 @@
 import type { FC } from "react";
 
-const Home: FC = () => null;
+const Index: FC = () => <main />;
 
-export default Home;
+export default Index;
