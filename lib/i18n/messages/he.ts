@@ -61,7 +61,6 @@ export const heMessages = {
       intermediate: "רמה בינונית",
       advanced: "מתקדם",
     },
-    estimatedMinutes: (minutes: number) => `~${minutes} דק׳ עבודה`,
     talkAction: (name: string) => `לדבר עם ${name}`,
     loading: "הלקוחות נטענים…",
     emptyState: {

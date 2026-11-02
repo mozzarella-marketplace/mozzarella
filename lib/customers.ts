@@ -13,7 +13,6 @@ const customerSummarySelection = {
   difficulty: true,
   rewardCoins: true,
   topic: true,
-  estimatedMinutes: true,
   summary: true,
 } as const satisfies Record<keyof CustomerSummary, true>;
 

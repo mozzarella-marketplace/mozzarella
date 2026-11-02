@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { ArrowRight, Braces, Clock, Coins } from "lucide-react";
+import { ArrowRight, Braces, Coins } from "lucide-react";
 import Link from "next/link";
 import { CustomerAvatar } from "@/components/customer-avatar";
 import { CustomerTags } from "@/components/customer-tags";
@@ -40,16 +40,13 @@ export const CustomerCard: FC<{ customer: CustomerSummary }> = ({
         <p>{marketplace.quoted(customer.summary)}</p>
       </blockquote>
       <div className="flex flex-wrap items-center justify-between gap-control">
-        <ul className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 text-caption text-muted">
-          <li className="inline-flex items-center gap-1 font-semibold text-foreground">
-            <Braces aria-hidden="true" className="size-3.5 text-primary" />
-            {customer.topic}
-          </li>
-          <li className="inline-flex items-center gap-1">
-            <Clock aria-hidden="true" className="size-3.5" />
-            {marketplace.estimatedMinutes(customer.estimatedMinutes)}
-          </li>
-        </ul>
+        <p className="inline-flex min-w-0 items-center gap-1 text-caption font-semibold">
+          <Braces
+            aria-hidden="true"
+            className="size-3.5 shrink-0 text-primary"
+          />
+          {customer.topic}
+        </p>
         <Link href={`/customers/${customer.id}`} className={actionClassName}>
           {marketplace.talkAction(customer.name)}
           <ArrowRight aria-hidden="true" className="size-4 rtl:-scale-x-100" />
