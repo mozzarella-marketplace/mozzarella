@@ -2,8 +2,6 @@ import type { FC, ReactNode } from "react";
 import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
 import "./globals.css";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
 import { defaultLocale, getLocaleConfig } from "@/consts/locales";
 import { env } from "@/lib/config/env";
 import { getMessages } from "@/lib/i18n/messages";
@@ -35,11 +33,7 @@ const RootLayout: FC<
       dir={locale.direction}
       className={rubik.variable}
     >
-      <body className="flex min-h-screen flex-col">
-        <SiteHeader />
-        <div className="grow">{children}</div>
-        <SiteFooter />
-      </body>
+      <body>{children}</body>
     </html>
   );
 };
