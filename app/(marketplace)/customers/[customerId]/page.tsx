@@ -11,7 +11,7 @@ const CustomerPage: FC<{
   params: Promise<{ customerId: string }>;
 }> = async ({ params }) => {
   const { customerId } = await params;
-  const parsedCustomerId = z.string().uuid().safeParse(customerId);
+  const parsedCustomerId = z.uuid().safeParse(customerId);
 
   if (!parsedCustomerId.success) {
     notFound();
