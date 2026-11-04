@@ -1,6 +1,6 @@
 import "server-only";
 import { redirect } from "next/navigation";
-import { getReturnTo } from "@/lib/auth/return-to";
+import { getSessionUrl } from "@/lib/auth/return-to";
 import {
   refreshKeycloakToken,
   requestKeycloakSubject,
@@ -89,9 +89,7 @@ export const getPageUser = async (
   const { refreshToken } = await getKeycloakTokens();
 
   if (refreshToken) {
-    redirect(
-      `/api/auth/session?${new URLSearchParams({ returnTo: getReturnTo(returnTo) })}`,
-    );
+    redirect(getSessionUrl(returnTo));
   }
 
   return null;

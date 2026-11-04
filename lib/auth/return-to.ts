@@ -38,5 +38,15 @@ export const getReturnTo = (value: string | null | undefined): string => {
   }
 };
 
+const getReturnToQuery = (returnTo: string) => {
+  const destination = getReturnTo(returnTo);
+  return destination === "/"
+    ? ""
+    : `?${new URLSearchParams({ returnTo: destination })}`;
+};
+
 export const getLoginUrl = (returnTo: string) =>
-  `/login?${new URLSearchParams({ returnTo: getReturnTo(returnTo) })}`;
+  `/login${getReturnToQuery(returnTo)}`;
+
+export const getSessionUrl = (returnTo: string) =>
+  `/api/auth/session${getReturnToQuery(returnTo)}`;
