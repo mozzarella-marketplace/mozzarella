@@ -13,13 +13,11 @@ import {
 import { env } from "@/lib/config/env";
 import { prisma } from "@/lib/db/prisma";
 import { logger } from "@/lib/logging/logger";
-import type { UserRole } from "@/lib/generated/prisma/enums";
 
 export type CurrentUser = {
   id: string;
   classId: string;
   userId: string;
-  role: UserRole;
 };
 
 const findUserByAccessToken = async (
@@ -63,7 +61,7 @@ const findUserByAccessToken = async (
         keycloakUserId: subject.subject,
         class: { is: {} },
       },
-      select: { id: true, classId: true, userId: true, role: true },
+      select: { id: true, classId: true, userId: true },
     });
   } catch {
     logger.error("Application session user lookup failed");
@@ -173,24 +171,4 @@ export const requireAuth = async () => {
   }
 
   return renewedUser.user;
-};
-
-export const requireRole = async (role: UserRole) => {
-  const user = await requireAuth();
-
-  if (user.role !== role) {
-    throw new AuthError(403, "Insufficient permissions");
-  }
-
-  return user;
-};
-
-export const requireTeacherForClass = async (classId: string) => {
-  const user = await requireRole("teacher");
-
-  if (user.classId !== classId) {
-    throw new AuthError(403, "Insufficient permissions");
-  }
-
-  return user;
 };

@@ -15,7 +15,7 @@ Browser -> Next.js / Vercel -> OIDC -> Keycloak / Railway
 Next.js / Vercel -> Application PostgreSQL / Supabase
 ```
 
-Keycloak owns credentials and OIDC token issuance. Next.js verifies the authenticated subject through UserInfo, maps it to the application database, and manages the browser session and authorization. Application roles and class membership come from the application database. No separate Express or Node backend is introduced.
+Keycloak owns credentials and OIDC token issuance. Next.js verifies the authenticated subject through UserInfo, maps it to the application database, and manages the browser session and access checks. Class membership comes from the application database. No separate Express or Node backend is introduced.
 
 Keycloak requires its own PostgreSQL database for its internal realms, credentials, sessions, clients, and configuration. The application database on Supabase will be the source of truth for application-specific student/class data. Never share the database, database user, connection URL, or credentials between these systems. Locally, Compose creates only Keycloak and its dedicated PostgreSQL service; it does not start or connect to Supabase or the application database.
 
@@ -30,7 +30,7 @@ cd Keycloak
 cp .env.example .env
 ```
 
-Edit the ignored `.env` and fill all five variables. Choose a dedicated database name and user, a bootstrap administrator username, and distinct generated passwords. There are no default credentials. The bootstrap administrator is for Keycloak administration only, not a student or teacher account.
+Edit the ignored `.env` and fill all five variables. Choose a dedicated database name and user, a bootstrap administrator username, and distinct generated passwords. There are no default credentials. The bootstrap administrator is for Keycloak administration only, not an application account.
 
 ```bash
 docker compose config --quiet
@@ -67,16 +67,16 @@ The baseline includes:
 
 - An enabled `mozzarella` realm with self-registration, email login, and password reset disabled.
 - Brute-force protection enabled and the `VERIFY_PROFILE` required action disabled so direct-grant users are not blocked by profile setup.
-- Realm roles `student` and `teacher`. Neither role is automatically assigned, and no users are included.
-- An enabled confidential OIDC client named `nextjs`. Standard Authorization Code flow with PKCE S256 is enabled for a possible future reviewed flow, and Direct Access Grants support the current app-owned login form. Implicit flow and service accounts are disabled; full scope is disabled and only the `roles` client scope is configured.
+- No user accounts or application permission tiers.
+- An enabled confidential OIDC client named `nextjs`. Standard Authorization Code flow with PKCE S256 is enabled for a possible future reviewed flow, and Direct Access Grants support the current app-owned login form. Implicit flow and service accounts are disabled; full scope is disabled.
 - Empty redirect URI and web origin lists. There are no invented application URLs or wildcard callbacks.
-- Only the built-in `roles` client scope, limited to the student/teacher roles. Profile/email scopes are not requested by this client baseline.
+- No default or optional client scopes. The app explicitly requests `openid` for UserInfo; additional scopes are not requested.
 
 Keycloak generates and stores a confidential client secret on import; no secret is supplied in Git. Configure the secret only as `KEYCLOAK_CLIENT_SECRET` in the ignored app `.env.local` and Vercel's server-only environment. Rotate any secret previously exposed during development and update both environments. The app uses Direct Access Grants, UserInfo, refresh grants, and the Keycloak logout endpoint. Access and refresh tokens are set only in `HttpOnly` cookies and are never exposed to browser JavaScript.
 
 Future identities should be pseudonymous: use opaque identifiers and the OIDC `sub` for identity linkage rather than names or email addresses. The realm JSON does not contain accounts; the local setup command separately provisions its marked examples. Production identities and provisioning remain outside this scaffold. Application-specific student/class information belongs in the application database, not in realm JSON or Git.
 
-The custom Class ID + User ID page is the only authentication UI outside Keycloak. Next.js sends the canonical identifier as both username and password over its server-side confidential-client request. Keycloak authenticates the user and manages access/refresh token expiry and logout. The verified `sub` maps to the app database, which owns application roles and class membership; realm roles alone do not grant app permissions.
+The custom Class ID + User ID page is the only authentication UI outside Keycloak. Next.js sends the canonical identifier as both username and password over its server-side confidential-client request. Keycloak authenticates the user and manages access/refresh token expiry and logout. The verified `sub` maps to the app database, which owns class membership.
 
 ## Secrets
 
@@ -112,7 +112,7 @@ Before production use, review the actual public HTTPS hostname and proxy behavio
 
 The production command automatically imports the bundled canonical realm on a fresh database. On subsequent starts it skips an existing `mozzarella` realm, preserving accounts and configuration. This is initial provisioning, not automatic synchronization of later realm JSON edits. Do not reset or overwrite a deployed database to apply configuration changes. Establish backups and a reviewed configuration-update process, with adequate Keycloak memory allocation.
 
-The application remains Next.js on Vercel, and its application database remains separate on Supabase. Set `KEYCLOAK_ISSUER` to the public Keycloak URL followed by `/realms/mozzarella`, `KEYCLOAK_CLIENT_ID` to `nextjs`, and `KEYCLOAK_CLIENT_SECRET` to the imported client's secret obtained from the Keycloak admin console. The issuer must exactly match the discovery document's issuer; never use the local `localhost` issuer in production. No application-code changes are needed to switch from local Keycloak to Railway. Apply the application's Prisma migrations before enabling login, and provision only pseudonymous users with a verified Keycloak subject and DB-owned role/class mapping. Account provisioning and the initial client-secret lookup remain administrative steps, not environment variables that automatically create users.
+The application remains Next.js on Vercel, and its application database remains separate on Supabase. Set `KEYCLOAK_ISSUER` to the public Keycloak URL followed by `/realms/mozzarella`, `KEYCLOAK_CLIENT_ID` to `nextjs`, and `KEYCLOAK_CLIENT_SECRET` to the imported client's secret obtained from the Keycloak admin console. The issuer must exactly match the discovery document's issuer; never use the local `localhost` issuer in production. No application-code changes are needed to switch from local Keycloak to Railway. Apply the application's Prisma migrations before enabling login, and provision only pseudonymous users with a verified Keycloak subject and DB-owned class mapping. Account provisioning and the initial client-secret lookup remain administrative steps, not environment variables that automatically create users.
 
 ## References
 

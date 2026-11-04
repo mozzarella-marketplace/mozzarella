@@ -22,16 +22,6 @@
             "config": {}
         }
     ],
-    "roles": {
-        "realm": [
-            {
-                "name": "student"
-            },
-            {
-                "name": "teacher"
-            }
-        ]
-    },
     "clients": [
         {
             "clientId": "nextjs",
@@ -46,22 +36,11 @@
             "fullScopeAllowed": false,
             "redirectUris": [],
             "webOrigins": [],
-            "defaultClientScopes": [
-                "roles"
-            ],
+            "defaultClientScopes": [],
             "optionalClientScopes": [],
             "attributes": {
                 "pkce.code.challenge.method": "S256"
             }
-        }
-    ],
-    "scopeMappings": [
-        {
-            "client": "nextjs",
-            "roles": [
-                "student",
-                "teacher"
-            ]
         }
     ]
 }

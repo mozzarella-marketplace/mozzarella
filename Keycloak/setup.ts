@@ -212,10 +212,6 @@ const setup = async () => {
         ),
       ),
     ).value;
-  const role = z
-    .object({ id: z.string().min(1), name: z.literal("student") })
-    .parse(await readJson(await adminRequest("/roles/student")));
-
   const profile = z
     .object({
       attributes: z.array(z.object({ name: z.string() }).passthrough()),
@@ -326,25 +322,10 @@ const setup = async () => {
         existingMapping &&
         (existingMapping.keycloakUserId !== keycloakUserId ||
           existingMapping.classId !== example.classId ||
-          existingMapping.userId !== example.userId ||
-          existingMapping.role !== "student")
+          existingMapping.userId !== example.userId)
       ) {
         throw new SetupError(
           "Example account conflicts with an application mapping; resolve it manually",
-        );
-      }
-
-      const assigned = await adminRequest(
-        `/users/${encodeURIComponent(keycloakUserId)}/role-mappings/realm`,
-        {
-          method: "POST",
-          body: JSON.stringify([role]),
-        },
-      );
-
-      if (!assigned.ok) {
-        throw new SetupError(
-          `Example role assignment failed with HTTP ${assigned.status}`,
         );
       }
 
@@ -363,7 +344,7 @@ const setup = async () => {
       for (const mapping of mappings) {
         await transaction.user.upsert({
           where: { keycloakUserId: mapping.keycloakUserId },
-          create: { ...mapping, role: "student" },
+          create: mapping,
           update: {},
         });
       }
