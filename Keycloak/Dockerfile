@@ -18,4 +18,4 @@ COPY --chown=keycloak:keycloak realm/ /opt/keycloak/data/import/
 
 EXPOSE 8080
 ENTRYPOINT ["/bin/bash", "-c"]
-CMD ["exec /opt/keycloak/bin/kc.sh start --optimized --http-port=\"${PORT:-8080}\""]
+CMD ["exec /opt/keycloak/bin/kc.sh start --optimized --import-realm --http-port=\"${PORT:-8080}\""]
