@@ -1,99 +1,192 @@
 import { NextResponse } from "next/server";
-import { z } from "zod";
+import { isSameOriginRequest } from "@/lib/auth/csrf";
+import { parseLoginInput } from "@/lib/auth/login-input";
+import {
+  logoutKeycloakSession,
+  requestKeycloakSubject,
+  requestKeycloakToken,
+} from "@/lib/auth/keycloak";
+import {
+  clearKeycloakTokens,
+  getKeycloakTokens,
+  setKeycloakTokens,
+} from "@/lib/auth/session";
 import { env } from "@/lib/config/env";
+import { prisma } from "@/lib/db/prisma";
 import { getMessages } from "@/lib/i18n/messages";
 import { logger } from "@/lib/logging/logger";
 
-const identifierSchema = z
-    .string()
-    .regex(/^[0-9a-fA-F]{4}$/)
-    .transform((identifier) => identifier.toUpperCase());
+export const runtime = "nodejs";
 
-const loginSchema = z.object({
-    classId: identifierSchema,
-    userId: identifierSchema,
-});
+const jsonResponse = (body: object, status: number, headers?: HeadersInit) =>
+  NextResponse.json(body, {
+    status,
+    headers: { "Cache-Control": "no-store", ...headers },
+  });
 
-const tokenSchema = z
-    .object({
-        access_token: z.string().min(1),
-        token_type: z.string().min(1),
-        expires_in: z.number().int().nonnegative(),
-        refresh_token: z.string().min(1).optional(),
-        refresh_expires_in: z.number().int().nonnegative().optional(),
-        id_token: z.string().min(1).optional(),
-    })
-    .passthrough();
+export const POST = async (request: Request) => {
+  const messages = getMessages().auth.login;
 
-export async function POST(request: Request) {
-    const messages = getMessages().auth.login;
-    let input: unknown;
+  if (!isSameOriginRequest(request)) {
+    return jsonResponse({ error: messages.invalidInput }, 403);
+  }
+
+  if (
+    !env.KEYCLOAK_ISSUER ||
+    !env.KEYCLOAK_CLIENT_ID ||
+    !env.KEYCLOAK_CLIENT_SECRET
+  ) {
+    logger.error("Keycloak login is not configured");
+    return jsonResponse({ error: messages.unavailable }, 503);
+  }
+
+  const keycloakConfiguration = {
+    issuer: env.KEYCLOAK_ISSUER,
+    clientId: env.KEYCLOAK_CLIENT_ID,
+    clientSecret: env.KEYCLOAK_CLIENT_SECRET,
+  };
+
+  let input: Awaited<ReturnType<typeof parseLoginInput>>;
+
+  try {
+    input = await parseLoginInput(request);
+  } catch {
+    return jsonResponse({ error: messages.invalidInput }, 400);
+  }
+
+  if (input.kind !== "valid") {
+    return jsonResponse(
+      { error: messages.invalidInput },
+      input.kind === "too_large" ? 413 : 400,
+    );
+  }
+
+  const username = `${input.data.classId}-${input.data.userId}`;
+  let tokenResult: Awaited<ReturnType<typeof requestKeycloakToken>>;
+
+  try {
+    tokenResult = await requestKeycloakToken({
+      ...keycloakConfiguration,
+      username,
+    });
+  } catch {
+    logger.error("Keycloak token request failed");
+    return jsonResponse({ error: messages.unavailable }, 503);
+  }
+
+  if (tokenResult.kind === "invalid_credentials") {
+    return jsonResponse({ error: messages.invalidCredentials }, 401);
+  }
+
+  if (
+    tokenResult.kind === "unavailable" ||
+    tokenResult.kind === "invalid_session"
+  ) {
+    logger.error("Keycloak returned an invalid token response");
+    return jsonResponse({ error: messages.unavailable }, 503);
+  }
+
+  const revokeSession = async (
+    refreshToken: string,
+    failureMessage: string,
+  ) => {
+    try {
+      const result = await logoutKeycloakSession({
+        ...keycloakConfiguration,
+        refreshToken,
+      });
+
+      if (result === "unavailable") {
+        logger.error(failureMessage);
+      }
+    } catch {
+      logger.error(failureMessage);
+    }
+  };
+
+  let sessionEstablished = false;
+
+  try {
+    let keycloakSubject: Awaited<ReturnType<typeof requestKeycloakSubject>>;
 
     try {
-        input = await request.json();
+      keycloakSubject = await requestKeycloakSubject({
+        issuer: keycloakConfiguration.issuer,
+        accessToken: tokenResult.tokens.accessToken,
+      });
     } catch {
-        return NextResponse.json({ error: messages.invalidInput }, { status: 400 });
+      logger.error("Keycloak userinfo request failed");
+      return jsonResponse({ error: messages.unavailable }, 503);
     }
 
-    const login = loginSchema.safeParse(input);
+    if (keycloakSubject.kind === "invalid_token") {
+      return jsonResponse({ error: messages.invalidCredentials }, 401);
+    }
 
-    if (!login.success) {
-        return NextResponse.json({ error: messages.invalidInput }, { status: 400 });
+    if (keycloakSubject.kind === "unavailable") {
+      logger.error("Keycloak returned invalid userinfo");
+      return jsonResponse({ error: messages.unavailable }, 503);
+    }
+
+    let user: { id: string; classId: string; userId: string } | null;
+
+    try {
+      user = await prisma.user.findUnique({
+        where: {
+          keycloakUserId: keycloakSubject.subject,
+          class: { is: {} },
+        },
+        select: { id: true, classId: true, userId: true },
+      });
+    } catch {
+      logger.error("Application user lookup failed");
+      return jsonResponse({ error: messages.unavailable }, 503);
     }
 
     if (
-        !env.KEYCLOAK_ISSUER ||
-        !env.KEYCLOAK_CLIENT_ID ||
-        !env.KEYCLOAK_CLIENT_SECRET
+      !user ||
+      user.classId !== input.data.classId ||
+      user.userId !== input.data.userId
     ) {
-        logger.error("Keycloak login is not configured");
-        return NextResponse.json({ error: messages.unavailable }, { status: 503 });
+      return jsonResponse({ error: messages.invalidCredentials }, 401);
     }
 
-    const username = `${login.data.classId}-${login.data.userId}`;
-    const issuer = env.KEYCLOAK_ISSUER;
-    const tokenEndpoint = new URL(
-        "protocol/openid-connect/token",
-        issuer.endsWith("/") ? issuer : `${issuer}/`,
-    );
+    let previousRefreshToken: string | undefined;
 
     try {
-        const response = await fetch(tokenEndpoint, {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({
-                client_id: env.KEYCLOAK_CLIENT_ID,
-                client_secret: env.KEYCLOAK_CLIENT_SECRET,
-                grant_type: "password",
-                username,
-                password: username,
-            }),
-            cache: "no-store",
-            signal: AbortSignal.timeout(10_000),
-        });
-
-        if (!response.ok) {
-            return NextResponse.json(
-                { error: messages.invalidCredentials },
-                { status: 401 },
-            );
-        }
-
-        const tokens = tokenSchema.safeParse(await response.json());
-
-        if (!tokens.success) {
-            logger.error("Keycloak returned an invalid token response");
-            return NextResponse.json(
-                { error: messages.unavailable },
-                { status: 503 },
-            );
-        }
-
-        return NextResponse.json(tokens.data, {
-            headers: { "Cache-Control": "no-store" },
-        });
+      previousRefreshToken = (await getKeycloakTokens()).refreshToken;
+      await setKeycloakTokens(tokenResult.tokens);
     } catch {
-        logger.error("Keycloak token request failed");
-        return NextResponse.json({ error: messages.unavailable }, { status: 503 });
+      logger.error("Keycloak token cookie setup failed");
+
+      try {
+        await clearKeycloakTokens();
+      } catch {
+        logger.error("Keycloak failed login cookie clearing failed");
+      }
+
+      return jsonResponse({ error: messages.unavailable }, 503);
     }
-}
+
+    sessionEstablished = true;
+
+    if (
+      previousRefreshToken &&
+      previousRefreshToken !== tokenResult.tokens.refreshToken
+    ) {
+      await revokeSession(
+        previousRefreshToken,
+        "Keycloak could not revoke a previous login",
+      );
+    }
+
+    return jsonResponse({ success: true }, 200);
+  } finally {
+    if (!sessionEstablished) {
+      await revokeSession(
+        tokenResult.tokens.refreshToken,
+        "Keycloak could not revoke a failed login",
+      );
+    }
+  }
+};

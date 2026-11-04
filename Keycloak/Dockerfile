@@ -5,10 +5,7 @@ ENV KC_DB=postgres \
     KC_METRICS_ENABLED=true
 
 WORKDIR /opt/keycloak
-COPY --chown=keycloak:keycloak providers/ /opt/keycloak/providers/
-RUN for providerJar in /opt/keycloak/providers/*.jar; do \
-    if [ -f "$providerJar" ]; then touch -m --date=@1743465600 "$providerJar"; fi; \
-    done && /opt/keycloak/bin/kc.sh build
+RUN /opt/keycloak/bin/kc.sh build
 
 FROM quay.io/keycloak/keycloak:26.8.0
 

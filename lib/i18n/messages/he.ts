@@ -2,6 +2,11 @@ export const heMessages = {
   app: {
     title: "מוצרלה",
     description: "פלטפורמת יזמות למתכנתים צעירים",
+    error: {
+      title: "לא ניתן לטעון את העמוד כרגע",
+      description: "ייתכן שיש תקלה זמנית. נסה שוב בעוד רגע.",
+      retry: "נסה שוב",
+    },
   },
   login: {
     brandName: "מוצרלה",
@@ -13,25 +18,24 @@ export const heMessages = {
     conversation: "שיחה וגילוי דרישות",
     coins: "תשלום במטבעות",
     form: {
-      anonymousAccess: "כניסה אנונימית מהירה ללא סיסמה",
+      anonymousAccess: "כניסה בעזרת קוד כיתה וקוד משתמש",
       classCode: "קוד כיתה",
       codeLengthHint: "4 תווים",
       studentCode: "קוד תלמיד אישי",
       identificationHint: "זיהוי מזהה",
       submit: "כניסה למרקטפלייס",
-      securityNote: "הקוד מנופק על ידי המורה וזהותך לא נשמרת",
+      submitting: "מתחברים...",
+      securityNote: "פרטי הכניסה אינם נשמרים בדפדפן",
     },
     validation: {
       required: "שדה חובה",
       length: "קוד בעל 4 תווים",
       format: "מספרים ואותיות A-F בלבד",
-      formError: "יש שגיאות בטופס, נסה שוב לאחר תיקונם",
     },
   },
   auth: {
     login: {
-      invalidInput:
-        "מזהה משתמש וכיתה חייבים להכיל בדיוק ארבע תווים",
+      invalidInput: "מזהה משתמש וכיתה חייבים להכיל בדיוק ארבע תווים",
       invalidCredentials: "מזהה משתמש או כיתה שגויים",
       unavailable: "התחברות אינה זמינה כרגע",
     },

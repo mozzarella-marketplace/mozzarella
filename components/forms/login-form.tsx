@@ -1,25 +1,41 @@
 "use client";
 
-import { loginAction } from "@/actions/login";
 import { defaultLocale } from "@/consts/locales";
 import { getMessages } from "@/lib/i18n/messages";
-import { ServerErrors } from "@/types/errors";
+import { getReturnTo } from "@/lib/auth/return-to";
 import { createLoginSchema, LoginSchema } from "@/types/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useActionState } from "react";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { FC } from "react";
 import { Card } from "../ui/card";
 import { ArrowLeft, IdCard, Info, ShieldCheck, UserGroup } from "lucide-react";
 import { Form, FormLabel } from "../ui/form";
-import { FormEventHandler } from "../custom-ui/form-event-handler";
 import { ControlledField } from "../custom-ui/controlled-field";
 import { Button } from "../ui/button";
 
 const loginMessages = getMessages(defaultLocale).login;
+const authMessages = getMessages(defaultLocale).auth.login;
 const loginSchema = createLoginSchema(loginMessages.validation);
 
-export const LoginForm: FC = () => {
+const getLoginErrorMessage = (status: number) => {
+  if (status === 401 || status === 403) {
+    return authMessages.invalidCredentials;
+  }
+
+  if (status === 400 || status === 413) {
+    return authMessages.invalidInput;
+  }
+
+  return authMessages.unavailable;
+};
+
+export const LoginForm: FC<{ returnTo: string }> = ({ returnTo }) => {
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [serverError, setServerError] = useState("");
+  const submissionInProgress = useRef(false);
   const form = useForm<LoginSchema>({
     mode: "onChange",
     resolver: zodResolver(loginSchema),
@@ -29,22 +45,50 @@ export const LoginForm: FC = () => {
     },
   });
 
-  const initialState: ServerErrors = {
-    message: "",
-  };
+  const submitLogin = form.handleSubmit(async (values) => {
+    if (submissionInProgress.current) {
+      return;
+    }
 
-  const [state, formAction] = useActionState(loginAction, initialState);
+    submissionInProgress.current = true;
+    setIsSubmitting(true);
+    setServerError("");
+
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        body: JSON.stringify({
+          classId: values["class-code"],
+          userId: values["student-code"],
+        }),
+      });
+
+      if (!response.ok) {
+        setServerError(getLoginErrorMessage(response.status));
+        return;
+      }
+
+      router.replace(getReturnTo(returnTo));
+      router.refresh();
+    } catch {
+      setServerError(authMessages.unavailable);
+    } finally {
+      submissionInProgress.current = false;
+      setIsSubmitting(false);
+    }
+  });
 
   return (
     <Card className="w-lg flex flex-col gap-4 bg-background p-10 shadow-xl">
       <div className="flex gap-1 bg-foreground-1 py-2 px-4 text-success font-bold text-right">
         <ShieldCheck className="stroke-3 inline-block" />{" "}
         {loginMessages.form.anonymousAccess}
-        <span className="text-muted inline-block mr-auto">CS-L1</span>
       </div>
       <Form {...form}>
-        <form action={formAction} onSubmit={() => form.trigger()}>
-          <FormEventHandler className="flex flex-col gap-4">
+        <form onSubmit={submitLogin} aria-busy={isSubmitting}>
+          <div className="flex flex-col gap-4">
             <ControlledField
               Icon={UserGroup}
               name="class-code"
@@ -73,16 +117,22 @@ export const LoginForm: FC = () => {
                 </div>
               }
             />
-            {state?.message && (
-              <div className="text-destructive">{state.message}</div>
+            {serverError && (
+              <div className="text-destructive" role="alert" aria-live="polite">
+                {serverError}
+              </div>
             )}
             <Button
               type="submit"
+              disabled={isSubmitting}
               className="bg-btn-primary p-8 font-bold text-lg"
             >
-              {loginMessages.form.submit} <ArrowLeft className="size-6" />
+              {isSubmitting
+                ? loginMessages.form.submitting
+                : loginMessages.form.submit}{" "}
+              <ArrowLeft className="size-6" />
             </Button>
-          </FormEventHandler>
+          </div>
         </form>
       </Form>
       <div className="flex gap-2 items-center justify-center font-semibold text-xs mt-2">

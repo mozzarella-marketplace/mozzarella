@@ -28,8 +28,12 @@ export const ControlledField = ({
             <FormControl>
               <Input
                 dir="ltr"
-                className="border-none text-center font-semibold text-xl! bg-foreground-1 rounded-md p-6"
+                className="border-none text-center font-semibold text-xl! bg-foreground-1 rounded-md p-6 uppercase"
                 name={field.name}
+                maxLength={4}
+                autoComplete="off"
+                autoCapitalize="characters"
+                spellCheck={false}
                 value={field.value}
                 onChange={field.onChange}
               />
