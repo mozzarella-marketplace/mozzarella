@@ -66,6 +66,8 @@ The demo flow is the authenticated customer marketplace: customer cards come fro
 
 Apply migrations with `npm run db:deploy` after updating the code, then restart the development server to load the regenerated Prisma Client. The integration migration restores the programming-language enum removed by the earlier customer-schema cleanup before the workspace's language migration uses it. Existing unscoped example drafts are retained but are not displayed to students.
 
+Sending a conversation message immediately adds it to the chat and clears the input. If the customer has not replied after 500 ms, a three-dot typing indicator appears until the reply arrives. Failed requests remove the unsaved message, restore the input for retry, and show an error.
+
 This local-only command starts Compose, waits for the imported realm and application database, applies application migrations to the configured database, seeds marketplace customers, creates two example classes and five students, and writes the local issuer/client secret into ignored `.env.local` without printing secrets. It preserves existing passwords and unrelated accounts and refuses conflicting mappings. Restart the app afterward. Examples are for development only: class `B001` has students `1001`, `1002`, `1003`; class `B002` has students `2001`, `2002`. New example accounts use `<CLASS_ID>-<USER_ID>` as username and password. Reruns reuse the marked example accounts; they do not reset passwords. Do not point the application database configuration at a production database when running this command.
 
 ```bash

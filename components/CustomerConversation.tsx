@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FC, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FC, type FormEvent } from "react";
 import { MessageCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,7 +31,25 @@ export const CustomerConversation: FC<CustomerConversationProps> = ({
   const [conversation, setConversation] = useState(initialMessages);
   const [draft, setDraft] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const conversationRef = useRef<HTMLOListElement>(null);
+
+  useEffect(() => {
+    if (!isSending) {
+      return;
+    }
+
+    const timeout = setTimeout(() => setIsTyping(true), 500);
+    return () => clearTimeout(timeout);
+  }, [isSending]);
+
+  useEffect(() => {
+    const conversationElement = conversationRef.current;
+    if (conversationElement) {
+      conversationElement.scrollTop = conversationElement.scrollHeight;
+    }
+  }, [conversation, isTyping]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -41,6 +59,14 @@ export const CustomerConversation: FC<CustomerConversationProps> = ({
       return;
     }
 
+    const messageId = crypto.randomUUID();
+    let receivedReply = false;
+
+    setConversation((current) => [
+      ...current,
+      { id: messageId, role: ConversationRole.user, content: message },
+    ]);
+    setDraft("");
     setIsSending(true);
     setErrorMessage(null);
 
@@ -66,20 +92,22 @@ export const CustomerConversation: FC<CustomerConversationProps> = ({
       setConversation((current) => [
         ...current,
         {
-          id: `${Date.now()}-user`,
-          role: ConversationRole.user,
-          content: message,
-        },
-        {
-          id: `${Date.now()}-assistant`,
+          id: crypto.randomUUID(),
           role: ConversationRole.assistant,
           content: reply,
         },
       ]);
-      setDraft("");
+      receivedReply = true;
     } catch {
       setErrorMessage(messages.error);
     } finally {
+      if (!receivedReply) {
+        setConversation((current) =>
+          current.filter(({ id }) => id !== messageId),
+        );
+        setDraft(message);
+      }
+      setIsTyping(false);
       setIsSending(false);
     }
   };
@@ -95,6 +123,7 @@ export const CustomerConversation: FC<CustomerConversationProps> = ({
       </CardHeader>
       <CardContent className="flex flex-col gap-control px-6">
         <ol
+          ref={conversationRef}
           aria-live="polite"
           className="flex max-h-96 min-h-24 flex-col gap-control overflow-y-auto"
         >
@@ -115,7 +144,7 @@ export const CustomerConversation: FC<CustomerConversationProps> = ({
               {messages.empty}
             </li>
           )}
-          {isSending && (
+          {isTyping && (
             <li
               role="status"
               className="flex w-fit items-center gap-1 self-start rounded-panel bg-foreground-1 px-content py-control"

@@ -25,6 +25,7 @@ const conversationBodySchema = z.object({
 });
 
 const anthropicResponseSchema = z.object({
+  stop_reason: z.string(),
   content: z.array(
     z.object({
       type: z.string(),
@@ -123,7 +124,7 @@ export const POST = async (
         },
         body: JSON.stringify({
           model: "claude-sonnet-5-5",
-          max_tokens: 400,
+          max_tokens: 1_024,
           system: buildCustomerConversationSystemPrompt(customer),
           messages: [
             ...history.reverse().map(({ role, content }) => ({
@@ -157,6 +158,14 @@ export const POST = async (
     }
 
     const parsedResponse = anthropicResponseSchema.safeParse(responseBody);
+    if (
+      parsedResponse.success &&
+      parsedResponse.data.stop_reason === "max_tokens"
+    ) {
+      logger.error("Anthropic customer response reached the token limit");
+      return jsonResponse({ error: messages.unavailable }, 502);
+    }
+
     const reply = parsedResponse.success
       ? parsedResponse.data.content.find((block) => block.type === "text")?.text
       : undefined;
