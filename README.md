@@ -29,7 +29,7 @@ Mozzarella stores its data in PostgreSQL through Prisma ORM. The schema and migr
 
 - `npm run db:migrate` creates and applies migrations during development.
 - `npm run db:deploy` applies committed migrations to a deployed database.
-- `npm run db:seed` inserts or updates the mock customers from `prisma/seed.ts`.
+- `npm run db:seed` inserts or updates 16 mock customers from `prisma/seed.ts`. Fixed IDs keep reruns from creating duplicates.
 - `npm run db:reset` prompts for confirmation, deletes all application database data, reapplies migrations, and seeds the mock customers. Use only with a development database; `DIRECT_URL` and `DATABASE_URL` must point to the same database. Keycloak is unchanged. Run `npm run keycloak:setup` afterward to restore the example classes and student mappings.
 
 ## Authentication
