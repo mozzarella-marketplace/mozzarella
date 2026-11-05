@@ -86,15 +86,17 @@ const CustomerPage: FC<{
           <p>{marketplace.quoted(customer.summary)}</p>
         </blockquote>
       </article>
-      <CustomerConversation
-        customerId={customer.id}
-        initialMessages={conversation}
-      />
-      <UserStoryWorkspace
-        customerId={customer.id}
-        savedContent={userStory?.content ?? null}
-        savedLanguage={userStory?.language ?? null}
-      />
+      <div className="grid items-start gap-section lg:grid-cols-2">
+        <CustomerConversation
+          customerId={customer.id}
+          initialMessages={conversation}
+        />
+        <UserStoryWorkspace
+          customerId={customer.id}
+          savedContent={userStory?.content ?? null}
+          savedLanguage={userStory?.language ?? null}
+        />
+      </div>
     </section>
   );
 };

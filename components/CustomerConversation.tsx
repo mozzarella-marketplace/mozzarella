@@ -113,7 +113,7 @@ export const CustomerConversation: FC<CustomerConversationProps> = ({
   };
 
   return (
-    <Card className="w-full max-w-2xl gap-content bg-background py-6 shadow-panel">
+    <Card className="w-full min-w-0 max-w-2xl gap-content bg-background py-6 shadow-panel">
       <CardHeader className="px-6">
         <CardTitle className="flex items-center gap-2 text-heading font-bold">
           <MessageCircle aria-hidden className="size-6 text-primary-1" />
