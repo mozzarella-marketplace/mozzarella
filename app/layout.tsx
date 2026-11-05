@@ -1,11 +1,17 @@
-import type { Metadata } from "next";
 import type { FC, ReactNode } from "react";
+import type { Metadata } from "next";
+import { Rubik } from "next/font/google";
 import "./globals.css";
 import { defaultLocale, getLocaleConfig } from "@/consts/locales";
 import { env } from "@/lib/config/env";
 import { getMessages } from "@/lib/i18n/messages";
 
 const locale = getLocaleConfig(defaultLocale);
+const rubik = Rubik({
+  subsets: ["hebrew", "latin"],
+  variable: "--font-rubik",
+  display: "swap",
+});
 const messages = getMessages(defaultLocale);
 
 export const metadata: Metadata = {
@@ -16,10 +22,20 @@ export const metadata: Metadata = {
     : undefined,
 };
 
-const RootLayout: FC<Readonly<{ children: ReactNode }>> = ({ children }) => (
-  <html lang={defaultLocale} dir={locale.direction}>
-    <body>{children}</body>
-  </html>
-);
+const RootLayout: FC<
+  Readonly<{
+    children: ReactNode;
+  }>
+> = ({ children }) => {
+  return (
+    <html
+      lang={defaultLocale}
+      dir={locale.direction}
+      className={rubik.variable}
+    >
+      <body>{children}</body>
+    </html>
+  );
+};
 
 export default RootLayout;

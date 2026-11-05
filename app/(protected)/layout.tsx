@@ -1,10 +1,10 @@
 import { headers } from "next/headers";
 import type { FC, ReactNode } from "react";
-import { Navbar } from "@/components/custom-ui/navbar";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { defaultLocale, getLocaleConfig } from "@/consts/locales";
 import { getPageUser } from "@/lib/auth/current-user";
-import { getMessages } from "@/lib/i18n/messages";
 import {
   getLoginUrl,
   getReturnTo,
@@ -23,19 +23,18 @@ const ProtectedLayout: FC<Readonly<{ children: ReactNode }>> = async ({
   }
 
   const locale = getLocaleConfig(defaultLocale);
-  const messages = getMessages(defaultLocale);
 
   return (
-    <div className="flex h-dvh w-full flex-col gap-4 px-6">
-      <Navbar
+    <div className="flex h-dvh w-full flex-col">
+      <SiteHeader
         studentData={{ classCode: user.classId, studentCode: user.userId }}
-        messages={messages.appShell}
       />
       <main className="flex min-h-0 w-full grow">
         <ScrollArea className="size-full" dir={locale.direction}>
           {children}
         </ScrollArea>
       </main>
+      <SiteFooter />
     </div>
   );
 };

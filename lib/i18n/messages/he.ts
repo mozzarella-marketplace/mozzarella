@@ -14,32 +14,6 @@ export const heMessages = {
     student: "תלמיד",
     class: "כיתה",
   },
-  marketplace: {
-    title: "לקוחות עם אתגרים אמיתיים",
-    description: "בחרו לקוח, הכירו את העסק שלו וגלו איזו בעיה תוכלו לפתור.",
-    emptyTitle: "אין כרגע לקוחות זמינים",
-    emptyDescription: "כדאי לנסות שוב אחרי טעינת נתוני ההדגמה.",
-    customer: "הלקוח",
-    category: "תחום",
-    difficulty: "רמת קושי",
-    location: "מיקום",
-    domain: "עולם תוכן",
-    topic: "נושא לתרגול",
-    reward: "תגמול",
-    coins: "מטבעות",
-    customerNeed: "מה הלקוח צריך?",
-    backToMarketplace: "חזרה למרקטפלייס",
-    categories: {
-      smallBusiness: "עסקים קטנים",
-      ticketingSystems: "כרטיסים ושירות",
-      managementAndData: "ניהול ונתונים",
-    },
-    difficulties: {
-      beginner: "מתחילים",
-      intermediate: "ביניים",
-      advanced: "מתקדמים",
-    },
-  },
   login: {
     brandName: "מוצרלה",
     tagline: "לא כותבים קוד פותרים בעיות.",
@@ -71,6 +45,58 @@ export const heMessages = {
       invalidCredentials: "מזהה משתמש או כיתה שגויים",
       unavailable: "התחברות אינה זמינה כרגע",
     },
+  },
+  brand: {
+    tagline: "פותרים בעיות",
+    copyright: "© מוצרלה (Mozzarella) • לא כותבים קוד. פותרים בעיות.",
+  },
+  navigation: {
+    label: "ניווט ראשי",
+    marketplace: "מרקטפלייס",
+    upcoming: ["פרויקט פעיל", "עבודות שלי", "מבט מורה"],
+  },
+  marketplace: {
+    status: "שוק פרויקטים פתוח",
+    opportunities: (count: number) => `• ${count} הזדמנויות פעילות`,
+    title: "לקוחות מחכים לפתרון שלך",
+    subtitle: "מוצאים בעיה. מדברים עם הלקוח. בונים פתרון.",
+    searchLabel: "חיפוש לקוחות",
+    searchPlaceholder: "חיפוש לקוח או תחום עניין…",
+    filtersLabel: "סינון לפי תחום",
+    allFilter: (count: number) => `הכל (${count})`,
+    categories: {
+      smallBusiness: "עסקים קטנים",
+      ticketingSystems: "מערכות כרטיסים",
+      managementAndData: "ניהול ונתונים",
+    },
+    coins: (count: number) => `${count} מטבעות`,
+    customerByline: (role: string, businessName: string, city: string) =>
+      `${role}, ${businessName} • ${city}`,
+    quoted: (text: string) => `״${text}״`,
+    difficulty: {
+      beginner: "רמת כניסה",
+      intermediate: "רמה בינונית",
+      advanced: "מתקדם",
+    },
+    talkAction: (name: string) => `לדבר עם ${name}`,
+    loading: "הלקוחות נטענים…",
+    emptyState: {
+      title: "אין כרגע לקוחות זמינים",
+      description: "לקוחות חדשים יצטרפו בקרוב. כדאי לחזור לכאן מאוחר יותר.",
+    },
+    searchEmptyState: {
+      title: "לא נמצאו לקוחות",
+      description: "אפשר לנסות מילת חיפוש או תחום אחרים.",
+    },
+    pedagogy: {
+      label: "עקרון פדגוגי מנחה",
+      quote:
+        "״לא כותבים קוד סתם. מדברים עם הלקוח, מגלים מה הוא באמת צריך, ופותרים לו את הבעיה.״",
+      waitingCount: (count: number) => `${count} לקוחות ממתינים לשיחה`,
+    },
+  },
+  customers: {
+    backToMarketplace: "חזרה לכל הלקוחות",
   },
 } as const;
 
