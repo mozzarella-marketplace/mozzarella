@@ -28,7 +28,7 @@ const LoginPage: FC<{
   }
 
   return (
-    <main className="w-screen h-screen flex flex-col gap-4 justify-center items-center text-center">
+    <main className="w-screen min-h-screen flex flex-col gap-4 justify-center items-center text-center">
       <div className="size-16 bg-primary-1 rounded-md mt-4" />
       <div>
         <div className="text-xl font-bold">
