@@ -7,6 +7,15 @@ datasource db {
   provider = "postgresql"
 }
 
+model UserStory {
+  id        String   @id @default(cuid())
+  sessionId String   @unique
+  content   String
+  language  ProgrammingLanguage?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 enum CustomerCategory {
   smallBusiness
   ticketingSystems
@@ -17,6 +26,11 @@ enum DifficultyLevel {
   beginner
   intermediate
   advanced
+}
+
+enum ProgrammingLanguage {
+  java
+  csharp
 }
 
 model Customer {

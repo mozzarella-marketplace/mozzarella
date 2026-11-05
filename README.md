@@ -62,7 +62,9 @@ For local authentication, follow the [container setup](Keycloak/README.md#local-
 npm run keycloak:setup
 ```
 
-The first demo flow is the authenticated customer marketplace: customer cards come from active database records, and selecting a card opens its profile.
+The demo flow is the authenticated customer marketplace: customer cards come from active database records, with search and category filters. Selecting a card opens its profile and the user-story workspace. Students can format a draft, select Java or C#, save, and reload it. Drafts are scoped to the authenticated student and selected customer; the server derives the stored `sessionId` from those two IDs, never from a browser-supplied session identifier. This is one evolving draft per student/customer, not multiple attempts or a version history. Customer conversations and AI integration are not implemented yet.
+
+Apply migrations with `npm run db:deploy` after updating the code, then restart the development server to load the regenerated Prisma Client. The integration migration restores the programming-language enum removed by the earlier customer-schema cleanup before the workspace's language migration uses it. Existing unscoped example drafts are retained but are not displayed to students.
 
 This local-only command starts Compose, waits for the imported realm and application database, applies application migrations to the configured database, seeds marketplace customers, creates two example classes and five students, and writes the local issuer/client secret into ignored `.env.local` without printing secrets. It preserves existing passwords and unrelated accounts and refuses conflicting mappings. Restart the app afterward. Examples are for development only: class `B001` has students `1001`, `1002`, `1003`; class `B002` has students `2001`, `2002`. New example accounts use `<CLASS_ID>-<USER_ID>` as username and password. Reruns reuse the marked example accounts; they do not reset passwords. Do not point the application database configuration at a production database when running this command.
 
@@ -80,6 +82,7 @@ Open [http://localhost:3000](http://localhost:3000) in a browser.
 - `npm run format` formats the repository with Oxfmt.
 - `npm run format:check` checks formatting without changing files.
 - `npm run typecheck` runs the strict TypeScript check.
+- `npm test` checks bounded JSON request parsing and login input regression cases.
 - `postinstall` runs `prisma generate` so the Prisma Client matches the schema.
 
 ## Continuous integration

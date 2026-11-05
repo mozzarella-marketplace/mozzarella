@@ -6,6 +6,12 @@ import { CustomerAvatar } from "@/components/customer-avatar";
 import { CustomerTags } from "@/components/customer-tags";
 import { getActiveCustomer } from "@/lib/customers";
 import { getMessages } from "@/lib/i18n/messages";
+import { UserStoryWorkspace } from "@/components/UserStoryWorkspace";
+import { getPageUser } from "@/lib/auth/current-user";
+import { getLoginUrl } from "@/lib/auth/return-to";
+import { redirect } from "next/navigation";
+import { prisma } from "@/lib/db/prisma";
+import { logger } from "@/lib/logging/logger";
 
 const CustomerPage: FC<{
   params: Promise<{ id: string }>;
@@ -17,6 +23,13 @@ const CustomerPage: FC<{
     notFound();
   }
 
+  const returnTo = `/marketplace/${parsedCustomerId.data}`;
+  const user = await getPageUser(returnTo);
+
+  if (!user) {
+    redirect(getLoginUrl(returnTo));
+  }
+
   const customer = await getActiveCustomer(parsedCustomerId.data);
 
   if (!customer) {
@@ -24,6 +37,17 @@ const CustomerPage: FC<{
   }
 
   const { customers, marketplace } = getMessages();
+  let userStory;
+
+  try {
+    userStory = await prisma.userStory.findUnique({
+      where: { sessionId: `${user.id}:${customer.id}` },
+      select: { content: true, language: true },
+    });
+  } catch (error) {
+    logger.error("User story draft query failed");
+    throw error;
+  }
 
   return (
     <section className="mx-auto flex max-w-content flex-col gap-section px-page-inline py-section">
@@ -52,6 +76,11 @@ const CustomerPage: FC<{
           <p>{marketplace.quoted(customer.summary)}</p>
         </blockquote>
       </article>
+      <UserStoryWorkspace
+        customerId={customer.id}
+        savedContent={userStory?.content ?? null}
+        savedLanguage={userStory?.language ?? null}
+      />
     </section>
   );
 };
