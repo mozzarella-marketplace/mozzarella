@@ -12,6 +12,7 @@ import { getLoginUrl } from "@/lib/auth/return-to";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db/prisma";
 import { logger } from "@/lib/logging/logger";
+import { CustomerConversation } from "@/components/CustomerConversation";
 
 const CustomerPage: FC<{
   params: Promise<{ id: string }>;
@@ -37,15 +38,24 @@ const CustomerPage: FC<{
   }
 
   const { customers, marketplace } = getMessages();
+  const sessionId = `${user.id}:${customer.id}`;
   let userStory;
+  let conversation;
 
   try {
-    userStory = await prisma.userStory.findUnique({
-      where: { sessionId: `${user.id}:${customer.id}` },
-      select: { content: true, language: true },
-    });
+    [userStory, conversation] = await Promise.all([
+      prisma.userStory.findUnique({
+        where: { sessionId },
+        select: { content: true, language: true },
+      }),
+      prisma.conversationMessage.findMany({
+        where: { sessionId },
+        orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+        select: { id: true, role: true, content: true },
+      }),
+    ]);
   } catch (error) {
-    logger.error("User story draft query failed");
+    logger.error("Customer workspace query failed");
     throw error;
   }
 
@@ -76,6 +86,10 @@ const CustomerPage: FC<{
           <p>{marketplace.quoted(customer.summary)}</p>
         </blockquote>
       </article>
+      <CustomerConversation
+        customerId={customer.id}
+        initialMessages={conversation}
+      />
       <UserStoryWorkspace
         customerId={customer.id}
         savedContent={userStory?.content ?? null}

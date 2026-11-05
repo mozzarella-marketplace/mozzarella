@@ -98,6 +98,25 @@ export const heMessages = {
   customers: {
     backToMarketplace: "חזרה לכל הלקוחות",
   },
+  conversation: {
+    api: {
+      invalidRequest: "ההודעה אינה תקינה",
+      notFound: "הלקוח אינו זמין",
+      unavailable: "השיחה אינה זמינה כרגע. נסו שוב בעוד רגע.",
+      dailyLimit: "הגעתם למכסת 30 ההודעות היומית. אפשר להמשיך מחר.",
+    },
+    title: "שיחה עם הלקוח",
+    notice: "הלקוח בשיחה מדומה באמצעות Claude. אל תכתבו מידע אישי.",
+    empty: "ספרו ללקוח מה תרצו להבין על הבעיה שלו.",
+    placeholder: "כתבו הודעה ללקוח...",
+    inputLabel: "הודעה ללקוח",
+    privacy: "ההודעות נשמרות ונשלחות ל-Anthropic כדי ליצור תשובות.",
+    send: "שליחה",
+    sending: "שולחים...",
+    waiting: "הלקוח חושב...",
+    error: "לא ניתן לשלוח את ההודעה. נסו שוב.",
+    dailyLimit: "הגעתם למכסת 30 ההודעות היומית. אפשר להמשיך מחר.",
+  },
   programmingLanguages: {
     java: "Java",
     csharp: "C#",

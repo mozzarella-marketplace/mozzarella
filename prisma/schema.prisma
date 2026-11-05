@@ -16,10 +16,25 @@ model UserStory {
   updatedAt DateTime @updatedAt
 }
 
+model ConversationMessage {
+  id        String           @id @default(cuid())
+  sessionId String
+  role      ConversationRole
+  content   String
+  createdAt DateTime         @default(now())
+
+  @@index([sessionId, createdAt])
+}
+
 enum CustomerCategory {
   smallBusiness
   ticketingSystems
   managementAndData
+}
+
+enum ConversationRole {
+  user
+  assistant
 }
 
 enum DifficultyLevel {
