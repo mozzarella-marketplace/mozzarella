@@ -1,5 +1,6 @@
 import type { FC } from "react";
+import { redirect } from "next/navigation";
 
-const Index: FC = () => <main />;
+const HomePage: FC = () => redirect("/marketplace");
 
-export default Index;
+export default HomePage;

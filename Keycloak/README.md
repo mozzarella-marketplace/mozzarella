@@ -1,6 +1,6 @@
 # Keycloak infrastructure
 
-This directory owns the Keycloak container, its dedicated database, and the canonical `mozzarella` realm configuration. The Next.js app uses this realm for server-side credential authentication. The local setup command provisions development-only example students; production account provisioning remains an administrative responsibility.
+This directory owns the Keycloak container, its dedicated database, the separate local application database, and the canonical `mozzarella` realm configuration. The Next.js app uses this realm for server-side credential authentication. The local setup command provisions development-only example students; production account provisioning remains an administrative responsibility.
 
 ## Architecture and ownership
 
@@ -17,20 +17,31 @@ Next.js / Vercel -> Application PostgreSQL / Supabase
 
 Keycloak owns credentials and OIDC token issuance. Next.js verifies the authenticated subject through UserInfo, maps it to the application database, and manages the browser session and access checks. Class membership comes from the application database. No separate Express or Node backend is introduced.
 
-Keycloak requires its own PostgreSQL database for its internal realms, credentials, sessions, clients, and configuration. The application database on Supabase will be the source of truth for application-specific student/class data. Never share the database, database user, connection URL, or credentials between these systems. Locally, Compose creates only Keycloak and its dedicated PostgreSQL service; it does not start or connect to Supabase or the application database.
+Keycloak requires its own PostgreSQL database for its internal realms, credentials, sessions, clients, and configuration. The application database on Supabase will be the source of truth for application-specific student/class data in production. Never share the database, database user, connection URL, or credentials between these systems. Locally, Compose creates three containers: Keycloak, its private `postgres` service, and a separate `app-postgres` service exposed only at `127.0.0.1:5432`. Each database has its own credentials and persistent named volume. Compose does not connect to Supabase.
 
 ## Local setup
 
-For the app and example accounts, run `npm run keycloak:setup` from the repository root after filling `Keycloak/.env` and the application database configuration in `.env.local`. It performs the Compose startup/import steps below, applies app migrations, provisions two classes and five student mappings, and saves the local client secret in ignored `.env.local`. It registers an admin-only `localFixture` user-profile attribute to identify setup-owned accounts. It never resets passwords or overwrites conflicting identities. Partial failures may leave newly created Keycloak examples; fix the reported problem and rerun to finish their database mappings. See the root [README](../README.md#local-development) for example login codes. The configured app database is modified, so use a development database only.
+For the app and example accounts, run `npm run keycloak:setup` from the repository root after filling `Keycloak/.env` and the application database configuration in `.env.local`. It performs the Compose startup/import steps below, applies app migrations, seeds marketplace customers, provisions two classes and five student mappings, and saves the local client secret in ignored `.env.local`. It registers an admin-only `localFixture` user-profile attribute to identify setup-owned accounts. It never resets passwords or overwrites conflicting identities. Partial failures may leave newly created Keycloak examples; fix the reported problem and rerun to finish their database mappings. See the root [README](../README.md#local-development) for example login codes. The configured app database is modified, so use a development database only.
 
-Prerequisites: Docker with Docker Compose v2, a running Docker daemon, and port 8080 available. Run these commands from the repository root:
+Prerequisites: Docker with Docker Compose v2.17 or newer, a running Docker daemon, and ports 8080 and 5432 available. OrbStack provides Docker and Compose without Docker Desktop on macOS:
+
+```bash
+brew install --cask orbstack
+open -a OrbStack
+orb config set memory_mib 2048
+orb config set cpu 2
+```
+
+Complete OrbStack's first-launch setup before running Docker commands. OrbStack releases unused memory; the 2 GB limit is a starting point for an 8 GB Mac. Compose caps Keycloak at 1 GB and each PostgreSQL container at 256 MB. Increase limits if your workload exhausts them. OrbStack is free for personal/non-commercial use; business/commercial use requires a paid license after the trial. Colima is a free CLI alternative.
+
+Run these commands from the repository root:
 
 ```bash
 cd Keycloak
 cp .env.example .env
 ```
 
-Edit the ignored `.env` and fill all five variables. Choose a dedicated database name and user, a bootstrap administrator username, and distinct generated passwords. There are no default credentials. The bootstrap administrator is for Keycloak administration only, not an application account.
+Edit the ignored `.env` and fill all eight variables. Choose separate database names and users, a bootstrap administrator username, and distinct generated passwords. There are no default credentials. The bootstrap administrator is for Keycloak administration only, not an application account. Set both `DATABASE_URL` and `DIRECT_URL` in the root `.env.local` to `postgresql://<APP_POSTGRES_USER>:<URL-encoded APP_POSTGRES_PASSWORD>@localhost:5432/<APP_POSTGRES_DB>`. Local PostgreSQL does not use a connection pooler.
 
 ```bash
 docker compose config --quiet
@@ -40,7 +51,7 @@ docker compose logs -f keycloak
 
 Wait for the startup/import completion message. Open <http://localhost:8080/admin/> and sign in with your local bootstrap administrator credentials. The imported realm is `mozzarella`; its discovery document is <http://localhost:8080/realms/mozzarella/.well-known/openid-configuration>.
 
-Compose builds Keycloak **26.8.0** and runs `start-dev --import-realm`. It connects to the official `postgres:17` image over the private Compose network and waits for PostgreSQL readiness. PostgreSQL data persists in the Compose-managed `keycloak-postgres` named volume. PostgreSQL has no published host port, and Keycloak binds only to host loopback at port 8080. Development mode and relaxed hostname checking are local-only, not production settings. PostgreSQL is pinned to major 17 and receives patch updates when pulled; Keycloak is pinned to the exact requested version.
+Compose builds Keycloak **26.8.0** and runs `start-dev --import-realm`. It connects to the official `postgres:17` image over the private Compose network and waits for its dedicated PostgreSQL readiness. Keycloak's database persists in the Compose-managed `keycloak-postgres` named volume; the application database persists in `app-postgres`. Keycloak's PostgreSQL has no published host port, and Keycloak binds only to host loopback at port 8080. Both database containers reuse the same PostgreSQL image download. Development mode and relaxed hostname checking are local-only, not production settings. PostgreSQL is pinned to major 17 and receives patch updates when pulled; Keycloak is pinned to the exact requested version.
 
 To stop without deleting database state:
 
@@ -55,7 +66,9 @@ docker compose down --volumes --remove-orphans
 docker compose up --build -d
 ```
 
-The reset permanently deletes this Compose project's Keycloak database, including realm edits, credentials, sessions, and administrator state. It does not affect Railway or Supabase. The fresh database is initialized using `.env`, then the realm is imported again. Changing PostgreSQL initialization credentials in `.env` does not change an existing database; use a deliberate database credential change or reset the disposable local environment. Bootstrap administrator variables likewise do not reset an existing administrator password.
+The reset permanently deletes **both local databases**, including application data, realm edits, credentials, sessions, and administrator state. It does not affect Railway or Supabase. The fresh databases are initialized using `.env`, then the realm is imported again. Run `npm run keycloak:setup` from the repository root afterward to reapply app migrations and example mappings. Changing PostgreSQL initialization credentials in `.env` does not change an existing database; use a deliberate database credential change or reset the disposable local environment. Bootstrap administrator variables likewise do not reset an existing administrator password.
+
+To release OrbStack's memory after stopping the containers, quit OrbStack from its menu bar. Do not delete volumes or reset OrbStack to stop it; those actions destroy local database state.
 
 ## Realm configuration and import
 

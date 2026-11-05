@@ -56,13 +56,15 @@ Malformed input returns `400`, oversized input `413`, rejected credentials a gen
 
 ## Local development
 
-For local authentication, fill the five values in `Keycloak/.env` using `Keycloak/.env.example`, configure the application `DATABASE_URL` and `DIRECT_URL` in `.env.local`, then run:
+For local authentication, follow the [container setup](Keycloak/README.md#local-setup) using OrbStack or another Docker-compatible runtime. Compose runs Keycloak and two separate PostgreSQL containers with persistent storage. Fill the eight values in `Keycloak/.env` using `Keycloak/.env.example`, then set application `DATABASE_URL` and `DIRECT_URL` in `.env.local` to the `APP_POSTGRES_*` credentials on `localhost:5432` (URL-encode the password). Run:
 
 ```bash
 npm run keycloak:setup
 ```
 
-This local-only command starts Compose, waits for the imported realm, applies application migrations to the configured database, creates two example classes and five students, and writes the local issuer/client secret into ignored `.env.local` without printing secrets. It preserves existing passwords and unrelated accounts and refuses conflicting mappings. Restart the app afterward. Examples are for development only: class `B001` has students `1001`, `1002`, `1003`; class `B002` has students `2001`, `2002`. New example accounts use `<CLASS_ID>-<USER_ID>` as username and password. Reruns reuse the marked example accounts; they do not reset passwords. Do not point the application database configuration at a production database when running this command.
+The first demo flow is the authenticated customer marketplace: customer cards come from active database records, and selecting a card opens its profile.
+
+This local-only command starts Compose, waits for the imported realm and application database, applies application migrations to the configured database, seeds marketplace customers, creates two example classes and five students, and writes the local issuer/client secret into ignored `.env.local` without printing secrets. It preserves existing passwords and unrelated accounts and refuses conflicting mappings. Restart the app afterward. Examples are for development only: class `B001` has students `1001`, `1002`, `1003`; class `B002` has students `2001`, `2002`. New example accounts use `<CLASS_ID>-<USER_ID>` as username and password. Reruns reuse the marked example accounts; they do not reset passwords. Do not point the application database configuration at a production database when running this command.
 
 ```bash
 npm run dev

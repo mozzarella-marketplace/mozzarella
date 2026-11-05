@@ -32,38 +32,17 @@ CREATE TABLE "customers" (
     CONSTRAINT "customers_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "users" (
-    "id" TEXT NOT NULL,
-    "keycloak_user_id" TEXT NOT NULL,
-    "class_id" TEXT NOT NULL,
-    "user_id" TEXT NOT NULL,
-
-    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "classes" (
-    "id" TEXT NOT NULL,
-    "class_id" TEXT NOT NULL,
-
-    CONSTRAINT "classes_pkey" PRIMARY KEY ("id")
-);
-
 -- CreateIndex
 CREATE INDEX "customers_is_active_idx" ON "customers"("is_active");
 
--- CreateIndex
-CREATE UNIQUE INDEX "users_keycloak_user_id_key" ON "users"("keycloak_user_id");
+-- Keep updated_at current for every writer, including SQL and the Supabase dashboard, not only Prisma Client.
+CREATE FUNCTION "set_updated_at"() RETURNS TRIGGER AS $$
+BEGIN
+    NEW."updated_at" = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
--- CreateIndex
-CREATE INDEX "users_class_id_idx" ON "users"("class_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "users_class_id_user_id_key" ON "users"("class_id", "user_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "classes_class_id_key" ON "classes"("class_id");
-
--- AddForeignKey
-ALTER TABLE "users" ADD CONSTRAINT "users_class_id_fkey" FOREIGN KEY ("class_id") REFERENCES "classes"("class_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+CREATE TRIGGER "customers_set_updated_at"
+BEFORE UPDATE ON "customers"
+FOR EACH ROW EXECUTE FUNCTION "set_updated_at"();

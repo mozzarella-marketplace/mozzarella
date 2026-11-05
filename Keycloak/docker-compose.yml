@@ -2,6 +2,7 @@ name: mozzarella-keycloak
 
 services:
   keycloak:
+    mem_limit: 1g
     build:
       context: .
       dockerfile: Dockerfile
@@ -28,6 +29,7 @@ services:
 
   postgres:
     image: postgres:17
+    mem_limit: 256m
     environment:
       POSTGRES_DB: ${POSTGRES_DB:?Set POSTGRES_DB in .env}
       POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in .env}
@@ -41,5 +43,24 @@ services:
       retries: 20
       start_period: 10s
 
+  app-postgres:
+    image: postgres:17
+    mem_limit: 256m
+    ports:
+      - "127.0.0.1:5432:5432"
+    environment:
+      POSTGRES_DB: ${APP_POSTGRES_DB:?Set APP_POSTGRES_DB in .env}
+      POSTGRES_USER: ${APP_POSTGRES_USER:?Set APP_POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${APP_POSTGRES_PASSWORD:?Set APP_POSTGRES_PASSWORD in .env}
+    volumes:
+      - app-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
 volumes:
   keycloak-postgres:
+  app-postgres:

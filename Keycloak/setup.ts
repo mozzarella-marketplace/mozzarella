@@ -111,7 +111,7 @@ const saveAppConfiguration = async (secret: string) => {
 };
 
 const setup = async () => {
-  for (const path of [".env", ".env.local"]) {
+  for (const path of [".env.local", ".env"]) {
     if (existsSync(path)) {
       process.loadEnvFile(path);
     }
@@ -131,7 +131,7 @@ const setup = async () => {
 
   if (!existsSync("Keycloak/.env")) {
     throw new SetupError(
-      "Copy Keycloak/.env.example to Keycloak/.env and fill all five values first",
+      "Copy Keycloak/.env.example to Keycloak/.env and fill all eight values first",
     );
   }
 
@@ -142,14 +142,17 @@ const setup = async () => {
       POSTGRES_DB: z.string().min(1),
       POSTGRES_USER: z.string().min(1),
       POSTGRES_PASSWORD: z.string().min(1),
+      APP_POSTGRES_DB: z.string().min(1),
+      APP_POSTGRES_USER: z.string().min(1),
+      APP_POSTGRES_PASSWORD: z.string().min(1),
     })
     .safeParse(parseEnv(await readFile("Keycloak/.env", "utf8")));
 
   if (!composeEnvironment.success) {
-    throw new SetupError("Fill all five required values in Keycloak/.env");
+    throw new SetupError("Fill all eight required values in Keycloak/.env");
   }
 
-  logger.info("Starting local Keycloak and importing the realm if absent");
+  logger.info("Starting local containers and importing the realm if absent");
   await runCommand("docker", [
     "compose",
     "--project-directory",
@@ -164,6 +167,9 @@ const setup = async () => {
     "up",
     "--build",
     "-d",
+    "--wait",
+    "--wait-timeout",
+    "120",
   ]);
   await waitForRealm();
 
@@ -241,6 +247,8 @@ const setup = async () => {
 
   logger.info("Applying application database migrations");
   await runCommand("npm", ["run", "db:deploy"]);
+  logger.info("Seeding marketplace customers");
+  await runCommand("npm", ["run", "db:seed"]);
   const { prisma } = await import("../lib/db/prisma");
 
   try {

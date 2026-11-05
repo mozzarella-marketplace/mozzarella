@@ -1,66 +1,37 @@
 "use client";
 
 import Link from "next/link";
-import { Separator } from "../ui/separator";
-import { cn } from "cn";
-import { StudentData } from "@/types/student";
-import { usePathname } from "next/navigation";
-import { Circle } from "lucide-react";
+import Image from "next/image";
+import type { FC } from "react";
+import type { Messages } from "@/lib/i18n/messages";
+import type { StudentData } from "@/types/student";
 
-const buttonsClassName = "rounded-lg px-4 py-1";
+type NavbarProps = {
+  studentData: StudentData;
+  messages: Messages["appShell"];
+};
 
-const navigationButtons = [
-  {
-    displayName: "מרקטפלייס",
-    href: "/marketplace",
-  },
-  {
-    displayName: "פרויקט פעיל",
-    href: "/projects/active",
-  },
-  {
-    displayName: "עבודות שלי",
-    href: "/projects",
-  },
-  {
-    displayName: "מבט מורה",
-    href: "/teacher",
-  },
-];
-
-export const Navbar = ({ studentData }: { studentData: StudentData }) => {
-  const currentPath = usePathname();
-
+export const Navbar: FC<NavbarProps> = ({ studentData, messages }) => {
   return (
-    <div className="flex w-full h-12 gap-6 mt-3.5 font-semibold items-center px-2">
-      <div className={cn(buttonsClassName, "flex gap-2 items-center py-0")}>
-        <img src="./solve.png" alt="solve-icon" className="h-6" />
-        <div>
-          <p className="text-primary-1 text-xl font-bold">סולב</p>
-          <p className="text-sm">פותרים בעיות</p>
-        </div>
+    <header className="flex w-full flex-wrap items-center gap-3 py-3 font-semibold">
+      <Link
+        href="/marketplace"
+        className="flex items-center gap-2 rounded-lg px-4 py-1"
+      >
+        <Image src="/solve.png" alt="" width={24} height={24} />
+        <span>
+          <span className="block text-xl font-bold text-primary-1">
+            {messages.brandName}
+          </span>
+          <span className="block text-sm">{messages.tagline}</span>
+        </span>
+      </Link>
+      <div className="ms-auto flex items-center gap-2 rounded-lg px-4 py-1">
+        <span>
+          {messages.student} <bdi>{studentData.studentCode}</bdi> (
+          {messages.class} <bdi>{studentData.classCode}</bdi>)
+        </span>
       </div>
-      <Separator orientation="vertical" className="opacity-70 my-2" />
-      {navigationButtons.map(({ displayName, href }) => (
-        <Link
-          key={href}
-          href={href}
-          className={cn(
-            buttonsClassName,
-            href === currentPath && "bg-btn-primary text-border",
-          )}
-        >
-          {displayName}
-        </Link>
-      ))}
-      <div className="mr-auto bg-accent-1 border border-accent rounded-2xl py-1 px-4">
-        <span className="font-bold text-lg">🪙 {studentData.coins}</span>
-        <span className="text-accent-2"> מטבעות</span>
-      </div>
-      <div className="py-1 rounded-lg flex gap-2 items-center px-4">
-        <Circle className="fill-success text-success size-2.5 mt-1 inline-block" />
-        תלמיד {studentData.studentCode} (כיתה {studentData.classCode})
-      </div>
-    </div>
+    </header>
   );
 };

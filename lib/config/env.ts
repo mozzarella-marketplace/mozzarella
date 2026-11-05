@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+const isProductionBuild = process.env.NEXT_PHASE === "phase-production-build";
+
 const environmentSchema = z
   .object({
     NODE_ENV: z
@@ -22,6 +24,7 @@ const environmentSchema = z
   .superRefine((configuration, context) => {
     if (
       configuration.NODE_ENV !== "production" ||
+      isProductionBuild ||
       !configuration.KEYCLOAK_ISSUER
     ) {
       return;
