@@ -26,7 +26,7 @@ const ProtectedLayout: FC<Readonly<{ children: ReactNode }>> = async ({
   const messages = getMessages(defaultLocale);
 
   return (
-    <div className="flex min-h-dvh w-full flex-col gap-4 px-6">
+    <div className="flex h-dvh w-full flex-col gap-4 px-6">
       <Navbar
         studentData={{ classCode: user.classId, studentCode: user.userId }}
         messages={messages.appShell}

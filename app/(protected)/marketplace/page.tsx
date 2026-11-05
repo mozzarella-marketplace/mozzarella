@@ -20,7 +20,7 @@ const MarketplacePage: FC = async () => {
   }
 
   return (
-    <section className="mx-auto w-full max-w-content space-y-6 p-page-inline">
+    <section className="mx-auto w-full max-w-[var(--token-container-content)] space-y-6 p-page-inline">
       <header className="space-y-2">
         <h1 className="text-heading font-semibold">{messages.title}</h1>
         <p className="text-muted">{messages.description}</p>

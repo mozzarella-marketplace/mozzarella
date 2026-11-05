@@ -18,7 +18,14 @@ export const Navbar: FC<NavbarProps> = ({ studentData, messages }) => {
         href="/marketplace"
         className="flex items-center gap-2 rounded-lg px-4 py-1"
       >
-        <Image src="/solve.png" alt="" width={24} height={24} />
+        <Image
+          src="/solve.png"
+          alt=""
+          width={24}
+          height={24}
+          className="h-6 w-6 object-cover object-left"
+          unoptimized
+        />
         <span>
           <span className="block text-xl font-bold text-primary-1">
             {messages.brandName}

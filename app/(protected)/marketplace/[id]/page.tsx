@@ -36,7 +36,7 @@ const CustomerPage: FC<{
   const messages = getMessages().marketplace;
 
   return (
-    <article className="mx-auto flex w-full max-w-content flex-col gap-6 p-page-inline">
+    <article className="mx-auto flex w-full max-w-[var(--token-container-content)] flex-col gap-6 p-page-inline">
       <Link
         href="/marketplace"
         className="w-fit rounded-control text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
