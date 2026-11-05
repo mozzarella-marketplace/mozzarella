@@ -30,8 +30,39 @@ Mozzarella stores its data in PostgreSQL through Prisma ORM. The schema and migr
 - `npm run db:migrate` creates and applies migrations during development.
 - `npm run db:deploy` applies committed migrations to a deployed database.
 - `npm run db:seed` inserts or updates the mock customers from `prisma/seed.ts`.
+- `npm run db:reset` prompts for confirmation, deletes all application database data, reapplies migrations, and seeds the mock customers. Use only with a development database; `DIRECT_URL` and `DATABASE_URL` must point to the same database. Keycloak is unchanged. Run `npm run keycloak:setup` afterward to restore the example classes and student mappings.
+
+## Authentication
+
+Authentication uses the app-owned Class ID + User ID form and Keycloak 26.8.0 Direct Access Grants. Each identifier is exactly four hexadecimal characters; the server normalizes both to uppercase and submits `<CLASS_ID>-<USER_ID>` as both username and password to the confidential `nextjs` client, requesting the `openid` scope required by UserInfo (not profile or email scopes). Keycloak authenticates the credentials, and the server calls the OIDC UserInfo endpoint to obtain the verified subject. The app grants access only when that subject maps to an existing `User` row; it does not create users or trust browser-supplied class membership.
+
+Configure `KEYCLOAK_ISSUER`, `KEYCLOAK_CLIENT_ID`, and `KEYCLOAK_CLIENT_SECRET` in ignored `.env.local`. Keep them server-only; never prefix them with `NEXT_PUBLIC_`. The local issuer is `http://localhost:8080/realms/mozzarella`, and the client ID is `nextjs`. Never commit or share client credentials. Rotate any client secret previously exposed during development, and update `.env.local` and the Vercel environment settings.
+
+To use a future Railway-hosted Keycloak, change these environment values to its public HTTPS issuer and client credentials; no application-code changes are required. The Keycloak image imports the realm on first startup and preserves it on later starts. See [Keycloak deployment setup](Keycloak/README.md#future-railway-connection) for service, database, hostname, and proxy configuration.
+
+After successful credential authentication, the server verifies the Keycloak subject through UserInfo, maps it to the existing app `User`, and places Keycloak access and refresh tokens in `HttpOnly` cookies. Browser JavaScript cannot read the tokens; the UI receives only a success response. Keycloak controls token expiry and refresh. Protected server operations validate the access token through UserInfo and use the refresh grant when needed. `POST /api/auth/logout` revokes the Keycloak refresh session and clears both cookies. HTTPS deployments set the cookies' `Secure` flag. Login and logout require a same-origin `Origin` header. The database stores user identity mapping and class membership, not authentication sessions. Use `requireAuth()` in route handlers or server actions that can update cookies when refresh-token rotation occurs; `getCurrentUser()` checks the current access token without refreshing it.
+
+Apply the committed migrations with `npm run db:deploy` before deploying. Populate the `users` mapping through a reviewed server-side provisioning process; unmapped Keycloak subjects are denied. Create each class before its users: `users.class_id` references the unique `classes.class_id`, and classes with users cannot be deleted. Authentication also requires an existing class. The class-link migration rejects orphaned user mappings; review and correct those mappings before applying it rather than deleting users or inventing classes automatically. Keycloak's realm brute-force protection is enabled.
+
+Pages under `app/(protected)/` share an authenticated layout; their public URLs do not include the route-group name. Unauthenticated visitors redirect to `/login?returnTo=...`. Login and session-refresh redirects omit the parameter when the validated destination is exactly `/`; home URLs with a query or fragment still preserve it. Middleware forwards the current pathname and query through an overwritten internal request header so the server layout can preserve the destination. The login page stays outside the group. After login, or when already authenticated, users return to the validated `returnTo` destination (default `/`). Only internal page paths are accepted; external URLs, malformed paths, login, API, and Next.js asset destinations fall back to `/` to prevent open redirects and auth loops.
+
+Page checks use `getPageUser(returnTo)`, which sends browsers with an expired or rejected access token and a remaining refresh cookie through `/api/auth/session?returnTo=...`. That route verifies or refreshes the Keycloak session and writes rotated cookies before returning to the destination. Invalid sessions clear both cookies and redirect to login while preserving `returnTo`; service failures return a non-cacheable `503` rather than redirecting in a loop. These redirects reuse the app's Keycloak tokens. URL fragments are not sent to the server, so automatic capture preserves the pathname and query, not the fragment. This restores navigation, not unsaved form state.
+
+The shared layout is a navigation guard, not an authorization boundary for data or mutations: layouts can be reused during client navigation. Server Components and their data-access functions must independently call the read-only `getCurrentUser()` and enforce any required ownership or class checks before fetching protected data; use `getPageUser(returnTo)` when a page needs the refresh redirect. Do not call `requireAuth()` during Server Component rendering: it may write cookies. Use it in API handlers and server actions, which support cookie writes; state-changing handlers must also enforce same-origin requests. Currently the only authenticated API operation is the session verification/refresh route, which already calls `requireAuth()`. Login and logout remain callable without authentication so users can establish a session or clear invalid cookies.
+
+Authentication network and database failures are logged without tokens or user content and reported as unavailable, not as rejected credentials. Page-rendering failures show a localized retry screen without exposing exception details. If login fails after Keycloak issues tokens, the app attempts to revoke that new session; cleanup failures are logged. The app revokes a previous Keycloak session only after the new token cookies have been set successfully.
+
+Malformed input returns `400`, oversized input `413`, rejected credentials a generic `401`, and unavailable services a generic `503`; all responses are non-cacheable. The password-equals-identifier scheme has limited entropy, so keep Keycloak brute-force protection enabled and provision accounts carefully.
 
 ## Local development
+
+For local authentication, fill the five values in `Keycloak/.env` using `Keycloak/.env.example`, configure the application `DATABASE_URL` and `DIRECT_URL` in `.env.local`, then run:
+
+```bash
+npm run keycloak:setup
+```
+
+This local-only command starts Compose, waits for the imported realm, applies application migrations to the configured database, creates two example classes and five students, and writes the local issuer/client secret into ignored `.env.local` without printing secrets. It preserves existing passwords and unrelated accounts and refuses conflicting mappings. Restart the app afterward. Examples are for development only: class `B001` has students `1001`, `1002`, `1003`; class `B002` has students `2001`, `2002`. New example accounts use `<CLASS_ID>-<USER_ID>` as username and password. Reruns reuse the marked example accounts; they do not reset passwords. Do not point the application database configuration at a production database when running this command.
 
 ```bash
 npm run dev

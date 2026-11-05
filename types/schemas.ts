@@ -7,7 +7,8 @@ export const createLoginSchema = (
   const code = z
     .string(validationMessages.required)
     .length(4, validationMessages.length)
-    .regex(/^[0-9A-F]*$/, validationMessages.format);
+    .regex(/^[0-9A-Fa-f]*$/, validationMessages.format)
+    .transform((identifier) => identifier.toUpperCase());
 
   return z.object({
     "class-code": code,
