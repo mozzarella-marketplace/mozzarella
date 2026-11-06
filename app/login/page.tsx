@@ -37,6 +37,7 @@ const LoginPage: FC<{
             alt={messages.brandName}
             fill
             sizes="256px"
+            priority
             className="object-cover"
           />
         </div>
