@@ -1,18 +1,17 @@
 import type { FC } from "react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { z } from "zod";
 import { CustomerAvatar } from "@/components/customer-avatar";
+import { CustomerConversation } from "@/components/customer-conversation";
 import { CustomerTags } from "@/components/customer-tags";
-import { getActiveCustomer } from "@/lib/customers";
-import { getMessages } from "@/lib/i18n/messages";
-import { UserStoryWorkspace } from "@/components/UserStoryWorkspace";
+import { UserStoryWorkspace } from "@/components/user-story-workspace";
 import { getPageUser } from "@/lib/auth/current-user";
 import { getLoginUrl } from "@/lib/auth/return-to";
-import { redirect } from "next/navigation";
+import { getActiveCustomer } from "@/lib/customers";
 import { prisma } from "@/lib/db/prisma";
+import { getMessages } from "@/lib/i18n/messages";
 import { logger } from "@/lib/logging/logger";
-import { CustomerConversation } from "@/components/CustomerConversation";
 
 const CustomerPage: FC<{
   params: Promise<{ id: string }>;
@@ -82,16 +81,18 @@ const CustomerPage: FC<{
           </div>
         </div>
         <CustomerTags customer={customer} />
-        <blockquote className="rounded-tile bg-background-1 px-content py-control text-muted italic">
+        <blockquote className="rounded-tile bg-background-subtle px-content py-control text-muted italic">
           <p>{marketplace.quoted(customer.summary)}</p>
         </blockquote>
       </article>
       <div className="grid items-start gap-section lg:grid-cols-2">
         <CustomerConversation
+          key={customer.id}
           customerId={customer.id}
           initialMessages={conversation}
         />
         <UserStoryWorkspace
+          key={customer.id}
           customerId={customer.id}
           savedContent={userStory?.content ?? null}
           savedLanguage={userStory?.language ?? null}

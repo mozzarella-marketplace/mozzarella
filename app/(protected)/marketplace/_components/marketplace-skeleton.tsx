@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import { getMessages } from "@/lib/i18n/messages";
-import { marketplaceGridClassName } from "./customer-marketplace";
+import { marketplaceGridClassName } from "./marketplace-grid";
 import { MarketplaceHero } from "./marketplace-hero";
 
 const placeholderCardCount = 4;
@@ -50,7 +50,7 @@ export const MarketplaceSkeleton: FC = () => {
               <div className="h-6 w-20 rounded-control bg-neutral-soft" />
               <div className="h-6 w-16 rounded-control bg-neutral-soft" />
             </div>
-            <div className="h-20 rounded-tile bg-background-1" />
+            <div className="h-20 rounded-tile bg-background-subtle" />
             <div className="flex items-center justify-between">
               <div className="h-4 w-40 rounded-control bg-neutral-soft" />
               <div className="h-9 w-28 rounded-control bg-secondary" />

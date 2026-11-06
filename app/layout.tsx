@@ -17,6 +17,9 @@ const messages = getMessages(defaultLocale);
 export const metadata: Metadata = {
   title: messages.app.title,
   description: messages.app.description,
+  icons: {
+    icon: [{ url: "/mozzarella-icon.png", type: "image/png" }],
+  },
   metadataBase: env.NEXT_PUBLIC_APP_URL
     ? new URL(env.NEXT_PUBLIC_APP_URL)
     : undefined,

@@ -7,31 +7,22 @@ import type { StudentData } from "@/types/student";
 export const SiteHeader: FC<{ studentData: StudentData }> = ({
   studentData,
 }) => {
-  const { app, brand, navigation, appShell } = getMessages();
+  const { app, navigation, appShell } = getMessages();
 
   return (
     <header className="border-b border-border bg-background">
       <div className="mx-auto flex max-w-content flex-wrap items-center gap-x-section gap-y-control px-page-inline py-control">
         <Link
           href="/marketplace"
-          className="flex items-center gap-2 rounded-control focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          className="relative h-14 w-48 shrink-0 overflow-hidden rounded-control focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
-          <span className="flex size-9 items-center justify-center rounded-tile bg-secondary text-primary">
-            <Image
-              src="/solve.png"
-              alt=""
-              width={24}
-              height={24}
-              className="h-6 w-6 object-cover object-left"
-              unoptimized
-            />
-          </span>
-          <span className="flex flex-col leading-tight">
-            <span className="text-title font-extrabold text-primary">
-              {app.title}
-            </span>
-            <span className="text-caption text-muted">{brand.tagline}</span>
-          </span>
+          <Image
+            src="/mozzarella-wordmark.jpg"
+            alt={app.title}
+            fill
+            sizes="192px"
+            className="object-cover"
+          />
         </Link>
         <nav aria-label={navigation.label}>
           <ul className="flex flex-wrap items-center gap-1 text-label font-medium">

@@ -4,6 +4,10 @@ import { useEffect, useRef, useState, type FC, type FormEvent } from "react";
 import { MessageCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  MAX_CONVERSATION_MESSAGE_LENGTH,
+  MAX_DAILY_MESSAGES,
+} from "@/consts/conversation";
 import { ConversationRole } from "@/lib/generated/prisma/enums";
 import { getMessages } from "@/lib/i18n/messages";
 import { z } from "zod";
@@ -82,7 +86,9 @@ export const CustomerConversation: FC<CustomerConversationProps> = ({
 
       if (!response.ok || !result.success || !result.data.reply) {
         setErrorMessage(
-          response.status === 429 ? messages.dailyLimit : messages.error,
+          response.status === 429
+            ? messages.dailyLimit(MAX_DAILY_MESSAGES)
+            : messages.error,
         );
         return;
       }
@@ -113,15 +119,15 @@ export const CustomerConversation: FC<CustomerConversationProps> = ({
   };
 
   return (
-    <Card className="w-full min-w-0 max-w-2xl gap-content bg-background py-6 shadow-panel">
-      <CardHeader className="px-6">
+    <Card className="w-full min-w-0 max-w-2xl">
+      <CardHeader>
         <CardTitle className="flex items-center gap-2 text-heading font-bold">
-          <MessageCircle aria-hidden className="size-6 text-primary-1" />
+          <MessageCircle aria-hidden className="size-6 text-primary" />
           {messages.title}
         </CardTitle>
         <p className="text-label text-muted">{messages.notice}</p>
       </CardHeader>
-      <CardContent className="flex flex-col gap-control px-6">
+      <CardContent>
         <ol
           ref={conversationRef}
           aria-live="polite"
@@ -132,22 +138,22 @@ export const CustomerConversation: FC<CustomerConversationProps> = ({
               key={message.id}
               className={`max-w-[85%] whitespace-pre-wrap rounded-panel px-content py-control ${
                 message.role === ConversationRole.assistant
-                  ? "self-start bg-foreground-1"
-                  : "self-end bg-primary-1 text-primary-foreground"
+                  ? "self-start bg-neutral-soft"
+                  : "self-end bg-primary text-primary-foreground"
               }`}
             >
               {message.content}
             </li>
           ))}
           {conversation.length === 0 && (
-            <li className="self-start rounded-panel bg-foreground-1 px-content py-control text-muted">
+            <li className="self-start rounded-panel bg-neutral-soft px-content py-control text-muted">
               {messages.empty}
             </li>
           )}
           {isTyping && (
             <li
               role="status"
-              className="flex w-fit items-center gap-1 self-start rounded-panel bg-foreground-1 px-content py-control"
+              className="flex w-fit items-center gap-1 self-start rounded-panel bg-neutral-soft px-content py-control"
             >
               <span className="sr-only">{messages.waiting}</span>
               <span
@@ -169,8 +175,18 @@ export const CustomerConversation: FC<CustomerConversationProps> = ({
           <textarea
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
+            onKeyDown={(event) => {
+              if (
+                event.key === "Enter" &&
+                !event.shiftKey &&
+                !event.nativeEvent.isComposing
+              ) {
+                event.preventDefault();
+                event.currentTarget.form?.requestSubmit();
+              }
+            }}
             placeholder={messages.placeholder}
-            maxLength={1_500}
+            maxLength={MAX_CONVERSATION_MESSAGE_LENGTH}
             rows={3}
             disabled={isSending}
             aria-label={messages.inputLabel}
@@ -186,7 +202,7 @@ export const CustomerConversation: FC<CustomerConversationProps> = ({
             <Button
               type="submit"
               disabled={!draft.trim() || isSending}
-              className="bg-btn-primary font-bold text-primary-foreground hover:bg-btn-primary/90"
+              className="bg-primary font-bold text-primary-foreground hover:bg-primary/90"
             >
               <Send aria-hidden />
               {isSending ? messages.sending : messages.send}

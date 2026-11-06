@@ -1,27 +1,26 @@
 "use client";
 
 import * as React from "react";
+import type { FC } from "react";
 import { cn } from "cn";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
 import { Select as SelectPrimitive } from "radix-ui";
 
-const Select = (props: React.ComponentProps<typeof SelectPrimitive.Root>) => (
-  <SelectPrimitive.Root data-slot="select" {...props} />
-);
+const Select: FC<React.ComponentProps<typeof SelectPrimitive.Root>> = (
+  props,
+) => <SelectPrimitive.Root data-slot="select" {...props} />;
 
-const SelectValue = (
-  props: React.ComponentProps<typeof SelectPrimitive.Value>,
+const SelectValue: FC<React.ComponentProps<typeof SelectPrimitive.Value>> = (
+  props,
 ) => <SelectPrimitive.Value data-slot="select-value" {...props} />;
 
-const SelectTrigger = ({
-  className,
-  children,
-  ...props
-}: React.ComponentProps<typeof SelectPrimitive.Trigger>) => (
+const SelectTrigger: FC<
+  React.ComponentProps<typeof SelectPrimitive.Trigger>
+> = ({ className, children, ...props }) => (
   <SelectPrimitive.Trigger
     data-slot="select-trigger"
     className={cn(
-      "flex h-9 w-fit items-center justify-between gap-2 rounded-lg border border-input bg-transparent px-3 py-2 text-sm whitespace-nowrap transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive data-[placeholder]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+      "flex h-9 w-fit items-center justify-between gap-control rounded-control border border-border bg-background px-content py-control text-label whitespace-nowrap outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transition-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:outline-2 aria-invalid:outline-destructive data-[placeholder]:text-muted [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
       className,
     )}
     {...props}
@@ -33,18 +32,15 @@ const SelectTrigger = ({
   </SelectPrimitive.Trigger>
 );
 
-const SelectContent = ({
-  className,
-  children,
-  position = "popper",
-  ...props
-}: React.ComponentProps<typeof SelectPrimitive.Content>) => (
+const SelectContent: FC<
+  React.ComponentProps<typeof SelectPrimitive.Content>
+> = ({ className, children, position = "popper", ...props }) => (
   <SelectPrimitive.Portal>
     <SelectPrimitive.Content
       data-slot="select-content"
       position={position}
       className={cn(
-        "relative z-50 max-h-(--radix-select-content-available-height) min-w-[8rem] overflow-x-hidden overflow-y-auto rounded-lg border border-border bg-background shadow-md data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1",
+        "relative z-50 max-h-(--radix-select-content-available-height) min-w-[8rem] overflow-x-hidden overflow-y-auto rounded-control border border-border bg-background shadow-floating data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1",
         className,
       )}
       {...props}
@@ -62,15 +58,15 @@ const SelectContent = ({
   </SelectPrimitive.Portal>
 );
 
-const SelectItem = ({
+const SelectItem: FC<React.ComponentProps<typeof SelectPrimitive.Item>> = ({
   className,
   children,
   ...props
-}: React.ComponentProps<typeof SelectPrimitive.Item>) => (
+}) => (
   <SelectPrimitive.Item
     data-slot="select-item"
     className={cn(
-      "relative flex w-full cursor-default items-center gap-2 rounded-md py-1.5 ps-2 pe-8 text-sm outline-none select-none focus:bg-foreground-1 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex w-full cursor-default items-center gap-control rounded-control py-1.5 ps-content pe-8 text-label outline-none select-none focus:bg-neutral-soft data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className,
     )}
     {...props}

@@ -1,37 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  --token-color-background: #ffffff;
-  --token-color-foreground: #1f2933;
-  --token-color-muted: #5f6675;
-  --token-color-primary: #4f46e5;
-  --token-color-primary-foreground: #ffffff;
-  --token-color-secondary: #eef0ff;
-  --token-color-secondary-foreground: #4338ca;
-  --token-color-neutral-soft: #f1f2f6;
-  --token-color-border: #e4e6ef;
-  --token-color-accent: #f2c14e;
-  --token-color-accent-soft: #fdecc8;
-  --token-color-accent-foreground: #8a3c0a;
-  --token-color-accent-2: #794858;
-  --token-color-success-soft: #dff1f0;
-  --token-color-success-foreground: #2f6764;
+  --token-color-background: #fffdf8;
+  --token-color-background-subtle: #f6f3eb;
+  --token-color-foreground: #1c2546;
+  --token-color-muted: #5f6476;
+  --token-color-primary: #17204f;
+  --token-color-primary-foreground: #fffdf8;
+  --token-color-secondary: #f0eee6;
+  --token-color-secondary-foreground: #17204f;
+  --token-color-neutral-soft: #f7f5ef;
+  --token-color-border: #e4e0d6;
+  --token-color-accent: #e4a834;
+  --token-color-accent-soft: #fff1cf;
+  --token-color-accent-foreground: #65470b;
+  --token-color-accent-strong: #8d6320;
+  --token-color-success-soft: #e5efe8;
+  --token-color-success-foreground: #315b47;
+  --token-color-success: #47765b;
   --token-color-destructive: #b42318;
-  --token-color-destructive-foreground: #ffffff;
-
-  --background-1: #faf8ff;
-
-  --foreground-1: #f2f3ff;
-  --foreground-2: #e2e7ff;
-
-  --btn-primary: #4f46e5;
-
-  --primary-1: #3525cd;
-  --primary-2: #776fe0;
-
-  --accent-1: #fde9d4;
-
-  --success: #4e9794;
+  --token-color-destructive-foreground: #fffdf8;
 
   --token-font-family-sans: var(--font-rubik), "Segoe UI", sans-serif;
   --token-font-size-caption: 0.75rem;
@@ -59,8 +47,8 @@
   --token-radius-panel: 1rem;
   --token-radius-pill: 9999px;
 
-  --token-shadow-panel: 0 1px 2px rgb(16 24 40 / 0.04), 0 1px 3px rgb(16 24 40 / 0.06);
-  --token-shadow-floating: 0 8px 24px rgb(16 24 40 / 0.12);
+  --token-shadow-panel: 0 1px 2px rgb(23 32 79 / 0.04), 0 1px 3px rgb(23 32 79 / 0.06);
+  --token-shadow-floating: 0 8px 24px rgb(23 32 79 / 0.12);
   --token-border-width-default: 1px;
   --token-container-content: 80rem;
   --token-duration-standard: 150ms;
@@ -70,28 +58,22 @@
 
 @theme inline {
   --color-background: var(--token-color-background);
-  --color-background-1: var(--background-1);
+  --color-background-subtle: var(--token-color-background-subtle);
   --color-foreground: var(--token-color-foreground);
-  --color-foreground-1: var(--foreground-1);
-  --color-foreground-2: var(--foreground-2);
   --color-muted: var(--token-color-muted);
-  --color-btn-primary: var(--btn-primary);
   --color-primary: var(--token-color-primary);
-  --color-primary-1: var(--primary-1);
-  --color-primary-2: var(--primary-2);
-  --color-success: var(--success);
+  --color-success: var(--token-color-success);
   --color-success-soft: var(--token-color-success-soft);
   --color-success-foreground: var(--token-color-success-foreground);
   --color-primary-foreground: var(--token-color-primary-foreground);
   --color-secondary: var(--token-color-secondary);
-  --color-accent-1: var(--accent-1);
   --color-secondary-foreground: var(--token-color-secondary-foreground);
   --color-neutral-soft: var(--token-color-neutral-soft);
   --color-border: var(--token-color-border);
   --color-accent: var(--token-color-accent);
   --color-accent-soft: var(--token-color-accent-soft);
   --color-accent-foreground: var(--token-color-accent-foreground);
-  --color-accent-2: var(--token-color-accent-2);
+  --color-accent-strong: var(--token-color-accent-strong);
   --color-destructive: var(--token-color-destructive);
   --color-destructive-foreground: var(--token-color-destructive-foreground);
 
@@ -131,7 +113,7 @@
 }
 
 body {
-  background: var(--background-1);
+  background: var(--color-background-subtle);
   color: var(--color-foreground);
   font-family: var(--font-sans);
   font-size: var(--text-body);

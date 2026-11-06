@@ -3,7 +3,7 @@
 import { defaultLocale } from "@/consts/locales";
 import { getMessages } from "@/lib/i18n/messages";
 import { getReturnTo } from "@/lib/auth/return-to";
-import { createLoginSchema, LoginSchema } from "@/types/schemas";
+import { createLoginSchema, type LoginSchema } from "@/types/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
@@ -12,7 +12,7 @@ import type { FC } from "react";
 import { Card } from "../ui/card";
 import { ArrowLeft, IdCard, Info, ShieldCheck, UserGroup } from "lucide-react";
 import { Form, FormLabel } from "../ui/form";
-import { ControlledField } from "../custom-ui/controlled-field";
+import { LoginCodeField } from "./login-code-field";
 import { Button } from "../ui/button";
 
 const loginMessages = getMessages(defaultLocale).login;
@@ -81,15 +81,15 @@ export const LoginForm: FC<{ returnTo: string }> = ({ returnTo }) => {
   });
 
   return (
-    <Card className="w-lg flex flex-col gap-4 bg-background p-10 shadow-xl">
-      <div className="flex gap-1 bg-foreground-1 py-2 px-4 text-success font-bold text-right">
+    <Card className="w-full max-w-lg text-start">
+      <div className="flex items-center gap-control rounded-tile bg-success-soft px-content py-control font-bold text-success-foreground">
         <ShieldCheck className="stroke-3 inline-block" />{" "}
         {loginMessages.form.anonymousAccess}
       </div>
       <Form {...form}>
         <form onSubmit={submitLogin} aria-busy={isSubmitting}>
-          <div className="flex flex-col gap-4">
-            <ControlledField
+          <div className="flex flex-col gap-content">
+            <LoginCodeField
               Icon={UserGroup}
               name="class-code"
               title={
@@ -97,13 +97,13 @@ export const LoginForm: FC<{ returnTo: string }> = ({ returnTo }) => {
                   <FormLabel className="font-bold">
                     {loginMessages.form.classCode}
                   </FormLabel>
-                  <div className="text-muted text-sm">
+                  <div className="text-label text-muted">
                     {loginMessages.form.codeLengthHint}
                   </div>
                 </div>
               }
             />
-            <ControlledField
+            <LoginCodeField
               Icon={IdCard}
               name="student-code"
               title={
@@ -111,7 +111,7 @@ export const LoginForm: FC<{ returnTo: string }> = ({ returnTo }) => {
                   <FormLabel className="font-bold">
                     {loginMessages.form.studentCode}
                   </FormLabel>
-                  <div className="text-muted text-sm">
+                  <div className="text-label text-muted">
                     {loginMessages.form.identificationHint}
                   </div>
                 </div>
@@ -125,7 +125,8 @@ export const LoginForm: FC<{ returnTo: string }> = ({ returnTo }) => {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-btn-primary p-8 font-bold text-lg"
+              size="lg"
+              className="w-full font-bold"
             >
               {isSubmitting
                 ? loginMessages.form.submitting
@@ -135,8 +136,8 @@ export const LoginForm: FC<{ returnTo: string }> = ({ returnTo }) => {
           </div>
         </form>
       </Form>
-      <div className="flex gap-2 items-center justify-center font-semibold text-xs mt-2">
-        <Info className="size-4 opacity-70" />
+      <div className="flex items-center justify-center gap-control pt-control text-caption font-semibold">
+        <Info className="size-4 shrink-0 opacity-70" />
         {loginMessages.form.securityNote}
       </div>
     </Card>

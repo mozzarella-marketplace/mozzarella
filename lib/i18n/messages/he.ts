@@ -1,7 +1,7 @@
 export const heMessages = {
   app: {
     title: "מוצרלה",
-    description: "פלטפורמת יזמות למתכנתים צעירים",
+    description: "לומדים לתכנת דרך שיחה עם לקוחות ופתרון בעיות מהעולם האמיתי",
     error: {
       title: "לא ניתן לטעון את העמוד כרגע",
       description: "ייתכן שיש תקלה זמנית. נסה שוב בעוד רגע.",
@@ -10,13 +10,13 @@ export const heMessages = {
   },
   appShell: {
     brandName: "מוצרלה",
-    tagline: "פותרים בעיות",
+    tagline: "ערך קודם קוד",
     student: "תלמיד",
     class: "כיתה",
   },
   login: {
     brandName: "מוצרלה",
-    tagline: "לא כותבים קוד פותרים בעיות.",
+    tagline: "ערך קודם קוד",
     welcomeTitle: "ברוכים הבאים",
     welcomeDescription: "יש בעיות לפתור. היכנס כדי לפגוש את הלקוחות שמחכים לך.",
     customerPromise: "אתה לא מקבל שיעורי בית. אתה מקבל לקוח אמיתי.",
@@ -47,8 +47,8 @@ export const heMessages = {
     },
   },
   brand: {
-    tagline: "פותרים בעיות",
-    copyright: "© מוצרלה (Mozzarella) • לא כותבים קוד. פותרים בעיות.",
+    tagline: "ערך קודם קוד",
+    copyright: "© מוצרלה (Mozzarella) • ערך קודם קוד",
   },
   navigation: {
     label: "ניווט ראשי",
@@ -103,7 +103,8 @@ export const heMessages = {
       invalidRequest: "ההודעה אינה תקינה",
       notFound: "הלקוח אינו זמין",
       unavailable: "השיחה אינה זמינה כרגע. נסו שוב בעוד רגע.",
-      dailyLimit: "הגעתם למכסת 30 ההודעות היומית. אפשר להמשיך מחר.",
+      dailyLimit: (count: number) =>
+        `הגעתם למכסת ${count} ההודעות היומית. אפשר להמשיך מחר.`,
     },
     title: "שיחה עם הלקוח",
     notice: "הלקוח בשיחה מדומה באמצעות Claude. אל תכתבו מידע אישי.",
@@ -115,7 +116,8 @@ export const heMessages = {
     sending: "שולחים...",
     waiting: "הלקוח חושב...",
     error: "לא ניתן לשלוח את ההודעה. נסו שוב.",
-    dailyLimit: "הגעתם למכסת 30 ההודעות היומית. אפשר להמשיך מחר.",
+    dailyLimit: (count: number) =>
+      `הגעתם למכסת ${count} ההודעות היומית. אפשר להמשיך מחר.`,
   },
   programmingLanguages: {
     java: "Java",
@@ -169,7 +171,7 @@ export const heMessages = {
           label: "צבע טקסט",
           options: {
             default: "צבע רגיל",
-            primary: "סגול",
+            primary: "כחול כהה",
             red: "אדום",
             green: "ירוק",
             brown: "חום",

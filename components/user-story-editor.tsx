@@ -65,10 +65,10 @@ const textStyleOptions: Record<TextStyleSetting, TextStyleOption[]> = {
   ],
   color: [
     { key: "default", value: null },
-    { key: "primary", value: "var(--primary-1)" },
+    { key: "primary", value: "var(--token-color-primary)" },
     { key: "red", value: "var(--token-color-destructive)" },
-    { key: "green", value: "var(--success)" },
-    { key: "brown", value: "var(--token-color-accent-2)" },
+    { key: "green", value: "var(--token-color-success)" },
+    { key: "brown", value: "var(--token-color-accent-strong)" },
   ],
 };
 
@@ -90,7 +90,7 @@ const alignmentIcons: Record<TextAlignment, LucideIcon> = {
 const alignments: TextAlignment[] = ["start", "center", "end", "justify"];
 
 const toolbarButtonClassName =
-  "text-muted hover:bg-foreground-2 hover:text-primary-1 aria-pressed:bg-foreground-2 aria-pressed:text-primary-1";
+  "text-muted hover:bg-border hover:text-primary aria-pressed:bg-border aria-pressed:text-primary";
 
 const getTextStyleOption = (editor: Editor, setting: TextStyleSetting) => {
   const currentValue = editor.getAttributes("textStyle")[setting] ?? null;
@@ -177,7 +177,7 @@ const EditorToolbar: FC<{ editor: Editor }> = ({ editor }) => {
     <div
       role="toolbar"
       aria-label={messages.toolbar}
-      className="flex items-center gap-0.5 overflow-x-auto border-b border-foreground-2 p-1"
+      className="flex items-center gap-0.5 overflow-x-auto border-b border-border p-1"
     >
       {markButtons.map(({ label, icon: Icon, isActive, toggle }) => (
         <Button
@@ -194,7 +194,7 @@ const EditorToolbar: FC<{ editor: Editor }> = ({ editor }) => {
         </Button>
       ))}
 
-      <span aria-hidden className="mx-0.5 h-5 w-px shrink-0 bg-foreground-2" />
+      <span aria-hidden className="mx-0.5 h-5 w-px shrink-0 bg-border" />
 
       {alignments.map((alignment) => {
         const Icon = alignmentIcons[alignment];
@@ -215,7 +215,7 @@ const EditorToolbar: FC<{ editor: Editor }> = ({ editor }) => {
         );
       })}
 
-      <span aria-hidden className="mx-0.5 h-5 w-px shrink-0 bg-foreground-2" />
+      <span aria-hidden className="mx-0.5 h-5 w-px shrink-0 bg-border" />
 
       {textStyleSettings.map((setting) => {
         const optionLabels: Record<string, string> =
@@ -231,7 +231,7 @@ const EditorToolbar: FC<{ editor: Editor }> = ({ editor }) => {
           >
             <SelectTrigger
               aria-label={messages.textStyles[setting].label}
-              className="h-7 shrink-0 gap-1 border-none px-2 text-muted hover:bg-foreground-2"
+              className="h-7 shrink-0 gap-1 border-none px-2 text-muted hover:bg-border"
             >
               <SelectValue />
             </SelectTrigger>
@@ -309,7 +309,7 @@ export const UserStoryEditor: FC<UserStoryEditorProps> = ({
   });
 
   return (
-    <div className="overflow-hidden rounded-lg border border-foreground-2 bg-background transition-colors focus-within:border-primary-2 focus-within:ring-3 focus-within:ring-primary-2/30">
+    <div className="overflow-hidden rounded-control border border-border bg-background transition-colors focus-within:border-primary focus-within:ring-3 focus-within:ring-primary/30">
       {editor && <EditorToolbar editor={editor} />}
       <EditorContent editor={editor} className="h-40 overflow-y-auto" />
     </div>

@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { UserStoryEditor } from "@/components/UserStoryEditor";
+import { UserStoryEditor } from "@/components/user-story-editor";
 import {
   Select,
   SelectContent,
@@ -32,7 +32,7 @@ type UserStoryWorkspaceProps = {
 
 const programmingLanguages = Object.values(ProgrammingLanguage);
 
-const specRowClassName = "rounded-panel bg-foreground-1 p-content";
+const detailPanelClassName = "rounded-panel bg-neutral-soft p-content";
 
 export const UserStoryWorkspace: FC<UserStoryWorkspaceProps> = ({
   customerId,
@@ -66,17 +66,17 @@ export const UserStoryWorkspace: FC<UserStoryWorkspaceProps> = ({
   };
 
   return (
-    <Card className="w-full min-w-0 max-w-2xl gap-content bg-background py-6 shadow-panel">
-      <CardHeader className="px-6">
+    <Card className="w-full min-w-0 max-w-2xl">
+      <CardHeader>
         <CardTitle className="flex items-center gap-2 text-heading font-bold">
-          <ClipboardList aria-hidden className="size-6 text-primary-1" />
+          <ClipboardList aria-hidden className="size-6 text-primary" />
           {messages.userStory.title}
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="flex flex-col gap-control px-6">
+      <CardContent>
         <div
-          className={`${specRowClassName} flex flex-wrap items-center justify-between gap-2`}
+          className={`${detailPanelClassName} flex flex-wrap items-center justify-between gap-2`}
         >
           <Label htmlFor="user-story-language" className="text-body text-muted">
             {messages.userStory.language}
@@ -94,7 +94,7 @@ export const UserStoryWorkspace: FC<UserStoryWorkspaceProps> = ({
           >
             <SelectTrigger
               id="user-story-language"
-              className="min-w-40 border-foreground-2 bg-background font-mono font-bold text-primary-1 focus-visible:border-primary-2 focus-visible:ring-primary-2/30"
+              className="min-w-40 border-border bg-background font-mono font-bold text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               <SelectValue
                 placeholder={messages.userStory.languagePlaceholder}
@@ -116,7 +116,7 @@ export const UserStoryWorkspace: FC<UserStoryWorkspaceProps> = ({
           </Select>
         </div>
 
-        <div className={`${specRowClassName} flex flex-col gap-control`}>
+        <div className={`${detailPanelClassName} flex flex-col gap-control`}>
           <Label id="user-story-content-label" className="text-body text-muted">
             {messages.userStory.label}
           </Label>
@@ -132,7 +132,10 @@ export const UserStoryWorkspace: FC<UserStoryWorkspaceProps> = ({
         </div>
 
         <aside className="flex gap-control rounded-panel bg-accent/15 p-content">
-          <Lightbulb aria-hidden className="size-5 shrink-0 text-accent-2" />
+          <Lightbulb
+            aria-hidden
+            className="size-5 shrink-0 text-accent-strong"
+          />
           <div className="flex flex-col gap-1">
             <p className="text-label font-bold">
               {messages.userStory.tip.title}
@@ -142,12 +145,13 @@ export const UserStoryWorkspace: FC<UserStoryWorkspaceProps> = ({
         </aside>
       </CardContent>
 
-      <CardFooter className="gap-control border-none bg-transparent px-6 pt-0">
+      <CardFooter className="pt-0">
         <Button
           type="button"
           onClick={handleSave}
           disabled={isSaveDisabled}
-          className="bg-btn-primary px-content py-5 font-bold text-primary-foreground hover:bg-btn-primary/90"
+          size="lg"
+          className="font-bold"
         >
           <Save aria-hidden />
           {messages.userStory.save}

@@ -1,0 +1,2 @@
+export const MAX_CONVERSATION_MESSAGE_LENGTH = 1_500;
+export const MAX_DAILY_MESSAGES = 30;

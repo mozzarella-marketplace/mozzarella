@@ -9,10 +9,13 @@ import { prisma } from "@/lib/db/prisma";
 import { getMessages } from "@/lib/i18n/messages";
 import { logger } from "@/lib/logging/logger";
 import { readJsonBody } from "@/lib/json-body";
+import {
+  MAX_CONVERSATION_MESSAGE_LENGTH,
+  MAX_DAILY_MESSAGES,
+} from "@/consts/conversation";
 
 const MAX_REQUEST_BYTES = 4_096;
 const MAX_HISTORY_MESSAGES = 20;
-const MAX_DAILY_MESSAGES = 30;
 
 const jsonResponse = (body: object, status: number) =>
   NextResponse.json(body, {
@@ -21,7 +24,7 @@ const jsonResponse = (body: object, status: number) =>
   });
 
 const conversationBodySchema = z.object({
-  message: z.string().trim().min(1).max(1_500),
+  message: z.string().trim().min(1).max(MAX_CONVERSATION_MESSAGE_LENGTH),
 });
 
 const anthropicResponseSchema = z.object({
@@ -102,7 +105,10 @@ export const POST = async (
     });
 
     if (dailyMessageCount >= MAX_DAILY_MESSAGES) {
-      return jsonResponse({ error: messages.dailyLimit }, 429);
+      return jsonResponse(
+        { error: messages.dailyLimit(MAX_DAILY_MESSAGES) },
+        429,
+      );
     }
 
     const history = await prisma.conversationMessage.findMany({

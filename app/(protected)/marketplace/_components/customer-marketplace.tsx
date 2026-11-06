@@ -6,9 +6,8 @@ import { CustomerCategory } from "@/lib/generated/prisma/enums";
 import { getMessages } from "@/lib/i18n/messages";
 import type { CustomerSummary } from "@/types/customer";
 import { CustomerCard } from "./customer-card";
+import { marketplaceGridClassName } from "./marketplace-grid";
 import { MarketplaceHero } from "./marketplace-hero";
-
-export const marketplaceGridClassName = "grid gap-content content:grid-cols-2";
 
 const categories = Object.values(CustomerCategory);
 

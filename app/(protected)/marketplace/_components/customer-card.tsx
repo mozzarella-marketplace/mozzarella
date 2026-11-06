@@ -36,7 +36,7 @@ export const CustomerCard: FC<{ customer: CustomerSummary }> = ({
         </p>
       </div>
       <CustomerTags customer={customer} />
-      <blockquote className="grow rounded-tile bg-background-1 px-content py-control text-label text-muted italic">
+      <blockquote className="grow rounded-tile bg-background-subtle px-content py-control text-label text-muted italic">
         <p>{marketplace.quoted(customer.summary)}</p>
       </blockquote>
       <div className="flex flex-wrap items-center justify-between gap-control">
