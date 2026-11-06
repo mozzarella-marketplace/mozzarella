@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import type { FC } from "react";
-import { cn } from "cn";
+import { cn } from "./cn";
 import { ScrollArea as ScrollAreaPrimitive } from "radix-ui";
 
 const ScrollArea: FC<React.ComponentProps<typeof ScrollAreaPrimitive.Root>> = ({

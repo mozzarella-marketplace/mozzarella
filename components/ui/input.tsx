@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { FC } from "react";
-import { cn } from "cn";
+import { cn } from "./cn";
 
 const Input: FC<React.ComponentProps<"input">> = ({
   className,

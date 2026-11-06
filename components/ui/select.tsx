@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import type { FC } from "react";
-import { cn } from "cn";
+import { cn } from "./cn";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
 import { Select as SelectPrimitive } from "radix-ui";
 

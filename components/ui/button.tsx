@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { FC } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "cn";
+import { cn } from "./cn";
 
 const buttonVariants = cva(
   "group/button inline-flex shrink-0 items-center justify-center rounded-control border border-transparent bg-clip-padding text-label font-medium whitespace-nowrap transition-colors duration-standard ease-standard outline-none select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transition-none active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
