@@ -2,12 +2,10 @@ import type { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { getMessages } from "@/lib/i18n/messages";
-import type { StudentData } from "@/types/student";
+import { LogoutButton } from "./logout-button";
 
-export const SiteHeader: FC<{ studentData: StudentData }> = ({
-  studentData,
-}) => {
-  const { app, navigation, appShell } = getMessages();
+export const SiteHeader: FC = () => {
+  const { app, navigation } = getMessages();
 
   return (
     <header className="border-b border-border bg-background">
@@ -46,10 +44,9 @@ export const SiteHeader: FC<{ studentData: StudentData }> = ({
             ))}
           </ul>
         </nav>
-        <p className="ms-auto text-label">
-          {appShell.student} <bdi>{studentData.studentCode}</bdi> (
-          {appShell.class} <bdi>{studentData.classCode}</bdi>)
-        </p>
+        <div className="ms-auto">
+          <LogoutButton />
+        </div>
       </div>
     </header>
   );

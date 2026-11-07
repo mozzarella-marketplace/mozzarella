@@ -8,12 +8,6 @@ export const heMessages = {
       retry: "נסה שוב",
     },
   },
-  appShell: {
-    brandName: "מוצרלה",
-    tagline: "ערך קודם קוד",
-    student: "תלמיד",
-    class: "כיתה",
-  },
   login: {
     brandName: "מוצרלה",
     tagline: "ערך קודם קוד",
@@ -40,6 +34,11 @@ export const heMessages = {
     },
   },
   auth: {
+    logout: {
+      submit: "התנתקות",
+      submitting: "מתנתקים...",
+      unavailable: "לא ניתן להשלים את ההתנתקות כרגע. נסו שוב.",
+    },
     login: {
       invalidInput: "מזהה משתמש וכיתה חייבים להכיל בדיוק ארבע תווים",
       invalidCredentials: "מזהה משתמש או כיתה שגויים",
