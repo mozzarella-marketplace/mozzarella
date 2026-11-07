@@ -1,25 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  --token-color-background: #fffdf8;
-  --token-color-background-subtle: #f6f3eb;
-  --token-color-foreground: #1c2546;
-  --token-color-muted: #5f6476;
-  --token-color-primary: #17204f;
-  --token-color-primary-foreground: #fffdf8;
-  --token-color-secondary: #f0eee6;
-  --token-color-secondary-foreground: #17204f;
-  --token-color-neutral-soft: #f7f5ef;
-  --token-color-border: #e4e0d6;
-  --token-color-accent: #e4a834;
-  --token-color-accent-soft: #fff1cf;
-  --token-color-accent-foreground: #65470b;
-  --token-color-accent-strong: #8d6320;
-  --token-color-success-soft: #e5efe8;
-  --token-color-success-foreground: #315b47;
-  --token-color-success: #47765b;
+  --token-color-background: #ffffff;
+  --token-color-background-subtle: #faf8ff;
+  --token-color-foreground: #1f2933;
+  --token-color-muted: #5f6675;
+  --token-color-primary: #4f46e5;
+  --token-color-primary-foreground: #ffffff;
+  --token-color-secondary: #eef0ff;
+  --token-color-secondary-foreground: #4338ca;
+  --token-color-neutral-soft: #f1f2f6;
+  --token-color-border: #e4e6ef;
+  --token-color-accent: #f2c14e;
+  --token-color-accent-soft: #fdecc8;
+  --token-color-accent-foreground: #8a3c0a;
+  --token-color-accent-strong: #794858;
+  --token-color-success-soft: #dff1f0;
+  --token-color-success-foreground: #2f6764;
+  --token-color-success: #4e9794;
   --token-color-destructive: #b42318;
-  --token-color-destructive-foreground: #fffdf8;
+  --token-color-destructive-foreground: #ffffff;
 
   --token-font-family-sans: var(--font-rubik), "Segoe UI", sans-serif;
   --token-font-size-caption: 0.75rem;
@@ -47,8 +47,8 @@
   --token-radius-panel: 1rem;
   --token-radius-pill: 9999px;
 
-  --token-shadow-panel: 0 1px 2px rgb(23 32 79 / 0.04), 0 1px 3px rgb(23 32 79 / 0.06);
-  --token-shadow-floating: 0 8px 24px rgb(23 32 79 / 0.12);
+  --token-shadow-panel: 0 1px 2px rgb(16 24 40 / 0.04), 0 1px 3px rgb(16 24 40 / 0.06);
+  --token-shadow-floating: 0 8px 24px rgb(16 24 40 / 0.12);
   --token-border-width-default: 1px;
   --token-container-content: 80rem;
   --token-duration-standard: 150ms;

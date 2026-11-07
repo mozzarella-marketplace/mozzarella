@@ -76,7 +76,7 @@ This document defines Mozzarella's permanent frontend conventions. Product scree
 
 ## Visual direction
 
-Mozzarella should feel like a modern learning marketplace: curious, welcoming, and grounded in real-world work. Its identity pairs deep navy with warm paper neutrals and restrained golden accents, supported by the Hebrew wordmark and interlocking-circle mark. Product screens should make choosing a problem feel inviting while keeping the student's thinking and progress central. Prefer clear surfaces, purposeful color, strong hierarchy, and small moments of warmth over gamification-heavy decoration or a generic dashboard aesthetic.
+Mozzarella should feel like a modern learning marketplace: curious, welcoming, and grounded in real-world work. Product screens should make choosing a problem feel inviting while keeping the student's thinking and progress central. Prefer clear surfaces, purposeful color, strong hierarchy, and small moments of warmth over gamification-heavy decoration or a generic dashboard aesthetic.
 
 ## Component conventions
 
