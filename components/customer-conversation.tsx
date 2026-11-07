@@ -138,22 +138,22 @@ export const CustomerConversation: FC<CustomerConversationProps> = ({
               key={message.id}
               className={`max-w-[85%] whitespace-pre-wrap rounded-panel px-content py-control ${
                 message.role === ConversationRole.assistant
-                  ? "self-start bg-neutral-soft"
-                  : "self-end bg-primary text-primary-foreground"
+                  ? "self-start bg-neutral-soft rtl:self-end"
+                  : "self-end bg-primary text-primary-foreground rtl:self-start"
               }`}
             >
               {message.content}
             </li>
           ))}
           {conversation.length === 0 && (
-            <li className="self-start rounded-panel bg-neutral-soft px-content py-control text-muted">
+            <li className="self-start rounded-panel bg-neutral-soft px-content py-control text-muted rtl:self-end">
               {messages.empty}
             </li>
           )}
           {isTyping && (
             <li
               role="status"
-              className="flex w-fit items-center gap-1 self-start rounded-panel bg-neutral-soft px-content py-control"
+              className="flex w-fit items-center gap-1 self-start rounded-panel bg-neutral-soft px-content py-control rtl:self-end"
             >
               <span className="sr-only">{messages.waiting}</span>
               <span
