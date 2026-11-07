@@ -87,12 +87,12 @@ const CustomerPage: FC<{
       </article>
       <div className="grid items-start gap-section lg:grid-cols-2">
         <CustomerConversation
-          key={customer.id}
+          key={`conversation:${customer.id}`}
           customerId={customer.id}
           initialMessages={conversation}
         />
         <UserStoryWorkspace
-          key={customer.id}
+          key={`user-story:${customer.id}`}
           customerId={customer.id}
           savedContent={userStory?.content ?? null}
           savedLanguage={userStory?.language ?? null}
