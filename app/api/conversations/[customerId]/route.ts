@@ -71,11 +71,6 @@ export const POST = async (
       return jsonResponse({ error: messages.invalidRequest }, 400);
     }
 
-    if (!env.ANTHROPIC_API_KEY) {
-      logger.error("Anthropic API key is not configured");
-      return jsonResponse({ error: messages.unavailable }, 503);
-    }
-
     const customer = await prisma.customer.findFirst({
       where: { id: parsedCustomerId.data, isActive: true },
       select: {

@@ -15,6 +15,8 @@ The platform is aimed primarily at high-school students learning introductory C#
 
 ## Setup
 
+Set the required server-only `ANTHROPIC_API_KEY` in `.env.local` before running the application or building it. Missing, empty, or whitespace-only values fail startup validation. CI uses a fake placeholder only for checks that do not call Anthropic; deployments require a real key. Never commit the key or expose it with a `NEXT_PUBLIC_` prefix.
+
 Copy `.env.example` to `.env.local` and set `DATABASE_URL` (and `DIRECT_URL`, when the provider pools connections) before installing, because `npm install` generates the Prisma Client. `.env.local` is ignored by Git and must never contain values that are committed or shared. Environment variables are validated centrally by `lib/config/env.ts`.
 
 ```bash

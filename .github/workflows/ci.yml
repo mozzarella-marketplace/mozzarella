@@ -12,7 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Placeholders only: install, typecheck, and build need these variables to exist, but CI never
-      # connects to a database. Real connection strings are configured per environment in Vercel.
+      # connects to a database or Anthropic. Real values are configured per environment in Vercel.
+      ANTHROPIC_API_KEY: ci-placeholder-not-a-real-key
       DATABASE_URL: postgresql://mozzarella:mozzarella@localhost:5432/mozzarella
       DIRECT_URL: postgresql://mozzarella:mozzarella@localhost:5432/mozzarella
 
