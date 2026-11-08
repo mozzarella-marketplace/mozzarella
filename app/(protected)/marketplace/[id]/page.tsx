@@ -1,95 +1,104 @@
-import Link from "next/link";
-import { notFound } from "next/navigation";
 import type { FC } from "react";
+import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
 import { z } from "zod";
-import { getMessages } from "@/lib/i18n/messages";
+import { CustomerAvatar } from "@/components/customer-avatar";
+import { CustomerConversation } from "@/components/customer-conversation";
+import { CustomerTags } from "@/components/customer-tags";
+import { UserStoryWorkspace } from "@/components/user-story-workspace";
+import { getPageUser } from "@/lib/auth/current-user";
+import { getLoginUrl } from "@/lib/auth/return-to";
+import { getActiveCustomer } from "@/lib/customers";
 import { prisma } from "@/lib/db/prisma";
+import { getMessages } from "@/lib/i18n/messages";
 import { logger } from "@/lib/logging/logger";
-import type { CustomerSummary } from "@/types/customer";
-
-const customerIdSchema = z.string().uuid();
 
 const CustomerPage: FC<{
   params: Promise<{ id: string }>;
 }> = async ({ params }) => {
   const { id } = await params;
+  const parsedCustomerId = z.uuid().safeParse(id);
 
-  if (!customerIdSchema.safeParse(id).success) {
+  if (!parsedCustomerId.success) {
     notFound();
   }
 
-  let customer: CustomerSummary | null;
+  const returnTo = `/marketplace/${parsedCustomerId.data}`;
+  const user = await getPageUser(returnTo);
 
-  try {
-    customer = await prisma.customer.findFirst({
-      where: { id, isActive: true },
-    });
-  } catch (error) {
-    logger.error("Marketplace customer detail query failed");
-    throw error;
+  if (!user) {
+    redirect(getLoginUrl(returnTo));
   }
+
+  const customer = await getActiveCustomer(parsedCustomerId.data);
 
   if (!customer) {
     notFound();
   }
 
-  const messages = getMessages().marketplace;
+  const { customers, marketplace } = getMessages();
+  const sessionId = `${user.id}:${customer.id}`;
+  let userStory;
+  let conversation;
+
+  try {
+    [userStory, conversation] = await Promise.all([
+      prisma.userStory.findUnique({
+        where: { sessionId },
+        select: { content: true, language: true },
+      }),
+      prisma.conversationMessage.findMany({
+        where: { sessionId },
+        orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+        select: { id: true, role: true, content: true },
+      }),
+    ]);
+  } catch (error) {
+    logger.error("Customer workspace query failed");
+    throw error;
+  }
 
   return (
-    <article className="mx-auto flex w-full max-w-content flex-col gap-6 p-page-inline">
+    <section className="mx-auto flex max-w-content flex-col gap-section px-page-inline py-section">
       <Link
         href="/marketplace"
-        className="w-fit rounded-control text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+        className="self-start rounded-control font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       >
-        {messages.backToMarketplace}
+        {customers.backToMarketplace}
       </Link>
-      <header className="flex items-center gap-4">
-        <span aria-hidden="true" className="text-5xl">
-          {customer.avatar}
-        </span>
-        <div>
-          <p className="text-muted">{messages.customer}</p>
-          <h1 className="text-heading font-semibold">
-            {customer.businessName}
-          </h1>
-          <p>
-            {customer.name} · {customer.role}
-          </p>
+      <article className="flex flex-col gap-content rounded-panel border border-border bg-background p-content shadow-panel content:p-section">
+        <div className="flex items-start gap-control">
+          <CustomerAvatar avatar={customer.avatar} />
+          <div className="flex flex-col gap-1">
+            <h1 className="text-heading font-extrabold">{customer.name}</h1>
+            <p className="text-label text-muted">
+              {marketplace.customerByline(
+                customer.role,
+                customer.businessName,
+                customer.city,
+              )}
+            </p>
+          </div>
         </div>
-      </header>
-      <dl className="grid gap-4 rounded-panel border border-border bg-background p-content sm:grid-cols-2">
-        <div>
-          <dt className="text-sm text-muted">{messages.location}</dt>
-          <dd>{customer.city}</dd>
-        </div>
-        <div>
-          <dt className="text-sm text-muted">{messages.domain}</dt>
-          <dd>{customer.domain}</dd>
-        </div>
-        <div>
-          <dt className="text-sm text-muted">{messages.category}</dt>
-          <dd>{messages.categories[customer.category]}</dd>
-        </div>
-        <div>
-          <dt className="text-sm text-muted">{messages.difficulty}</dt>
-          <dd>{messages.difficulties[customer.difficulty]}</dd>
-        </div>
-        <div>
-          <dt className="text-sm text-muted">{messages.topic}</dt>
-          <dd>{customer.topic}</dd>
-        </div>
-        <div>
-          <dt className="text-sm text-muted">{messages.reward}</dt>
-          <dd>
-            <bdi dir="ltr">{customer.rewardCoins}</bdi> {messages.coins}
-          </dd>
-        </div>
-      </dl>
-      <section className="space-y-2 rounded-panel border border-border bg-background p-content">
-        <h2 className="font-semibold">{messages.customerNeed}</h2>
-        <p>{customer.summary}</p>
-      </section>
-    </article>
+        <CustomerTags customer={customer} />
+        <blockquote className="rounded-tile bg-background-subtle px-content py-control text-muted italic">
+          <p>{marketplace.quoted(customer.summary)}</p>
+        </blockquote>
+      </article>
+      <div className="grid items-start gap-section lg:grid-cols-2">
+        <CustomerConversation
+          key={`conversation:${customer.id}`}
+          customerId={customer.id}
+          initialMessages={conversation}
+        />
+        <UserStoryWorkspace
+          key={`user-story:${customer.id}`}
+          customerId={customer.id}
+          savedContent={userStory?.content ?? null}
+          savedLanguage={userStory?.language ?? null}
+        />
+      </div>
+    </section>
   );
 };
 

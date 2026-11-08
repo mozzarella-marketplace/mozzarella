@@ -1,4 +1,5 @@
 import { LoginForm } from "@/components/forms/login-form";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getPageUser } from "@/lib/auth/current-user";
 import { getReturnTo } from "@/lib/auth/return-to";
@@ -28,42 +29,52 @@ const LoginPage: FC<{
   }
 
   return (
-    <main className="w-screen h-screen flex flex-col gap-4 justify-center items-center text-center">
-      <div className="size-16 bg-primary-1 rounded-md mt-4" />
-      <div>
-        <div className="text-xl font-bold">
-          <span className="text-2xl">{messages.brandName}</span>{" "}
-          <span className="text-primary-2 bg-foreground-2 px-1">SOLVE.IL</span>
+    <main className="flex min-h-dvh flex-col items-center justify-center gap-section bg-background-subtle px-page-inline py-section text-center">
+      <header className="flex flex-col items-center gap-2">
+        <div className="relative h-20 w-64 overflow-hidden rounded-panel">
+          <Image
+            src="/mozzarella-wordmark.jpg"
+            alt={messages.brandName}
+            fill
+            sizes="256px"
+            priority
+            className="object-cover"
+          />
         </div>
-        <p className="text-muted font-bold text-sm mt-2">{messages.tagline}</p>
-      </div>
-      <div className="mb-8">
-        <p className="text-2xl font-bold">{messages.welcomeTitle}</p>
-        <p className="mt-2">{messages.welcomeDescription}</p>
-      </div>
+        <p className="text-label font-semibold text-muted">
+          {messages.tagline}
+        </p>
+      </header>
 
-      <LoginForm returnTo={returnTo} />
+      <section className="flex w-full max-w-lg flex-col items-center gap-content">
+        <div className="flex flex-col gap-2">
+          <h2 className="text-heading font-bold">{messages.welcomeTitle}</h2>
+          <p className="text-muted">{messages.welcomeDescription}</p>
+        </div>
 
-      <div className="flex flex-col gap-4 mt-8">
-        <div className="flex gap-2 items-center">
-          <Circle className="fill-success text-success size-2.5 mt-1" />
-          {messages.customerPromise}
-        </div>
-        <div className="flex justify-around items-center font-semibold gap-8">
-          <div className="flex gap-2 items-center">
-            <BriefcaseBusiness className="size-4 fill-accent-2 mt-1" />
-            {messages.businessCustomers}
+        <LoginForm returnTo={returnTo} />
+
+        <div className="flex flex-col gap-control text-label">
+          <div className="flex items-start gap-2 text-start font-semibold">
+            <Circle className="mt-1 size-2.5 shrink-0 fill-success text-success" />
+            {messages.customerPromise}
           </div>
-          <div className="flex gap-2 items-center">
-            <MessageCircle className="text-muted size-4 mt-1" />
-            {messages.conversation}
+          <div className="flex flex-wrap justify-center gap-x-content gap-y-control font-semibold">
+            <div className="flex items-center gap-2">
+              <BriefcaseBusiness className="size-4 fill-accent-strong" />
+              {messages.businessCustomers}
+            </div>
+            <div className="flex items-center gap-2">
+              <MessageCircle className="size-4 text-primary" />
+              {messages.conversation}
+            </div>
+          </div>
+          <div className="flex items-center justify-center gap-2 font-semibold">
+            <TriangleAlert className="size-4 fill-accent" />
+            {messages.coins}
           </div>
         </div>
-        <div className="flex gap-2 items-center justify-center font-semibold">
-          <TriangleAlert className="fill-accent size-4 mt-1" />
-          {messages.coins}
-        </div>
-      </div>
+      </section>
     </main>
   );
 };

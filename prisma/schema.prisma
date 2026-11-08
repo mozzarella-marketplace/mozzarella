@@ -7,16 +7,45 @@ datasource db {
   provider = "postgresql"
 }
 
+model UserStory {
+  id        String   @id @default(cuid())
+  sessionId String   @unique
+  content   String
+  language  ProgrammingLanguage?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ConversationMessage {
+  id        String           @id @default(cuid())
+  sessionId String
+  role      ConversationRole
+  content   String
+  createdAt DateTime         @default(now())
+
+  @@index([sessionId, createdAt])
+}
+
 enum CustomerCategory {
   smallBusiness
   ticketingSystems
   managementAndData
 }
 
+enum ConversationRole {
+  user
+  assistant
+}
+
 enum DifficultyLevel {
   beginner
   intermediate
   advanced
+}
+
+enum ProgrammingLanguage {
+  java
+  csharp
 }
 
 model Customer {
