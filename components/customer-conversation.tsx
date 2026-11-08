@@ -20,6 +20,7 @@ type ConversationMessage = {
 
 type CustomerConversationProps = {
   customerId: string;
+  customerName: string;
   initialMessages: ConversationMessage[];
 };
 
@@ -29,6 +30,7 @@ const conversationResponseSchema = z.object({
 
 export const CustomerConversation: FC<CustomerConversationProps> = ({
   customerId,
+  customerName,
   initialMessages,
 }) => {
   const messages = getMessages().conversation;
@@ -125,7 +127,6 @@ export const CustomerConversation: FC<CustomerConversationProps> = ({
           <MessageCircle aria-hidden className="size-6 text-primary" />
           {messages.title}
         </CardTitle>
-        <p className="text-label text-muted">{messages.notice}</p>
       </CardHeader>
       <CardContent>
         <ol
@@ -198,7 +199,9 @@ export const CustomerConversation: FC<CustomerConversationProps> = ({
             </p>
           )}
           <div className="flex flex-wrap items-center justify-between gap-control">
-            <span className="text-label text-muted">{messages.privacy}</span>
+            <span className="text-label text-muted">
+              {messages.aiDisclaimer(customerName)}
+            </span>
             <Button
               type="submit"
               disabled={!draft.trim() || isSending}

@@ -26,6 +26,7 @@ type SaveStatus = "idle" | "saving" | "saved" | "error";
 
 type UserStoryWorkspaceProps = {
   customerId: string;
+  customerName: string;
   savedContent: string | null;
   savedLanguage: ProgrammingLanguage | null;
 };
@@ -36,6 +37,7 @@ const detailPanelClassName = "rounded-panel bg-neutral-soft p-content";
 
 export const UserStoryWorkspace: FC<UserStoryWorkspaceProps> = ({
   customerId,
+  customerName,
   savedContent,
   savedLanguage,
 }) => {
@@ -123,6 +125,7 @@ export const UserStoryWorkspace: FC<UserStoryWorkspaceProps> = ({
           <UserStoryEditor
             labelId="user-story-content-label"
             initialContent={savedContent ?? ""}
+            placeholder={messages.userStory.placeholder(customerName)}
             onChange={({ html, isEmpty }) => {
               setContent(html);
               setIsContentEmpty(isEmpty);

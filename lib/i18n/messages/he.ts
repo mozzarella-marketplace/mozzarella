@@ -103,11 +103,11 @@ export const heMessages = {
         `הגעתם למכסת ${count} ההודעות היומית. אפשר להמשיך מחר.`,
     },
     title: "שיחה עם הלקוח",
-    notice: "הלקוח בשיחה מדומה באמצעות Claude. אל תכתבו מידע אישי.",
     empty: "ספרו ללקוח מה תרצו להבין על הבעיה שלו.",
     placeholder: "כתבו הודעה ללקוח...",
     inputLabel: "הודעה ללקוח",
-    privacy: "ההודעות נשמרות ונשלחות ל-Anthropic כדי ליצור תשובות.",
+    aiDisclaimer: (customerName: string) =>
+      `${customerName} הוא יציר AI ויכול לטעות - זה מה שעושה אותו אנושי`,
     send: "שליחה",
     sending: "שולחים...",
     waiting: "הלקוח חושב...",
@@ -130,7 +130,8 @@ export const heMessages = {
     language: "שפת פיתוח",
     languagePlaceholder: "בחרו שפה",
     label: "סיפור המשתמש",
-    placeholder: "כתבו כאן את סיפור המשתמש שגיבשתם מהשיחה עם הלקוח...",
+    placeholder: (customerName: string) =>
+      `כתבו כאן את סיפור המשתמש שגיבשתם עם ${customerName}...`,
     save: "שמירה",
     status: {
       saving: "שומר...",

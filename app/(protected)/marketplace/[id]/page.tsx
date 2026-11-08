@@ -82,11 +82,13 @@ const CustomerPage: FC<{
         <CustomerConversation
           key={`conversation:${customer.id}`}
           customerId={customer.id}
+          customerName={customer.name}
           initialMessages={conversation}
         />
         <UserStoryWorkspace
           key={`user-story:${customer.id}`}
           customerId={customer.id}
+          customerName={customer.name}
           savedContent={userStory?.content ?? null}
           savedLanguage={userStory?.language ?? null}
         />
