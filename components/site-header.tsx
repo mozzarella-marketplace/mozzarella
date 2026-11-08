@@ -12,14 +12,15 @@ export const SiteHeader: FC = () => {
       <div className="mx-auto flex max-w-content flex-wrap items-center gap-x-section gap-y-control px-page-inline py-control">
         <Link
           href="/marketplace"
-          className="relative h-14 w-48 shrink-0 overflow-hidden rounded-control focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          className="w-48 shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           <Image
-            src="/mozzarella-wordmark.jpg"
+            src="/logo-horizontal.svg"
             alt={app.title}
-            fill
+            width={984}
+            height={244}
             sizes="192px"
-            className="object-cover"
+            className="h-auto w-full"
           />
         </Link>
         <nav aria-label={navigation.label}>

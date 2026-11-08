@@ -21,7 +21,7 @@
   --token-color-destructive: #b42318;
   --token-color-destructive-foreground: #ffffff;
 
-  --token-font-family-sans: var(--font-rubik), "Segoe UI", sans-serif;
+  --token-font-family-sans: var(--font-heebo), "Segoe UI", sans-serif;
   --token-font-size-caption: 0.75rem;
   --token-font-size-label: 0.875rem;
   --token-font-size-body: 1rem;

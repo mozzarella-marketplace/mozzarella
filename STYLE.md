@@ -26,7 +26,7 @@ This document defines Mozzarella's permanent frontend conventions. Product scree
 ## Typography
 
 - Choose a legible Hebrew typeface with a clear, contemporary shape and a complete Latin character set.
-- The interface uses Rubik (Hebrew and Latin subsets), loaded with `next/font` in `app/layout.tsx` and exposed through the `--font-rubik` variable.
+- The interface uses Heebo (Hebrew and Latin subsets), loaded with `next/font` in `app/layout.tsx` and exposed through the centralized `--font-heebo` variable. Heebo is not a separate "Heebo Rounded" font; the logo uses an outlined rounded wordmark from the supplied reference.
 - Establish a small type scale with distinct roles for headings, body text, labels, and code.
 - Keep body text comfortable to read and avoid using condensed or decorative faces for instructional content.
 
@@ -73,6 +73,14 @@ This document defines Mozzarella's permanent frontend conventions. Product scree
 - Use Lucide React for interface icons when an icon communicates a clear action or state.
 - Icons should support nearby text or have an accessible label; do not use icons as decoration when they add noise.
 - Keep icon sizing and stroke weight consistent within a context.
+
+## Brand assets
+
+- Use `public/logo-horizontal.svg` in the navigation header and `public/logo-vertical.svg` on the login page. `public/logo-mark.svg` is the standalone cheese-brace symbol. These transparent SVGs contain outlined lettering, so the logos do not depend on installed fonts.
+- Brand artwork uses deep navy `#0F172A`, cheese yellow `#FBBF24`, and orange `#F97316`. These asset colors do not change the application theme tokens.
+- `public/favicon.svg` is a simplified symbol on a white rounded square. Browser metadata also provides PNG exports at 16, 32, 48, 192, and 512 pixels; `public/favicon.png` is the 512-pixel export. `public/apple-touch-icon.png` is the 180-pixel Apple home-screen icon. Regenerate PNGs from the SVG when changing the icon.
+- `public/design-system.png` and `public/horizontal-logo.png` are supplied design references, not runtime assets.
+- Preserve each logo's aspect ratio and show the complete artwork without clipping or stretching.
 
 ## Visual direction
 

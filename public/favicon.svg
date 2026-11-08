@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="352" height="352" viewBox="0 0 352 352" role="img" aria-labelledby="title"><title id="title">מוצרלה</title><rect width="352" height="352" rx="64" fill="#FFFFFF"/><g transform="translate(16 70)">
+  <g fill="none" stroke="#0F172A" stroke-width="28" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M74 22H66C43 22 38 39 38 55V73C38 91 29 106 12 106C29 106 38 121 38 139V157C38 173 43 190 66 190H74"/>
+    <path d="M246 22H254C277 22 282 39 282 55V73C282 91 291 106 308 106C291 106 282 121 282 139V157C282 173 277 190 254 190H246"/>
+  </g>
+  <path fill="#FBBF24" d="M68 50Q160 112 252 50C253 77 257 95 265 106C257 117 253 135 252 162Q160 103 68 162C67 135 63 117 55 106C63 95 67 77 68 50Z"/>
+</g></svg>

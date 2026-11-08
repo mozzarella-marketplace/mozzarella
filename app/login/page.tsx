@@ -31,14 +31,15 @@ const LoginPage: FC<{
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center gap-section bg-background-subtle px-page-inline py-section text-center">
       <header className="flex flex-col items-center gap-2">
-        <div className="relative h-20 w-64 overflow-hidden rounded-panel">
+        <div className="w-64">
           <Image
-            src="/mozzarella-wordmark.jpg"
+            src="/logo-vertical.svg"
             alt={messages.brandName}
-            fill
+            width={590}
+            height={410}
             sizes="256px"
             priority
-            className="object-cover"
+            className="h-auto w-full"
           />
         </div>
         <p className="text-label font-semibold text-muted">
