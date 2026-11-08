@@ -107,7 +107,7 @@ export const heMessages = {
     placeholder: "כתבו הודעה ללקוח...",
     inputLabel: "הודעה ללקוח",
     aiDisclaimer: (customerName: string) =>
-      `${customerName} הוא יציר AI ויכול לטעות - זה מה שעושה אותו אנושי`,
+      `${customerName} הוא יציר AI ולכן יכול לטעות - בדיוק כמו בני אדם.`,
     send: "שליחה",
     sending: "שולחים...",
     waiting: "הלקוח חושב...",
