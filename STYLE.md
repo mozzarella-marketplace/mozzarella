@@ -81,6 +81,7 @@ This document defines Mozzarella's permanent frontend conventions. Product scree
 - `public/favicon.svg` is a simplified symbol on a white rounded square. Browser metadata also provides PNG exports at 16, 32, 48, 192, and 512 pixels; `public/favicon.png` is the 512-pixel export. `public/apple-touch-icon.png` is the 180-pixel Apple home-screen icon. Regenerate PNGs from the SVG when changing the icon.
 - `public/design-system.png` and `public/horizontal-logo.png` are supplied design references, not runtime assets.
 - Preserve each logo's aspect ratio and show the complete artwork without clipping or stretching.
+- The horizontal Hebrew logo places the cheese-brace symbol on the right and the wordmark on the left; never mirror the lettering.
 
 ## Visual direction
 
