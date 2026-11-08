@@ -1,5 +1,4 @@
 import type { FC } from "react";
-import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { z } from "zod";
 import { CustomerAvatar } from "@/components/customer-avatar";
@@ -36,7 +35,7 @@ const CustomerPage: FC<{
     notFound();
   }
 
-  const { customers, marketplace } = getMessages();
+  const { marketplace } = getMessages();
   const sessionId = `${user.id}:${customer.id}`;
   let userStory;
   let conversation;
@@ -60,12 +59,6 @@ const CustomerPage: FC<{
 
   return (
     <section className="mx-auto flex max-w-content flex-col gap-section px-page-inline py-section">
-      <Link
-        href="/marketplace"
-        className="self-start rounded-control font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-      >
-        {customers.backToMarketplace}
-      </Link>
       <article className="flex flex-col gap-content rounded-panel border border-border bg-background p-content shadow-panel content:p-section">
         <div className="flex items-start gap-control">
           <CustomerAvatar avatar={customer.avatar} />

@@ -94,9 +94,6 @@ export const heMessages = {
       waitingCount: (count: number) => `${count} לקוחות ממתינים לשיחה`,
     },
   },
-  customers: {
-    backToMarketplace: "חזרה לכל הלקוחות",
-  },
   conversation: {
     api: {
       invalidRequest: "ההודעה אינה תקינה",
