@@ -27,12 +27,12 @@ const ProtectedLayout: FC<Readonly<{ children: ReactNode }>> = async ({
   return (
     <div className="flex h-dvh w-full flex-col">
       <SiteHeader />
-      <main className="flex min-h-0 w-full grow">
+      <div className="flex min-h-0 w-full grow">
         <ScrollArea className="size-full" dir={locale.direction}>
-          {children}
+          <main>{children}</main>
+          <SiteFooter />
         </ScrollArea>
-      </main>
-      <SiteFooter />
+      </div>
     </div>
   );
 };
