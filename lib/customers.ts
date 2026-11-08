@@ -1,6 +1,8 @@
 import "server-only";
 import { prisma } from "@/lib/db/prisma";
-import { AuthError, getCurrentUser } from "@/lib/auth/current-user";
+import { redirect } from "next/navigation";
+import { getPageUser } from "@/lib/auth/current-user";
+import { getLoginUrl } from "@/lib/auth/return-to";
 import { logger } from "@/lib/logging/logger";
 import type { CustomerSummary } from "@/types/customer";
 
@@ -19,10 +21,14 @@ const customerSummarySelection = {
   summary: true,
 } as const satisfies Record<keyof CustomerSummary, true>;
 
-export const getActiveCustomers = async (): Promise<CustomerSummary[]> => {
-  if (!(await getCurrentUser())) {
-    throw new AuthError(401, "Authentication required");
+const requireCustomerPageUser = async (returnTo: string) => {
+  if (!(await getPageUser(returnTo))) {
+    redirect(getLoginUrl(returnTo));
   }
+};
+
+export const getActiveCustomers = async (): Promise<CustomerSummary[]> => {
+  await requireCustomerPageUser("/marketplace");
 
   try {
     return await prisma.customer.findMany({
@@ -39,9 +45,7 @@ export const getActiveCustomers = async (): Promise<CustomerSummary[]> => {
 export const getActiveCustomer = async (
   customerId: string,
 ): Promise<CustomerSummary | null> => {
-  if (!(await getCurrentUser())) {
-    throw new AuthError(401, "Authentication required");
-  }
+  await requireCustomerPageUser(`/marketplace/${customerId}`);
 
   try {
     return await prisma.customer.findFirst({
