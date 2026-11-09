@@ -30,21 +30,18 @@ const LoginPage: FC<{
 
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center gap-section bg-background-subtle px-page-inline py-section text-center">
-      <header className="flex flex-col items-center gap-2">
+      <header className="flex flex-col items-center">
         <div className="w-64">
           <Image
-            src="/logo-vertical.svg"
+            src="/logo-horizontal.svg"
             alt={messages.brandName}
-            width={590}
-            height={410}
+            width={984}
+            height={244}
             sizes="256px"
             priority
             className="h-auto w-full"
           />
         </div>
-        <p className="text-label font-semibold text-muted">
-          {messages.tagline}
-        </p>
       </header>
 
       <section className="flex w-full max-w-lg flex-col items-center gap-content">
