@@ -87,6 +87,45 @@ export const heMessages = {
       title: "לא נמצאו לקוחות",
       description: "אפשר לנסות מילת חיפוש או תחום אחרים.",
     },
+    intro: {
+      label: "ברוכים הבאים למוצרלה",
+      title: "קודם אנשים. אחר כך קוד.",
+      description:
+        "פוגשים לקוח מדומה, מגלים בשיחה מה הוא באמת צריך, ובונים פתרון בקוד.",
+      skip: "ישר ללקוחות",
+      pause: "השהיית האנימציה",
+      resume: "המשך האנימציה",
+      continue: "בואו נכיר לקוחות",
+      customerName: "נועה",
+      customerRole: "בעלת פיצרייה",
+      developerName: "אתם",
+      developerRole: "המפתחים",
+      customerMessage: "אני כל הזמן מתבלבלת בחשבון…",
+      developerMessage: "מה צריך לחשב בכל הזמנה?",
+      insight: "הבנתי! מחיר × כמות.",
+      need: "מה באמת צריך?",
+      result: "בדיוק מה שהייתי צריכה!",
+      codeLabel: "מהרעיון לקוד",
+      code: "total = price * quantity;",
+      resultLabel: "בעיה אמיתית. פתרון שלכם.",
+      steps: [
+        {
+          label: "פוגשים",
+          title: "הכול מתחיל בשיחה.",
+          description: "פוגשים לקוח. שואלים. מקשיבים.",
+        },
+        {
+          label: "מגלים",
+          title: "ופתאום, הכול מתחבר.",
+          description: "מגלים את הבעיה שבאמת צריך לפתור.",
+        },
+        {
+          label: "פותרים",
+          title: "עכשיו לקוד יש משמעות.",
+          description: "הופכים את מה שהבנתם לפתרון שעובד.",
+        },
+      ],
+    },
     pedagogy: {
       label: "עקרון פדגוגי מנחה",
       quote:
