@@ -15,9 +15,8 @@ test("catalog contains 20 distinct, active customers with complete problem brief
 
   for (const customer of customers) {
     assert.equal(customer.isActive, true);
-    assert.ok(
-      customerProblemBriefSchema.safeParse(customer.problemBrief).success,
-    );
+    const brief = customerProblemBriefSchema.parse(customer.problemBrief);
+    assert.ok(brief.background, `Missing customer background: ${customer.id}`);
   }
 });
 

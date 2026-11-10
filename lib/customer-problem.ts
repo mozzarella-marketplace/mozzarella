@@ -3,6 +3,13 @@ import { z } from "zod";
 const requiredText = z.string().trim().min(1);
 
 export const customerProblemBriefSchema = z.strictObject({
+  background: z
+    .strictObject({
+      currentWorkflow: requiredText,
+      painPoint: requiredText,
+      communicationStyle: requiredText,
+    })
+    .optional(),
   inputs: z.array(requiredText).min(1),
   outputs: z.array(requiredText).min(1),
   rules: z.array(requiredText).min(1),

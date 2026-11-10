@@ -31,7 +31,10 @@ const customerSchema = z
     topic: requiredText,
     summary: requiredText,
     isActive: z.literal(true),
-    problemBrief: customerProblemBriefSchema,
+    problemBrief: customerProblemBriefSchema.refine(
+      (brief) => brief.background !== undefined,
+      { message: "Catalog customers must include a background" },
+    ),
   })
 
   .refine(
