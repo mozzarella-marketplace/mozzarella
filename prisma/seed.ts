@@ -1,258 +1,98 @@
+import { z } from "zod";
+import customerData from "./customers.json";
+import { customerProblemBriefSchema } from "../lib/customer-problem";
 import { prisma } from "../lib/db/prisma";
-import type { CustomerSummary } from "../types/customer";
+import {
+  CustomerCategory,
+  DifficultyLevel,
+} from "../lib/generated/prisma/enums";
+import { logger } from "../lib/logging/logger";
 
-// Fixed UUIDs keep the seed idempotent: re-running it updates these rows instead of adding new ones.
-const mockCustomers: CustomerSummary[] = [
-  {
-    id: "00000000-0000-4000-8000-000000000001",
-    name: "דני",
-    role: "בעלים",
-    businessName: "מאפיית דני",
-    city: "פלורנטין, תל אביב",
-    avatar: "🥐",
-    category: "smallBusiness",
-    domain: "קמעונאות ומזון",
-    difficulty: "beginner",
-    rewardCoins: 80,
-    topic: "חישוב הכנסות",
-    summary:
-      "אני צריך עזרה דחופה עם המכירות של המאפייה. בסוף כל יום יש לי ערימות קבלות ואני לא יודע כמה באמת הרווחתי אחרי הוצאות הקמח והחשמל.",
-  },
-  {
-    id: "00000000-0000-4000-8000-000000000002",
-    name: "מיכל",
-    role: "מנהלת",
-    businessName: "קולנוע השכונה",
-    city: "חיפה",
-    avatar: "🎬",
-    category: "ticketingSystems",
-    domain: "כרטיסים ושירות",
-    difficulty: "intermediate",
-    rewardCoins: 120,
-    topic: "תנאים ולוגיקה",
-    summary:
-      "אני מנסה לעשות קצת סדר במערכת הכרטיסים שלנו, במיוחד בחישוב ההנחות המורכבות לחיילים, אזרחים ותיקים וילדים בסופי שבוע.",
-  },
-  {
-    id: "00000000-0000-4000-8000-000000000003",
-    name: "רועי",
-    role: "מייסד",
-    businessName: "Happy Paws",
-    city: "הרצליה",
-    avatar: "🐶",
-    category: "managementAndData",
-    domain: "שירותי חיות מחמד",
-    difficulty: "advanced",
-    rewardCoins: 180,
-    topic: "מבני נתונים",
-    summary:
-      "המספרה והפנסיון גדלו מהר מדי. יש לי יותר מדי לקוחות ואני צריך דרך ממוחשבת לנהל את התיקים, הגזעים ותאריכי החיסונים הקריטיים.",
-  },
-  {
-    id: "00000000-0000-4000-8000-000000000004",
-    name: "תמר",
-    role: "מנהלת",
-    businessName: "שליחויות ירוקות",
-    city: "תל אביב",
-    avatar: "🚴",
-    category: "managementAndData",
-    domain: "לוגיסטיקה עירונית",
-    difficulty: "intermediate",
-    rewardCoins: 150,
-    topic: "לולאות וחישובים",
-    summary:
-      "אנחנו רוצים לחשב את המסלול הזול והמהיר ביותר למשלוח חבילות ברחבי העיר, בהתאם לעומסי התנועה ולמרחק שכל שליח עובר.",
-  },
-  {
-    id: "00000000-0000-4000-8000-000000000005",
-    name: "נועה",
-    role: "מנהלת",
-    businessName: "מרפאת השכונה",
-    city: "באר שבע",
-    avatar: "🩺",
-    category: "ticketingSystems",
-    domain: "בריאות ושירות",
-    difficulty: "intermediate",
-    rewardCoins: 110,
-    topic: "מערכים וחיפוש",
-    summary:
-      "תורים במרפאה נקבעים לפעמים באותה שעה. אני צריכה כלי שבודק אם שעה פנויה לפני שקובעים תור חדש.",
-  },
-  {
-    id: "00000000-0000-4000-8000-000000000006",
-    name: "אבי",
-    role: "בעלים",
-    businessName: "המכולת של אבי",
-    city: "ירושלים",
-    avatar: "🛒",
-    category: "smallBusiness",
-    domain: "קמעונאות ומזון",
-    difficulty: "beginner",
-    rewardCoins: 70,
-    topic: "משתנים וקלט/פלט",
-    summary:
-      "מוצרים נגמרים מהמדפים בלי שאני שם לב. אני רוצה לדעת מראש אילו מוצרים צריך להזמין מחדש.",
-  },
-  {
-    id: "00000000-0000-4000-8000-000000000007",
-    name: "יעל",
-    role: "בעלים",
-    businessName: "פרחים לדרך",
-    city: "רמת גן",
-    avatar: "💐",
-    category: "smallBusiness",
-    domain: "פרחים ומתנות",
-    difficulty: "beginner",
-    rewardCoins: 75,
-    topic: "משתנים ופעולות חשבון",
-    summary:
-      "לקוחות מרכיבים זרים לפי מספר הפרחים וסוג האריזה. אני צריכה לחשב מחיר כולל, ולהוסיף דמי משלוח רק כשמבקשים משלוח.",
-  },
-  {
-    id: "00000000-0000-4000-8000-000000000008",
-    name: "אורן",
-    role: "מנהל",
-    businessName: "בריכת הגלים",
-    city: "אשדוד",
-    avatar: "🏊",
-    category: "ticketingSystems",
-    domain: "ספורט ופנאי",
-    difficulty: "intermediate",
-    rewardCoins: 115,
-    topic: "תנאים וחישוב הנחות",
-    summary:
-      "מחיר הכניסה לבריכה משתנה לפי גיל ולפי סוג המנוי. אני רוצה לחשב מחיר לכל מבקר ולוודא שלא מקבלים שתי הנחות על אותו כרטיס.",
-  },
-  {
-    id: "00000000-0000-4000-8000-000000000009",
-    name: "ליאת",
-    role: "ספרנית",
-    businessName: "הספרייה הקהילתית",
-    city: "כפר סבא",
-    avatar: "📚",
-    category: "managementAndData",
-    domain: "ספרים וקהילה",
-    difficulty: "intermediate",
-    rewardCoins: 130,
-    topic: "מערכים, חיפוש וסינון",
-    summary:
-      "קשה לי לדעת אילו ספרים פנויים להשאלה. אני צריכה לחפש ספר לפי שם, לראות אם הוא מושאל ולהציג רשימה של הספרים הזמינים.",
-  },
-  {
-    id: "00000000-0000-4000-8000-000000000010",
-    name: "גיא",
-    role: "בעלים",
-    businessName: "קפה בפינה",
-    city: "גבעתיים",
-    avatar: "☕",
-    category: "smallBusiness",
-    domain: "בתי קפה",
-    difficulty: "beginner",
-    rewardCoins: 85,
-    topic: "קלט, פלט וחישוב סכומים",
-    summary:
-      "בסוף הזמנה אני מחשב ידנית את מחיר המשקאות והמאפים. אני רוצה להזין כמויות, לקבל חשבון ולדעת כמה עודף להחזיר ללקוח.",
-  },
-  {
-    id: "00000000-0000-4000-8000-000000000011",
-    name: "שירה",
-    role: "רכזת",
-    businessName: "סדנאות במתנ״ס",
-    city: "מודיעין",
-    avatar: "🎨",
-    category: "ticketingSystems",
-    domain: "חוגים ויצירה",
-    difficulty: "intermediate",
-    rewardCoins: 125,
-    topic: "לולאות ומונים",
-    summary:
-      "לכל סדנה יש מספר מקומות מוגבל. אני צריכה לספור נרשמים, להציג כמה מקומות נשארו ולעצור הרשמה כשהסדנה מלאה.",
-  },
-  {
-    id: "00000000-0000-4000-8000-000000000012",
-    name: "עמית",
-    role: "מנהל",
-    businessName: "גינת השכונה",
-    city: "רחובות",
-    avatar: "🌱",
-    category: "managementAndData",
-    domain: "גינון וקהילה",
-    difficulty: "intermediate",
-    rewardCoins: 140,
-    topic: "לולאות, מערכים וממוצעים",
-    summary:
-      "המתנדבים רושמים כמה מים כל ערוגה קיבלה בכל יום. אני רוצה לסכם את ההשקיה השבועית ולמצוא ערוגות שקיבלו פחות מהכמות הדרושה.",
-  },
-  {
-    id: "00000000-0000-4000-8000-000000000013",
-    name: "אייל",
-    role: "טכנאי",
-    businessName: "אופניים בתנועה",
-    city: "נתניה",
-    avatar: "🔧",
-    category: "smallBusiness",
-    domain: "תיקונים ושירות",
-    difficulty: "beginner",
-    rewardCoins: 90,
-    topic: "פירוק למתודות",
-    summary:
-      "מחיר תיקון מורכב מעלות החלקים ושעות העבודה. אני צריך מחשבון שיפריד בין שני הסכומים ויציג ללקוח הצעת מחיר ברורה.",
-  },
-  {
-    id: "00000000-0000-4000-8000-000000000014",
-    name: "רונית",
-    role: "מנהלת",
-    businessName: "מוזיאון הסקרנות",
-    city: "חולון",
-    avatar: "🏛️",
-    category: "ticketingSystems",
-    domain: "תרבות ולמידה",
-    difficulty: "intermediate",
-    rewardCoins: 135,
-    topic: "מתודות ותנאים",
-    summary:
-      "קבוצות מגיעות עם ילדים ומבוגרים, ולכל אחד מחיר אחר. אני רוצה לחשב מחיר לקבוצה ולהחיל הנחת קבוצה רק כשמספר המבקרים מספיק גדול.",
-  },
-  {
-    id: "00000000-0000-4000-8000-000000000015",
-    name: "יובל",
-    role: "רכז",
-    businessName: "מרכז ההתנדבות",
-    city: "עפולה",
-    avatar: "🤝",
-    category: "managementAndData",
-    domain: "התנדבות וקהילה",
-    difficulty: "advanced",
-    rewardCoins: 170,
-    topic: "מבני נתונים ומיון",
-    summary:
-      "לכל מתנדב יש תחומי עניין ושעות פנויות. אני רוצה לחפש מתנדבים שמתאימים למשימה ולהציג אותם לפי מספר שעות ההתנדבות שכבר השלימו.",
-  },
-  {
-    id: "00000000-0000-4000-8000-000000000016",
-    name: "מאיה",
-    role: "מדריכה",
-    businessName: "שבילי הצפון",
-    city: "כרמיאל",
-    avatar: "🥾",
-    category: "managementAndData",
-    domain: "טיולים וטבע",
-    difficulty: "advanced",
-    rewardCoins: 185,
-    topic: "סינון נתונים ופירוק בעיות",
-    summary:
-      "משפחות מבקשות מסלול לפי מרחק, רמת קושי והזמן שעומד לרשותן. אני צריכה לסנן את רשימת המסלולים ולהציג רק את אלה שמתאימים לבקשה.",
-  },
-];
+const rewardByDifficulty = {
+  beginner: 80,
+  intermediate: 130,
+  advanced: 180,
+} as const;
+
+const requiredText = z.string().trim().min(1);
+const customerSchema = z
+
+  .strictObject({
+    id: z.uuid(),
+    name: requiredText,
+    role: requiredText,
+    businessName: requiredText,
+    city: requiredText,
+    avatar: requiredText,
+    category: z.enum(CustomerCategory),
+    domain: requiredText,
+    difficulty: z.enum(DifficultyLevel),
+    rewardCoins: z.number().int().positive(),
+    topic: requiredText,
+    summary: requiredText,
+    isActive: z.literal(true),
+    problemBrief: customerProblemBriefSchema,
+  })
+
+  .refine(
+    (customer) =>
+      customer.rewardCoins === rewardByDifficulty[customer.difficulty],
+    { message: "Customer reward must match its difficulty" },
+  );
+
+const customerCatalogSchema = z
+
+  .array(customerSchema)
+
+  .length(20)
+
+  .refine((customers) => new Set(customers.map(({ id }) => id)).size === 20, {
+    message: "Customer IDs must be distinct",
+  })
+
+  .refine(
+    (customers) =>
+      new Set(customers.map(({ businessName }) => businessName)).size === 20,
+    { message: "Customer businesses must be distinct" },
+  );
+
+// Retire only the old seed-owned examples; preserve their rows and conversations.
+const legacyCustomerIds = Array.from(
+  { length: 16 },
+  (_, index) =>
+    `00000000-0000-4000-8000-${String(index + 1).padStart(12, "0")}`,
+);
 
 const seedCustomers = async () => {
-  for (const customer of mockCustomers) {
-    await prisma.customer.upsert({
-      where: { id: customer.id },
-      create: customer,
-      update: customer,
+  const customers = customerCatalogSchema.parse(customerData);
+
+  await prisma.$transaction(async (transaction) => {
+    await transaction.customer.updateMany({
+      where: { id: { in: legacyCustomerIds }, isActive: true },
+      data: { isActive: false },
     });
-  }
+
+    for (const customer of customers) {
+      await transaction.customer.upsert({
+        where: { id: customer.id },
+        create: customer,
+        update: customer,
+      });
+    }
+  });
+
+  logger.info(
+    "Seeded 20 active customer scenarios; legacy examples preserved as inactive",
+  );
 };
 
-seedCustomers().finally(() => prisma.$disconnect());
+seedCustomers()
+
+  .catch(() => {
+    logger.error(
+      "Customer seed failed; check catalog validation and database availability",
+    );
+    process.exitCode = 1;
+  })
+
+  .finally(() => prisma.$disconnect());
