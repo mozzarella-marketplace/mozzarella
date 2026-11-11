@@ -37,7 +37,7 @@ export const LoginForm: FC<{ returnTo: string }> = ({ returnTo }) => {
   const [serverError, setServerError] = useState("");
   const submissionInProgress = useRef(false);
   const form = useForm<LoginSchema>({
-    mode: "onChange",
+    mode: "onBlur",
     resolver: zodResolver(loginSchema),
     defaultValues: {
       "class-code": "",
@@ -112,7 +112,7 @@ export const LoginForm: FC<{ returnTo: string }> = ({ returnTo }) => {
                     {loginMessages.form.studentCode}
                   </FormLabel>
                   <div className="text-label text-muted">
-                    {loginMessages.form.identificationHint}
+                    {loginMessages.form.codeLengthHint}
                   </div>
                 </div>
               }

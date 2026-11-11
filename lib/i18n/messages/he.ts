@@ -22,7 +22,6 @@ export const heMessages = {
       classCode: "קוד כיתה",
       codeLengthHint: "4 תווים",
       studentCode: "קוד תלמיד אישי",
-      identificationHint: "זיהוי מזהה",
       submit: "כניסה למרקטפלייס",
       submitting: "מתחברים...",
       securityNote: "פרטי הכניסה אינם נשמרים בדפדפן",
