@@ -81,6 +81,7 @@ export const POST = async (
         summary: true,
         topic: true,
         difficulty: true,
+        problemBrief: true,
       },
     });
 
