@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { ArrowRight, Braces, Coins } from "lucide-react";
+import { ArrowRight, Braces, Leaf } from "lucide-react";
 import Link from "next/link";
 import { CustomerAvatar } from "@/components/customer-avatar";
 import { CustomerTags } from "@/components/customer-tags";
@@ -8,11 +8,13 @@ import type { CustomerSummary } from "@/types/customer";
 
 const actionClassName =
   "inline-flex shrink-0 items-center gap-2 rounded-control bg-secondary px-content py-2 text-label font-semibold text-secondary-foreground transition-colors duration-standard ease-standard hover:bg-primary hover:text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transition-none";
+const HIGH_REWARD_THRESHOLD = 150;
 
 export const CustomerCard: FC<{ customer: CustomerSummary }> = ({
   customer,
 }) => {
   const { marketplace } = getMessages();
+  const isHighReward = customer.rewardCoins >= HIGH_REWARD_THRESHOLD;
 
   return (
     <article className="flex w-full flex-col gap-content rounded-panel border border-border bg-background p-content shadow-panel">
@@ -30,9 +32,20 @@ export const CustomerCard: FC<{ customer: CustomerSummary }> = ({
             </p>
           </div>
         </div>
-        <p className="inline-flex shrink-0 items-center gap-1 rounded-pill bg-accent-soft px-3 py-1 text-label font-bold text-accent-foreground">
-          <Coins aria-hidden="true" className="size-4 text-accent" />
-          {marketplace.coins(customer.rewardCoins)}
+        <p
+          className={`inline-flex shrink-0 items-center gap-1 rounded-pill px-3 py-1 text-label font-bold ${
+            isHighReward
+              ? "bg-accent-soft text-accent-foreground"
+              : "bg-success-soft text-success-foreground"
+          }`}
+        >
+          <Leaf
+            aria-hidden="true"
+            className={`size-4 shrink-0 fill-current ${
+              isHighReward ? "text-accent" : "text-success"
+            }`}
+          />
+          {customer.rewardCoins}
         </p>
       </div>
       <CustomerTags customer={customer} />

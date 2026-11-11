@@ -57,7 +57,7 @@ export const heMessages = {
       ticketingSystems: "מערכות כרטיסים",
       managementAndData: "ניהול ונתונים",
     },
-    coins: (count: number) => `${count} מטבעות`,
+    basilLeaves: (count: number) => `${count} עלי בזיליקום`,
     customerByline: (role: string, businessName: string, city: string) =>
       `${role}, ${businessName} • ${city}`,
     quoted: (text: string) => `״${text}״`,
