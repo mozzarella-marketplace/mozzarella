@@ -10,7 +10,7 @@ import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { FC } from "react";
 import { Card } from "../ui/card";
-import { ArrowLeft, IdCard, Info, ShieldCheck, UserGroup } from "lucide-react";
+import { ArrowLeft, IdCard, Info, UserGroup } from "lucide-react";
 import { Form, FormLabel } from "../ui/form";
 import { LoginCodeField } from "./login-code-field";
 import { Button } from "../ui/button";
@@ -38,6 +38,7 @@ export const LoginForm: FC<{ returnTo: string }> = ({ returnTo }) => {
   const submissionInProgress = useRef(false);
   const form = useForm<LoginSchema>({
     mode: "onBlur",
+    reValidateMode: "onSubmit",
     resolver: zodResolver(loginSchema),
     defaultValues: {
       "class-code": "",
@@ -82,64 +83,85 @@ export const LoginForm: FC<{ returnTo: string }> = ({ returnTo }) => {
 
   return (
     <Card className="w-full max-w-lg text-start">
-      <div className="flex items-center gap-control rounded-tile bg-success-soft px-content py-control font-bold text-success-foreground">
-        <ShieldCheck className="stroke-3 inline-block" />{" "}
-        {loginMessages.form.anonymousAccess}
-      </div>
       <Form {...form}>
         <form onSubmit={submitLogin} aria-busy={isSubmitting}>
           <div className="flex flex-col gap-content">
             <LoginCodeField
               Icon={UserGroup}
               name="class-code"
-              title={
+              title={(invalid) => (
                 <div className="w-full flex justify-between">
-                  <FormLabel className="font-bold">
+                  <FormLabel
+                    className={
+                      invalid
+                        ? "font-bold text-destructive"
+                        : "font-bold text-foreground"
+                    }
+                  >
                     {loginMessages.form.classCode}
                   </FormLabel>
-                  <div className="text-label text-muted">
+                  <div
+                    className={
+                      invalid
+                        ? "text-label text-destructive"
+                        : "text-label text-muted"
+                    }
+                  >
                     {loginMessages.form.codeLengthHint}
                   </div>
                 </div>
-              }
+              )}
             />
             <LoginCodeField
               Icon={IdCard}
               name="student-code"
-              title={
+              title={(invalid) => (
                 <div className="w-full flex justify-between">
-                  <FormLabel className="font-bold">
+                  <FormLabel
+                    className={
+                      invalid
+                        ? "font-bold text-destructive"
+                        : "font-bold text-foreground"
+                    }
+                  >
                     {loginMessages.form.studentCode}
                   </FormLabel>
-                  <div className="text-label text-muted">
+                  <div
+                    className={
+                      invalid
+                        ? "text-label text-destructive"
+                        : "text-label text-muted"
+                    }
+                  >
                     {loginMessages.form.codeLengthHint}
                   </div>
                 </div>
-              }
+              )}
             />
-            {serverError && (
-              <div className="text-destructive" role="alert" aria-live="polite">
-                {serverError}
-              </div>
-            )}
             <Button
               type="submit"
               disabled={isSubmitting}
               size="lg"
-              className="w-full font-bold"
+              className="mt-2 w-full font-bold"
             >
               {isSubmitting
                 ? loginMessages.form.submitting
-                : loginMessages.form.submit}{" "}
+                : loginMessages.form.submit}
               <ArrowLeft className="size-6" />
             </Button>
           </div>
         </form>
       </Form>
-      <div className="flex items-center justify-center gap-control pt-control text-caption font-semibold">
-        <Info className="size-4 shrink-0 opacity-70" />
-        {loginMessages.form.securityNote}
-      </div>
+      {serverError && (
+        <div
+          className="flex items-center justify-center gap-control pt-control text-caption font-semibold text-destructive"
+          role="alert"
+          aria-live="polite"
+        >
+          <Info className="size-4 shrink-0 opacity-70" />
+          {serverError}
+        </div>
+      )}
     </Card>
   );
 };

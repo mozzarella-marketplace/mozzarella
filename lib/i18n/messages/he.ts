@@ -10,21 +10,12 @@ export const heMessages = {
   },
   login: {
     brandName: "מוצרלה",
-    tagline: "ערך קודם קוד",
-    welcomeTitle: "ברוכים הבאים",
-    welcomeDescription: "יש בעיות לפתור. היכנס כדי לפגוש את הלקוחות שמחכים לך.",
-    customerPromise: "אתה לא מקבל שיעורי בית. אתה מקבל לקוח אמיתי.",
-    businessCustomers: "לקוחות עסקיים אמיתיים",
-    conversation: "שיחה וגילוי דרישות",
-    coins: "תשלום במטבעות",
     form: {
-      anonymousAccess: "כניסה בעזרת קוד כיתה וקוד משתמש",
       classCode: "קוד כיתה",
       codeLengthHint: "4 תווים",
-      studentCode: "קוד תלמיד אישי",
-      submit: "כניסה למרקטפלייס",
+      studentCode: "קוד תלמיד",
+      submit: "מתחילים לפתור בעיות",
       submitting: "מתחברים...",
-      securityNote: "פרטי הכניסה אינם נשמרים בדפדפן",
     },
     validation: {
       required: "שדה חובה",
