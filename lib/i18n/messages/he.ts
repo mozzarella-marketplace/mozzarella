@@ -91,12 +91,11 @@ export const heMessages = {
       dailyLimit: (count: number) =>
         `הגעתם למכסת ${count} ההודעות היומית. אפשר להמשיך מחר.`,
     },
-    title: "שיחה עם הלקוח",
+    title: (customerName: string) => `שיחה עם ${customerName}`,
     empty: "ספרו ללקוח מה תרצו להבין על הבעיה שלו.",
     placeholder: "כתבו הודעה ללקוח...",
     inputLabel: "הודעה ללקוח",
-    aiDisclaimer: (customerName: string) =>
-      `${customerName} הוא יציר AI ולכן יכול לטעות - בדיוק כמו בני אדם.`,
+    aiDisclaimer: "בינה מלאכותית עלולה לטעות — בדיוק כמו בני אדם.",
     send: "שליחה",
     sending: "שולחים...",
     waiting: "הלקוח חושב...",
@@ -115,7 +114,7 @@ export const heMessages = {
       unavailable: "נדרשת התחברות או ששירות ההתחברות אינו זמין",
       saveFailed: "לא ניתן לשמור את סיפור המשתמש כרגע",
     },
-    title: "מה הבנתי מהלקוח עד כה",
+    title: (customerName: string) => `מה הבנתי מ${customerName} עד כה`,
     language: "שפת פיתוח",
     languagePlaceholder: "בחרו שפה",
     label: "סיפור המשתמש",

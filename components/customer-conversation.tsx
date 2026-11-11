@@ -125,7 +125,7 @@ export const CustomerConversation: FC<CustomerConversationProps> = ({
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-heading font-bold">
           <MessageCircle aria-hidden className="size-6 text-primary" />
-          {messages.title}
+          {messages.title(customerName)}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -200,7 +200,7 @@ export const CustomerConversation: FC<CustomerConversationProps> = ({
           )}
           <div className="flex flex-wrap items-center justify-between gap-control">
             <span className="text-label text-muted">
-              {messages.aiDisclaimer(customerName)}
+              {messages.aiDisclaimer}
             </span>
             <Button
               type="submit"

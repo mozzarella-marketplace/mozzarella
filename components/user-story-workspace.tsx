@@ -72,7 +72,7 @@ export const UserStoryWorkspace: FC<UserStoryWorkspaceProps> = ({
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-heading font-bold">
           <ClipboardList aria-hidden className="size-6 text-primary" />
-          {messages.userStory.title}
+          {messages.userStory.title(customerName)}
         </CardTitle>
       </CardHeader>
 
