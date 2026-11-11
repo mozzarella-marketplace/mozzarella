@@ -1,124 +1,47 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type FC } from "react";
-import {
-  ArrowLeft,
-  Check,
-  CodeXml,
-  Lightbulb,
-  Pause,
-  Pizza,
-  Play,
-  Sparkles,
-} from "lucide-react";
+import { ArrowLeft, Pause, Play } from "lucide-react";
 import { getMessages } from "@/lib/i18n/messages";
 import type { createIntroAnimation } from "./marketplace-intro-animation";
 import { MarketplaceIntroLogo } from "./marketplace-intro-logo";
+import {
+  IntroConversationScene,
+  IntroDiscoveryScene,
+  IntroSolutionScene,
+} from "./marketplace-intro-scenes";
 import styles from "./marketplace-intro.module.css";
 
 const introStorageKey = "mozzarella:welcome:v1";
 let dismissedInSession = false;
 
-const IntroArt: FC<{ step: number }> = ({ step }) => {
-  const { intro } = getMessages().marketplace;
+const introScenes = [
+  IntroConversationScene,
+  IntroDiscoveryScene,
+  IntroSolutionScene,
+];
 
-  if (step === 0) {
-    return (
-      <div className={styles.chatStage} aria-hidden="true">
-        <div className={styles.customerAvatar} data-intro-art="customer-avatar">
-          <span className={styles.chatAvatar}>👩‍🍳</span>
-          <span>
-            <strong>{intro.customerName}</strong>
-            <span className={styles.role}>{intro.customerRole}</span>
-          </span>
-        </div>
-        <div className={styles.customerBubble} data-intro-art="customer">
-          {intro.customerMessage}
-        </div>
-        <div className={styles.typing} data-intro-art="typing">
-          <i />
-          <i />
-          <i />
-        </div>
-        <div className={styles.developerBubble} data-intro-art="reply">
-          {intro.developerMessage}
-        </div>
-        <div
-          className={styles.developerAvatar}
-          data-intro-art="developer-avatar"
-        >
-          <span className={styles.chatAvatar}>
-            <CodeXml />
-          </span>
-          <span>
-            <strong>{intro.developerName}</strong>
-            <span className={styles.role}>{intro.developerRole}</span>
-          </span>
-        </div>
-        <span
-          className={[styles.satellite, styles.pizzaSatellite].join(" ")}
-          data-intro-art="pizza"
-        >
-          <Pizza />
-        </span>
-        <span
-          className={[styles.satellite, styles.codeSatellite].join(" ")}
-          data-intro-art="code-icon"
-        >
-          <CodeXml />
-        </span>
-      </div>
-    );
-  }
-
-  if (step === 1) {
-    return (
-      <div className={styles.artStage} aria-hidden="true">
-        <div className={styles.bulbGlow} />
-        <span className={styles.need} data-intro-art="need">
-          {intro.need}
-        </span>
-        <div className={styles.bulb} data-intro-art="bulb">
-          <Lightbulb strokeWidth={1.5} />
-        </div>
-        <div className={styles.insight} data-intro-art="insight">
-          <Check />
-          <span>{intro.insight}</span>
-        </div>
-        <span className={styles.ideaSpark} data-intro-art="spark-one">
-          <Sparkles />
-        </span>
-      </div>
-    );
-  }
-
+const IntroCaption: FC<{ title: string; description: string }> = ({
+  title,
+  description,
+}) => {
   return (
-    <div className={styles.artStage} aria-hidden="true">
-      <div className={styles.codeWindow} data-intro-art="code">
-        <div className={styles.codeHeader}>
-          <span>{intro.codeLabel}</span>
-          <span className={styles.windowDots}>
-            <i />
-            <i />
-            <i />
-          </span>
-        </div>
-        <code dir="ltr">{intro.code}</code>
-        <div className={styles.codeResult}>
-          <Check />
-          <span>{intro.resultLabel}</span>
-        </div>
-      </div>
-      <span className={styles.successBadge} data-intro-art="success">
-        <Check strokeWidth={3} />
-      </span>
-      <div className={styles.receipt} data-intro-art="receipt">
-        <span>👩‍🍳</span>
-        <span>{intro.result}</span>
-      </div>
-      <span className={styles.solutionSpark} data-intro-art="solution-spark">
-        <Sparkles />
-      </span>
+    <div className={styles.caption}>
+      <h3>
+        <span className="sr-only">{title}</span>
+        <span aria-hidden="true">
+          {title.split(" ").map((word, wordIndex) => (
+            <span key={wordIndex}>
+              <span className={styles.word} data-intro-word>
+                {word}
+              </span>{" "}
+            </span>
+          ))}
+        </span>
+      </h3>
+      <p className={styles.description} data-intro-description>
+        {description}
+      </p>
     </div>
   );
 };
@@ -283,49 +206,38 @@ export const MarketplaceIntro: FC = () => {
       </p>
       <div className={styles.stage}>
         <div className={styles.atmosphere} aria-hidden="true" />
-        {intro.steps.map((scene, index) => (
-          <section
-            className={styles.act}
-            data-intro-act={index}
-            key={scene.label}
-            aria-hidden={index !== currentStep}
-          >
-            <IntroArt step={index} />
-            <div className={styles.caption}>
-              <h3>
-                <span className="sr-only">
-                  {reducedMotion ? intro.title : scene.title}
-                </span>
-                <span aria-hidden="true">
-                  {(reducedMotion ? intro.title : scene.title)
-                    .split(" ")
-                    .map((word, wordIndex) => (
-                      <span key={wordIndex}>
-                        <span className={styles.word} data-intro-word>
-                          {word}
-                        </span>{" "}
-                      </span>
-                    ))}
-                </span>
-              </h3>
-              <p className={styles.description} data-intro-description>
-                {reducedMotion ? intro.description : scene.description}
-              </p>
-            </div>
-            {index === intro.steps.length - 1 && (
-              <button
-                type="button"
-                className={styles.continue}
-                data-intro-cta
-                onClick={finish}
-                disabled={exiting}
-              >
-                {intro.continue}
-                <ArrowLeft className="ltr:rotate-180" />
-              </button>
-            )}
-          </section>
-        ))}
+        {introScenes.map((Scene, index) => {
+          const scene = intro.steps[index];
+
+          return (
+            <section
+              className={styles.act}
+              data-intro-act={index}
+              key={scene.label}
+              aria-hidden={index !== currentStep}
+            >
+              <Scene />
+              <IntroCaption
+                title={reducedMotion ? intro.title : scene.title}
+                description={
+                  reducedMotion ? intro.description : scene.description
+                }
+              />
+              {index === intro.steps.length - 1 && (
+                <button
+                  type="button"
+                  className={styles.continue}
+                  data-intro-cta
+                  onClick={finish}
+                  disabled={exiting}
+                >
+                  {intro.continue}
+                  <ArrowLeft className="ltr:rotate-180" />
+                </button>
+              )}
+            </section>
+          );
+        })}
       </div>
       <div className={styles.footer}>
         <ol className={styles.steps}>
