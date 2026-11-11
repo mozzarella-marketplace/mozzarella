@@ -225,6 +225,10 @@ export const MarketplaceIntro: FC = () => {
     animationRef.current?.setPaused(shouldPause);
   }, [shouldPause]);
 
+  useEffect(() => {
+    if (reducedMotion && exiting) dismiss();
+  }, [reducedMotion, exiting, dismiss]);
+
   if (!visible) return null;
   const currentStep = reducedMotion ? intro.steps.length - 1 : step;
 
