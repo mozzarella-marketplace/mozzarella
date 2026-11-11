@@ -5,6 +5,8 @@ type IntroAnimationCallbacks = {
   onComplete: () => void;
 };
 
+const logoPrologueDuration = 1.6;
+
 const introSelectors = {
   scenes: "[data-intro-act]",
   progress: "[data-intro-progress]",
@@ -12,6 +14,8 @@ const introSelectors = {
   logo: "[data-intro-logo]",
   scrim: "[data-intro-scrim]",
   cheese: "[data-intro-cheese]",
+  cheeseTears: "[data-intro-cheese-tears]",
+  cheeseStrands: "[data-intro-cheese-strands]",
   braces: "[data-intro-brace]",
   leftBrace: '[data-intro-brace="left"]',
   rightBrace: '[data-intro-brace="right"]',
@@ -74,6 +78,12 @@ const addLogoPrologue = (
 ) => {
   const frame = root.getBoundingClientRect();
   const logoBounds = logo.getBoundingClientRect();
+  const openingWidth = Math.min(540, root.clientWidth * 0.76);
+  const pullStartsAt = 0.18;
+  const recoilStartsAt = 0.68;
+  const returnStartsAt = logoPrologueDuration - 0.55;
+  const tears = root.querySelector<SVGGElement>(introSelectors.cheeseTears);
+  const strands = root.querySelector<SVGGElement>(introSelectors.cheeseStrands);
 
   timeline
     .set(
@@ -83,8 +93,10 @@ const addLogoPrologue = (
           frame.left + frame.width / 2 - logoBounds.left - logoBounds.width / 2,
         y:
           frame.top + frame.height / 2 - logoBounds.top - logoBounds.height / 2,
-        scale: root.clientWidth < 640 ? 2.5 : 3.2,
+        scale: openingWidth / logoBounds.width,
+        rotation: -4,
         transformOrigin: "50% 50%",
+        "--intro-logo-glow-opacity": 1,
       },
       0,
     )
@@ -95,34 +107,94 @@ const addLogoPrologue = (
     )
     .to(
       introSelectors.cheese,
-      { scaleX: 1.28, scaleY: 0.76, duration: 0.24, ease: "power2.out" },
-      0.12,
+      { scaleX: 1.45, scaleY: 0.66, duration: 0.38, ease: "power2.out" },
+      pullStartsAt,
     )
     .to(
       introSelectors.leftBrace,
-      { x: -24, duration: 0.24, ease: "power2.out" },
-      0.12,
+      { x: -42, duration: 0.38, ease: "power2.out" },
+      pullStartsAt,
     )
     .to(
       introSelectors.rightBrace,
-      { x: 24, duration: 0.24, ease: "power2.out" },
-      0.12,
-    )
-    .to(
-      introSelectors.cheese,
-      { scaleX: 1, scaleY: 1, duration: 0.55, ease: "elastic.out(1, 0.4)" },
-      0.36,
-    )
-    .to(
-      introSelectors.braces,
-      { x: 0, duration: 0.55, ease: "elastic.out(1, 0.4)" },
-      0.36,
+      { x: 42, duration: 0.38, ease: "power2.out" },
+      pullStartsAt,
     )
     .to(
       logo,
-      { x: 0, y: 0, scale: 1, duration: 0.55, ease: "power3.inOut" },
-      0.65,
+      { rotation: -7, duration: 0.38, ease: "power2.out" },
+      pullStartsAt,
+    )
+    .to(
+      introSelectors.cheese,
+      { scaleX: 1, scaleY: 1, duration: 0.57, ease: "elastic.out(1, 0.4)" },
+      recoilStartsAt,
+    )
+    .to(
+      introSelectors.braces,
+      { x: 0, duration: 0.57, ease: "elastic.out(1, 0.4)" },
+      recoilStartsAt,
+    )
+    .to(
+      logo,
+      { rotation: 1.5, duration: 0.32, ease: "power2.out" },
+      recoilStartsAt,
+    )
+    .to(
+      logo,
+      {
+        x: 0,
+        y: 0,
+        scale: 1,
+        rotation: 0,
+        "--intro-logo-glow-opacity": 0.45,
+        duration: 0.55,
+        ease: "power3.inOut",
+      },
+      returnStartsAt,
     );
+
+  if (tears) {
+    timeline
+      .set(
+        tears,
+        { opacity: 0, scaleX: 0.8, scaleY: 0.2, transformOrigin: "50% 50%" },
+        0,
+      )
+      .to(
+        tears,
+        {
+          opacity: 1,
+          scaleX: 1,
+          scaleY: 1,
+          duration: 0.18,
+          ease: "power2.out",
+        },
+        0.4,
+      )
+      .to(
+        tears,
+        {
+          opacity: 0,
+          scaleX: 0.8,
+          scaleY: 0.2,
+          duration: 0.25,
+          ease: "power2.in",
+        },
+        recoilStartsAt,
+      );
+  }
+
+  if (strands) {
+    timeline
+      .set(strands, { opacity: 0 }, 0)
+      .to(strands, { opacity: 0.8, duration: 0.18, ease: "power2.out" }, 0.4)
+      .to(
+        strands,
+        { opacity: 0, duration: 0.25, ease: "power2.in" },
+        recoilStartsAt,
+      );
+  }
 };
 
 const addConversationScene = (
@@ -421,7 +493,7 @@ export const createIntroAnimation = (
   const inlineOffset =
     getComputedStyle(root).direction === "rtl" ? travel : -travel;
   const logo = root.querySelector<HTMLElement>(introSelectors.logo);
-  const conversationStart = logo ? 1.1 : 0;
+  const conversationStart = logo ? logoPrologueDuration : 0;
   const discoveryStart = conversationStart + 3.5;
   const solutionStart = conversationStart + 7;
   const callToActionStart = conversationStart + 9;

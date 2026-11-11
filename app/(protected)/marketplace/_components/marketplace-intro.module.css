@@ -68,6 +68,7 @@
 }
 
 .brandMark {
+  position: relative;
   display: grid;
   place-items: center;
   inline-size: calc(var(--spacing) * 26);
@@ -75,15 +76,39 @@
   padding: var(--spacing);
   flex-shrink: 0;
   overflow: visible;
-  border-radius: var(--radius-tile);
-  background: var(--color-accent-soft);
-  box-shadow: var(--shadow-floating);
+  isolation: isolate;
+}
+
+.brandMark::before {
+  position: absolute;
+  inset-block: -20%;
+  inset-inline: -28%;
+  z-index: -1;
+  background:
+    radial-gradient(
+      ellipse at 34% 48%,
+      color-mix(in srgb, var(--color-accent-soft) 60%, transparent),
+      transparent 66%
+    ),
+    radial-gradient(
+      ellipse at 70% 46%,
+      color-mix(in srgb, var(--color-background) 48%, transparent),
+      transparent 64%
+    );
+  filter: blur(calc(var(--spacing) * 3));
+  opacity: var(--intro-logo-glow-opacity, 0.45);
+  pointer-events: none;
+  content: "";
 }
 
 .brandMark svg {
   inline-size: 100%;
   block-size: 100%;
   overflow: visible;
+  filter: drop-shadow(
+    0 0 calc(var(--spacing) * 0.75)
+      color-mix(in srgb, var(--color-accent-soft) 60%, transparent)
+  );
 }
 
 .eyebrow,
