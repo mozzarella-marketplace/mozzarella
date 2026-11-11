@@ -33,16 +33,14 @@ export const SiteHeader: FC = () => {
                 {navigation.marketplace}
               </Link>
             </li>
-            {navigation.upcoming.map((label) => (
-              <li key={label}>
-                <span
-                  aria-disabled="true"
-                  className="block px-3 py-1.5 text-muted"
-                >
-                  {label}
-                </span>
-              </li>
-            ))}
+            <li>
+              <span
+                aria-disabled="true"
+                className="block px-3 py-1.5 text-muted"
+              >
+                {navigation.factoryShop}
+              </span>
+            </li>
           </ul>
         </nav>
         <div className="ms-auto">

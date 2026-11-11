@@ -41,7 +41,7 @@ export const heMessages = {
   navigation: {
     label: "ניווט ראשי",
     marketplace: "מרקטפלייס",
-    upcoming: ["פרויקט פעיל", "עבודות שלי", "מבט מורה"],
+    factoryShop: "חנות המפעל",
   },
   marketplace: {
     status: "המרקטפלייס פתוח",
