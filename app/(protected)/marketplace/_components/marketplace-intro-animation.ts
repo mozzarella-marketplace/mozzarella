@@ -14,8 +14,6 @@ const introSelectors = {
   logo: "[data-intro-logo]",
   scrim: "[data-intro-scrim]",
   cheese: "[data-intro-cheese]",
-  cheeseTears: "[data-intro-cheese-tears]",
-  cheeseStrands: "[data-intro-cheese-strands]",
   braces: "[data-intro-brace]",
   leftBrace: '[data-intro-brace="left"]',
   rightBrace: '[data-intro-brace="right"]',
@@ -82,8 +80,6 @@ const addLogoPrologue = (
   const pullStartsAt = 0.18;
   const recoilStartsAt = 0.68;
   const returnStartsAt = logoPrologueDuration - 0.55;
-  const tears = root.querySelector<SVGGElement>(introSelectors.cheeseTears);
-  const strands = root.querySelector<SVGGElement>(introSelectors.cheeseStrands);
 
   timeline
     .set(
@@ -96,7 +92,6 @@ const addLogoPrologue = (
         scale: openingWidth / logoBounds.width,
         rotation: -4,
         transformOrigin: "50% 50%",
-        "--intro-logo-glow-opacity": 1,
       },
       0,
     )
@@ -147,54 +142,11 @@ const addLogoPrologue = (
         y: 0,
         scale: 1,
         rotation: 0,
-        "--intro-logo-glow-opacity": 0.45,
         duration: 0.55,
         ease: "power3.inOut",
       },
       returnStartsAt,
     );
-
-  if (tears) {
-    timeline
-      .set(
-        tears,
-        { opacity: 0, scaleX: 0.8, scaleY: 0.2, transformOrigin: "50% 50%" },
-        0,
-      )
-      .to(
-        tears,
-        {
-          opacity: 1,
-          scaleX: 1,
-          scaleY: 1,
-          duration: 0.18,
-          ease: "power2.out",
-        },
-        0.4,
-      )
-      .to(
-        tears,
-        {
-          opacity: 0,
-          scaleX: 0.8,
-          scaleY: 0.2,
-          duration: 0.25,
-          ease: "power2.in",
-        },
-        recoilStartsAt,
-      );
-  }
-
-  if (strands) {
-    timeline
-      .set(strands, { opacity: 0 }, 0)
-      .to(strands, { opacity: 0.8, duration: 0.18, ease: "power2.out" }, 0.4)
-      .to(
-        strands,
-        { opacity: 0, duration: 0.25, ease: "power2.in" },
-        recoilStartsAt,
-      );
-  }
 };
 
 const addConversationScene = (
