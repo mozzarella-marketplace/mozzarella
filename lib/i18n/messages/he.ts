@@ -62,9 +62,9 @@ export const heMessages = {
       `${role}, ${businessName} • ${city}`,
     quoted: (text: string) => `״${text}״`,
     difficulty: {
-      beginner: "רמת כניסה",
-      intermediate: "רמה בינונית",
-      advanced: "מתקדם",
+      beginner: "מתחילים",
+      intermediate: "מתקדמים",
+      advanced: "מנוסים",
     },
     talkAction: (name: string) => `לדבר עם ${name}`,
     loading: "הלקוחות נטענים…",
