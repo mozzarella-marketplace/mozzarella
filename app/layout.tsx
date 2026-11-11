@@ -1,6 +1,7 @@
 import type { FC, ReactNode } from "react";
 import type { Metadata } from "next";
 import { Heebo } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { defaultLocale } from "@/consts/locales";
 import { env } from "@/lib/config/env";
@@ -45,7 +46,10 @@ const RootLayout: FC<
       dir={defaultLocale.direction}
       className={heebo.variable}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 };
