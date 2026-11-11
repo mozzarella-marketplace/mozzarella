@@ -31,12 +31,11 @@ export const heMessages = {
     },
     login: {
       invalidInput: "מזהה משתמש וכיתה חייבים להכיל בדיוק ארבע תווים",
-      invalidCredentials: "מזהה משתמש או כיתה שגויים",
+      invalidCredentials: "קוד הכיתה או קוד התלמיד שגויים",
       unavailable: "התחברות אינה זמינה כרגע",
     },
   },
   brand: {
-    tagline: "ערך קודם קוד",
     copyright: "© מוצרלה (Mozzarella) • ערך קודם קוד",
   },
   navigation: {
@@ -45,9 +44,9 @@ export const heMessages = {
     upcoming: ["פרויקט פעיל", "עבודות שלי", "מבט מורה"],
   },
   marketplace: {
-    status: "שוק פרויקטים פתוח",
+    status: "המרקטפלייס פתוח",
     opportunities: (count: number) => `• ${count} הזדמנויות פעילות`,
-    title: "לקוחות מחכים לפתרון שלך",
+    title: "לקוחות מחכים לפתרונות שלך",
     subtitle: "מוצאים בעיה. מדברים עם הלקוח. בונים פתרון.",
     searchLabel: "חיפוש לקוחות",
     searchPlaceholder: "חיפוש לקוח או תחום עניין…",
