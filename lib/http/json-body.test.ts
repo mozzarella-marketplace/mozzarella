@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { parseLoginInput } from "@/lib/auth/login-input";
-import { readJsonBody } from "@/lib/json-body";
+import { readJsonBody } from "@/lib/http/json-body";
 
 const jsonRequest = (body: string, headers: Record<string, string> = {}) =>
   new Request("http://localhost/api/example", {

@@ -18,11 +18,10 @@ Use Next.js App Router, TypeScript in strict mode, Tailwind CSS, Oxlint, Oxfmt, 
 - `consts/`: fixed application and domain constants
 - `lib/`: shared utilities and application helpers
 - `lib/config/`: centralized environment and deployment configuration
-- `lib/db/`: the Prisma Client entry point; `lib/generated/prisma/` holds the generated client and is ignored by Git
 - `lib/i18n/`: translation resources and i18n helpers
 - `lib/logging/`: the application/server logging entry point
 - `types/`: shared application and domain types
-- `prisma/`: the Prisma schema, migrations, and seed data
+- `prisma/`: the Prisma Client entry point, schema, migrations, and seed data; `lib/generated/prisma/` holds the generated client and is ignored by Git
 - `public/`: static assets
 
 Do not add folders or abstractions without a concrete need. Do not create `components/ui` or a custom UI library unless a feature requires it.

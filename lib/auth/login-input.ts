@@ -1,6 +1,6 @@
 import "server-only";
 import { loginSchema, type LoginInput } from "@/lib/auth/login-schema";
-import { readJsonBody } from "@/lib/json-body";
+import { readJsonBody } from "@/lib/http/json-body";
 
 const MAX_REQUEST_BYTES = 1024;
 

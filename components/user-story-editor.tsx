@@ -35,7 +35,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { defaultLocale, getLocaleConfig } from "@/consts/locales";
+import { defaultLocale } from "@/consts/locales";
 import { getMessages } from "@/lib/i18n/messages";
 
 type TextAlignment = "start" | "center" | "end" | "justify";
@@ -79,7 +79,7 @@ const textStyleSettings: TextStyleSetting[] = [
   "color",
 ];
 
-const isRightToLeft = getLocaleConfig(defaultLocale).direction === "rtl";
+const isRightToLeft = defaultLocale.direction === "rtl";
 
 const alignmentIcons: Record<TextAlignment, LucideIcon> = {
   start: isRightToLeft ? AlignRight : AlignLeft,

@@ -1,4 +1,4 @@
-import { prisma } from "../lib/db/prisma";
+import { prisma } from "./prisma";
 import type { CustomerSummary } from "../types/customer";
 
 // Fixed UUIDs keep the seed idempotent: re-running it updates these rows instead of adding new ones.

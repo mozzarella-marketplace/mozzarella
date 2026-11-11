@@ -11,7 +11,7 @@ import {
   setKeycloakTokens,
 } from "@/lib/auth/session";
 import { env } from "@/lib/config/env";
-import { prisma } from "@/lib/db/prisma";
+import { prisma } from "@/prisma/prisma";
 import { logger } from "@/lib/logging/logger";
 
 export type CurrentUser = {
@@ -82,9 +82,7 @@ export const getPageUser = async (
 ): Promise<CurrentUser | null> => {
   const user = await getCurrentUser();
 
-  if (user) {
-    return user;
-  }
+  if (user) return user;
 
   const { refreshToken } = await getKeycloakTokens();
 

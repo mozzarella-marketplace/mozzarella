@@ -249,7 +249,7 @@ const setup = async () => {
   await runCommand("npm", ["run", "db:deploy"]);
   logger.info("Seeding marketplace customers");
   await runCommand("npm", ["run", "db:seed"]);
-  const { prisma } = await import("../lib/db/prisma");
+  const { prisma } = await import("../prisma/prisma");
 
   try {
     const userSchema = z.object({
