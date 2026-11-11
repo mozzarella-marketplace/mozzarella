@@ -38,7 +38,7 @@ const LoginPage: FC<{
         </div>
       </header>
 
-      <section className="flex w-full max-w-lg flex-col items-center gap-content">
+      <section className="relative flex w-full max-w-lg flex-col items-center">
         <LoginForm returnTo={returnTo} />
       </section>
     </main>

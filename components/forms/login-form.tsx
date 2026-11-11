@@ -82,79 +82,81 @@ export const LoginForm: FC<{ returnTo: string }> = ({ returnTo }) => {
   });
 
   return (
-    <Card className="w-full max-w-lg text-start">
-      <Form {...form}>
-        <form onSubmit={submitLogin} aria-busy={isSubmitting}>
-          <div className="flex flex-col gap-content">
-            <LoginCodeField
-              Icon={UserGroup}
-              name="class-code"
-              title={(invalid) => (
-                <div className="w-full flex justify-between">
-                  <FormLabel
-                    className={
-                      invalid
-                        ? "font-bold text-destructive"
-                        : "font-bold text-foreground"
-                    }
-                  >
-                    {loginMessages.form.classCode}
-                  </FormLabel>
-                  <div
-                    className={
-                      invalid
-                        ? "text-label text-destructive"
-                        : "text-label text-muted"
-                    }
-                  >
-                    {loginMessages.form.codeLengthHint}
+    <>
+      <Card className="w-full max-w-lg text-start">
+        <Form {...form}>
+          <form onSubmit={submitLogin} aria-busy={isSubmitting}>
+            <div className="flex flex-col gap-content">
+              <LoginCodeField
+                Icon={UserGroup}
+                name="class-code"
+                title={(invalid) => (
+                  <div className="w-full flex justify-between">
+                    <FormLabel
+                      className={
+                        invalid
+                          ? "font-bold text-destructive"
+                          : "font-bold text-foreground"
+                      }
+                    >
+                      {loginMessages.form.classCode}
+                    </FormLabel>
+                    <div
+                      className={
+                        invalid
+                          ? "text-label text-destructive"
+                          : "text-label text-muted"
+                      }
+                    >
+                      {loginMessages.form.codeLengthHint}
+                    </div>
                   </div>
-                </div>
-              )}
-            />
-            <LoginCodeField
-              Icon={IdCard}
-              name="student-code"
-              title={(invalid) => (
-                <div className="w-full flex justify-between">
-                  <FormLabel
-                    className={
-                      invalid
-                        ? "font-bold text-destructive"
-                        : "font-bold text-foreground"
-                    }
-                  >
-                    {loginMessages.form.studentCode}
-                  </FormLabel>
-                  <div
-                    className={
-                      invalid
-                        ? "text-label text-destructive"
-                        : "text-label text-muted"
-                    }
-                  >
-                    {loginMessages.form.codeLengthHint}
+                )}
+              />
+              <LoginCodeField
+                Icon={IdCard}
+                name="student-code"
+                title={(invalid) => (
+                  <div className="w-full flex justify-between">
+                    <FormLabel
+                      className={
+                        invalid
+                          ? "font-bold text-destructive"
+                          : "font-bold text-foreground"
+                      }
+                    >
+                      {loginMessages.form.studentCode}
+                    </FormLabel>
+                    <div
+                      className={
+                        invalid
+                          ? "text-label text-destructive"
+                          : "text-label text-muted"
+                      }
+                    >
+                      {loginMessages.form.codeLengthHint}
+                    </div>
                   </div>
-                </div>
-              )}
-            />
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              size="lg"
-              className="mt-2 w-full font-bold"
-            >
-              {isSubmitting
-                ? loginMessages.form.submitting
-                : loginMessages.form.submit}
-              <ArrowLeft className="size-6" />
-            </Button>
-          </div>
-        </form>
-      </Form>
+                )}
+              />
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                size="lg"
+                className="mt-2 w-full font-bold"
+              >
+                {isSubmitting
+                  ? loginMessages.form.submitting
+                  : loginMessages.form.submit}
+                <ArrowLeft className="size-6" />
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </Card>
       {serverError && (
         <div
-          className="flex items-center justify-center gap-control pt-control text-caption font-semibold text-destructive"
+          className="absolute inset-x-0 top-full flex items-center justify-center gap-control pt-content text-caption font-semibold text-destructive"
           role="alert"
           aria-live="polite"
         >
@@ -162,6 +164,6 @@ export const LoginForm: FC<{ returnTo: string }> = ({ returnTo }) => {
           {serverError}
         </div>
       )}
-    </Card>
+    </>
   );
 };
