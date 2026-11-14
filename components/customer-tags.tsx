@@ -9,7 +9,7 @@ const difficultyStyles = {
 } satisfies Record<DifficultyLevel, string>;
 
 export const CustomerTags: FC<{
-  customer: Pick<CustomerSummary, "domain" | "difficulty">;
+  customer: Pick<CustomerSummary, "domain" | "difficulty" | "tags">;
 }> = ({ customer }) => {
   const { marketplace } = getMessages();
 
@@ -23,6 +23,14 @@ export const CustomerTags: FC<{
       >
         {marketplace.difficulty[customer.difficulty]}
       </li>
+      {customer.tags.map((tag) => (
+        <li
+          key={tag.slug}
+          className="rounded-pill border border-border px-2 py-1 text-muted"
+        >
+          {tag.label}
+        </li>
+      ))}
     </ul>
   );
 };

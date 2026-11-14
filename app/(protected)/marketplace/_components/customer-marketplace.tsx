@@ -4,22 +4,16 @@ import { Search } from "lucide-react";
 import { useMemo, useState, type ReactNode, type FC } from "react";
 import { CustomerCategory } from "@/lib/generated/prisma/enums";
 import { getMessages } from "@/lib/i18n/messages";
+import {
+  filterCustomers,
+  getCustomerTags,
+} from "@/lib/marketplace/customer-filters";
 import type { CustomerSummary } from "@/types/customer";
 import { CustomerCard } from "./customer-card";
 import { marketplaceGridClassName } from "./marketplace-grid";
 import { MarketplaceHero } from "./marketplace-hero";
 
 const categories = Object.values(CustomerCategory);
-
-const matchesQuery = (customer: CustomerSummary, normalizedQuery: string) =>
-  [
-    customer.name,
-    customer.role,
-    customer.businessName,
-    customer.city,
-    customer.domain,
-    customer.topic,
-  ].some((field) => field.toLowerCase().includes(normalizedQuery));
 
 const FilterChip: FC<{
   isSelected: boolean;
@@ -42,6 +36,27 @@ const FilterChip: FC<{
   );
 };
 
+const TagFilterChip: FC<{
+  isSelected: boolean;
+  onToggle: () => void;
+  children: ReactNode;
+}> = ({ isSelected, onToggle, children }) => {
+  return (
+    <button
+      type="button"
+      aria-pressed={isSelected}
+      onClick={onToggle}
+      className={`rounded-pill border px-3 py-1 text-caption font-medium transition-colors duration-standard ease-standard focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transition-none ${
+        isSelected
+          ? "border-primary bg-primary text-primary-foreground"
+          : "border-border bg-background text-muted hover:border-primary hover:text-secondary-foreground"
+      }`}
+    >
+      {children}
+    </button>
+  );
+};
+
 export const CustomerMarketplace: FC<{
   customers: CustomerSummary[];
 }> = ({ customers }) => {
@@ -49,42 +64,82 @@ export const CustomerMarketplace: FC<{
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] =
     useState<CustomerCategory | null>(null);
+  const [selectedTagSlugs, setSelectedTagSlugs] = useState<ReadonlySet<string>>(
+    new Set(),
+  );
 
-  const visibleCustomers = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase();
+  const tags = useMemo(() => getCustomerTags(customers), [customers]);
+  const visibleCustomers = useMemo(
+    () =>
+      filterCustomers(customers, {
+        query,
+        category: selectedCategory,
+        tagSlugs: selectedTagSlugs,
+      }),
+    [customers, query, selectedCategory, selectedTagSlugs],
+  );
 
-    return customers.filter(
-      (customer) =>
-        (selectedCategory === null || customer.category === selectedCategory) &&
-        (!normalizedQuery || matchesQuery(customer, normalizedQuery)),
-    );
-  }, [customers, query, selectedCategory]);
+  const toggleTag = (slug: string) =>
+    setSelectedTagSlugs((current) => {
+      const next = new Set(current);
+
+      if (!next.delete(slug)) {
+        next.add(slug);
+      }
+
+      return next;
+    });
 
   return (
     <div className="flex flex-col gap-section">
       <MarketplaceHero
         opportunityCount={customers.length}
         filters={
-          <div
-            role="group"
-            aria-label={marketplace.filtersLabel}
-            className="flex flex-wrap gap-2 pt-2"
-          >
-            <FilterChip
-              isSelected={selectedCategory === null}
-              onSelect={() => setSelectedCategory(null)}
+          <div className="flex flex-col gap-control pt-2">
+            <div
+              role="group"
+              aria-label={marketplace.filtersLabel}
+              className="flex flex-wrap gap-2"
             >
-              {marketplace.allFilter(customers.length)}
-            </FilterChip>
-            {categories.map((category) => (
               <FilterChip
-                key={category}
-                isSelected={selectedCategory === category}
-                onSelect={() => setSelectedCategory(category)}
+                isSelected={selectedCategory === null}
+                onSelect={() => setSelectedCategory(null)}
               >
-                {marketplace.categories[category]}
+                {marketplace.allFilter(customers.length)}
               </FilterChip>
-            ))}
+              {categories.map((category) => (
+                <FilterChip
+                  key={category}
+                  isSelected={selectedCategory === category}
+                  onSelect={() => setSelectedCategory(category)}
+                >
+                  {marketplace.categories[category]}
+                </FilterChip>
+              ))}
+            </div>
+            {tags.length > 0 && (
+              <div
+                role="group"
+                aria-labelledby="customer-tag-filters-label"
+                className="flex flex-wrap items-center gap-2"
+              >
+                <span
+                  id="customer-tag-filters-label"
+                  className="text-caption font-semibold text-muted"
+                >
+                  {marketplace.tagFiltersLabel}
+                </span>
+                {tags.map((tag) => (
+                  <TagFilterChip
+                    key={tag.slug}
+                    isSelected={selectedTagSlugs.has(tag.slug)}
+                    onToggle={() => toggleTag(tag.slug)}
+                  >
+                    {tag.label}
+                  </TagFilterChip>
+                ))}
+              </div>
+            )}
           </div>
         }
         search={

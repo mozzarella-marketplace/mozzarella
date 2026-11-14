@@ -51,6 +51,7 @@ export const heMessages = {
     searchLabel: "חיפוש לקוחות",
     searchPlaceholder: "חיפוש לקוח או תחום עניין…",
     filtersLabel: "סינון לפי תחום",
+    tagFiltersLabel: "תחומי עניין",
     allFilter: (count: number) => `הכל (${count})`,
     categories: {
       smallBusiness: "עסקים קטנים",
