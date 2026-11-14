@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FC } from "react";
-import { ClipboardList, Lightbulb, Save } from "lucide-react";
+import { ClipboardList, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { ProductTipCard } from "@/components/product-tip-card";
 import { UserStoryEditor } from "@/components/user-story-editor";
 import {
   Select,
@@ -77,6 +78,8 @@ export const UserStoryWorkspace: FC<UserStoryWorkspaceProps> = ({
       </CardHeader>
 
       <CardContent>
+        <ProductTipCard />
+
         <div
           className={`${detailPanelClassName} flex flex-wrap items-center justify-between gap-2`}
         >
@@ -133,19 +136,6 @@ export const UserStoryWorkspace: FC<UserStoryWorkspaceProps> = ({
             }}
           />
         </div>
-
-        <aside className="flex gap-control rounded-panel bg-accent/15 p-content">
-          <Lightbulb
-            aria-hidden
-            className="size-5 shrink-0 text-accent-strong"
-          />
-          <div className="flex flex-col gap-1">
-            <p className="text-label font-bold">
-              {messages.userStory.tip.title}
-            </p>
-            <p className="italic text-muted">{messages.userStory.tip.body}</p>
-          </div>
-        </aside>
       </CardContent>
 
       <CardFooter className="pt-0">

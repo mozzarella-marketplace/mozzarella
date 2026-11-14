@@ -11,6 +11,7 @@
     "format:check": "oxfmt --check .",
     "typecheck": "tsc --noEmit",
     "test": "node --conditions=react-server --import tsx --test lib/*/*.test.ts",
+    "test:db": "node --conditions=react-server --import tsx --test lib/*/*.db-test.ts",
     "postinstall": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
