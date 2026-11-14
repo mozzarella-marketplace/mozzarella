@@ -50,14 +50,8 @@ export const heMessages = {
     subtitle: "מוצאים בעיה. מדברים עם הלקוח. בונים פתרון.",
     searchLabel: "חיפוש לקוחות",
     searchPlaceholder: "חיפוש לקוח או תחום עניין…",
-    filtersLabel: "סינון לפי תחום",
-    tagFiltersLabel: "תחומי עניין",
+    filtersLabel: "סינון לפי תחומי עניין",
     allFilter: (count: number) => `הכל (${count})`,
-    categories: {
-      smallBusiness: "עסקים קטנים",
-      ticketingSystems: "מערכות כרטיסים",
-      managementAndData: "ניהול ונתונים",
-    },
     basilLeaves: (count: number) => `${count} עלי בזיליקום`,
     customerByline: (role: string, businessName: string, city: string) =>
       `${role}, ${businessName} • ${city}`,

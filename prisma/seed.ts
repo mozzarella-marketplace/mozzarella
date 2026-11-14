@@ -1,9 +1,11 @@
+import type { Customer } from "../lib/generated/prisma/client";
 import { prisma } from "./prisma";
 import type { CustomerSummary } from "../types/customer";
 import { seedCustomerTagSlugs, seedTags } from "./customer-tags";
 
 // Fixed UUIDs keep the seed idempotent: re-running it updates these rows instead of adding new ones.
-const mockCustomers: Omit<CustomerSummary, "tags">[] = [
+const mockCustomers: (Omit<CustomerSummary, "tags"> &
+  Pick<Customer, "category">)[] = [
   {
     id: "00000000-0000-4000-8000-000000000001",
     name: "דני",

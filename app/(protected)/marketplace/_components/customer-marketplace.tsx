@@ -2,7 +2,6 @@
 
 import { Search } from "lucide-react";
 import { useMemo, useState, type ReactNode, type FC } from "react";
-import { CustomerCategory } from "@/lib/generated/prisma/enums";
 import { getMessages } from "@/lib/i18n/messages";
 import {
   filterCustomers,
@@ -13,39 +12,16 @@ import { CustomerCard } from "./customer-card";
 import { marketplaceGridClassName } from "./marketplace-grid";
 import { MarketplaceHero } from "./marketplace-hero";
 
-const categories = Object.values(CustomerCategory);
-
 const FilterChip: FC<{
   isSelected: boolean;
-  onSelect: () => void;
+  onClick: () => void;
   children: ReactNode;
-}> = ({ isSelected, onSelect, children }) => {
+}> = ({ isSelected, onClick, children }) => {
   return (
     <button
       type="button"
       aria-pressed={isSelected}
-      onClick={onSelect}
-      className={`rounded-control px-content py-1.5 text-label font-semibold transition-colors duration-standard ease-standard focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transition-none ${
-        isSelected
-          ? "bg-primary text-primary-foreground"
-          : "bg-secondary text-secondary-foreground hover:bg-primary/15"
-      }`}
-    >
-      {children}
-    </button>
-  );
-};
-
-const TagFilterChip: FC<{
-  isSelected: boolean;
-  onToggle: () => void;
-  children: ReactNode;
-}> = ({ isSelected, onToggle, children }) => {
-  return (
-    <button
-      type="button"
-      aria-pressed={isSelected}
-      onClick={onToggle}
+      onClick={onClick}
       className={`rounded-pill border px-3 py-1 text-caption font-medium transition-colors duration-standard ease-standard focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transition-none ${
         isSelected
           ? "border-primary bg-primary text-primary-foreground"
@@ -62,21 +38,14 @@ export const CustomerMarketplace: FC<{
 }> = ({ customers }) => {
   const { marketplace } = getMessages();
   const [query, setQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] =
-    useState<CustomerCategory | null>(null);
   const [selectedTagSlugs, setSelectedTagSlugs] = useState<ReadonlySet<string>>(
     new Set(),
   );
 
   const tags = useMemo(() => getCustomerTags(customers), [customers]);
   const visibleCustomers = useMemo(
-    () =>
-      filterCustomers(customers, {
-        query,
-        category: selectedCategory,
-        tagSlugs: selectedTagSlugs,
-      }),
-    [customers, query, selectedCategory, selectedTagSlugs],
+    () => filterCustomers(customers, { query, tagSlugs: selectedTagSlugs }),
+    [customers, query, selectedTagSlugs],
   );
 
   const toggleTag = (slug: string) =>
@@ -95,51 +64,26 @@ export const CustomerMarketplace: FC<{
       <MarketplaceHero
         opportunityCount={customers.length}
         filters={
-          <div className="flex flex-col gap-control pt-2">
-            <div
-              role="group"
-              aria-label={marketplace.filtersLabel}
-              className="flex flex-wrap gap-2"
+          <div
+            role="group"
+            aria-label={marketplace.filtersLabel}
+            className="flex flex-wrap gap-2 pt-2"
+          >
+            <FilterChip
+              isSelected={selectedTagSlugs.size === 0}
+              onClick={() => setSelectedTagSlugs(new Set())}
             >
+              {marketplace.allFilter(customers.length)}
+            </FilterChip>
+            {tags.map((tag) => (
               <FilterChip
-                isSelected={selectedCategory === null}
-                onSelect={() => setSelectedCategory(null)}
+                key={tag.slug}
+                isSelected={selectedTagSlugs.has(tag.slug)}
+                onClick={() => toggleTag(tag.slug)}
               >
-                {marketplace.allFilter(customers.length)}
+                {tag.label}
               </FilterChip>
-              {categories.map((category) => (
-                <FilterChip
-                  key={category}
-                  isSelected={selectedCategory === category}
-                  onSelect={() => setSelectedCategory(category)}
-                >
-                  {marketplace.categories[category]}
-                </FilterChip>
-              ))}
-            </div>
-            {tags.length > 0 && (
-              <div
-                role="group"
-                aria-labelledby="customer-tag-filters-label"
-                className="flex flex-wrap items-center gap-2"
-              >
-                <span
-                  id="customer-tag-filters-label"
-                  className="text-caption font-semibold text-muted"
-                >
-                  {marketplace.tagFiltersLabel}
-                </span>
-                {tags.map((tag) => (
-                  <TagFilterChip
-                    key={tag.slug}
-                    isSelected={selectedTagSlugs.has(tag.slug)}
-                    onToggle={() => toggleTag(tag.slug)}
-                  >
-                    {tag.label}
-                  </TagFilterChip>
-                ))}
-              </div>
-            )}
+            ))}
           </div>
         }
         search={

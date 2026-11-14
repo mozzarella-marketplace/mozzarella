@@ -1,12 +1,7 @@
-import type {
-  CustomerCategory,
-  CustomerSummary,
-  TagSummary,
-} from "@/types/customer";
+import type { CustomerSummary, TagSummary } from "@/types/customer";
 
 export type CustomerFilters = {
   query: string;
-  category: CustomerCategory | null;
   tagSlugs: ReadonlySet<string>;
 };
 
@@ -29,13 +24,12 @@ const matchesTags = (
 
 export const filterCustomers = (
   customers: CustomerSummary[],
-  { query, category, tagSlugs }: CustomerFilters,
+  { query, tagSlugs }: CustomerFilters,
 ) => {
   const normalizedQuery = query.trim().toLowerCase();
 
   return customers.filter(
     (customer) =>
-      (category === null || customer.category === category) &&
       matchesTags(customer, tagSlugs) &&
       (!normalizedQuery || matchesQuery(customer, normalizedQuery)),
   );

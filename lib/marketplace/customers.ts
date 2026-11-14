@@ -13,7 +13,6 @@ const customerSummarySelection = {
   businessName: true,
   city: true,
   avatar: true,
-  category: true,
   domain: true,
   difficulty: true,
   rewardCoins: true,

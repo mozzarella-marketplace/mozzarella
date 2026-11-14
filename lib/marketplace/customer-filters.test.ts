@@ -11,7 +11,6 @@ const createCustomer = (
   businessName: "עסק",
   city: "חיפה",
   avatar: "🙂",
-  category: "smallBusiness",
   domain: "שירות",
   difficulty: "beginner",
   rewardCoins: 80,
@@ -24,14 +23,10 @@ const createCustomer = (
 const food = { slug: "food", label: "אוכל" };
 const sports = { slug: "sports", label: "ספורט" };
 const bakery = createCustomer({ id: "bakery", tags: [food] });
-const pool = createCustomer({
-  id: "pool",
-  category: "ticketingSystems",
-  tags: [sports],
-});
+const pool = createCustomer({ id: "pool", tags: [sports] });
 const library = createCustomer({ id: "library", tags: [] });
 const customers = [bakery, pool, library];
-const noFilters = { query: "", category: null, tagSlugs: new Set<string>() };
+const noFilters = { query: "", tagSlugs: new Set<string>() };
 
 const ids = (result: CustomerSummary[]) => result.map(({ id }) => id);
 
@@ -62,16 +57,15 @@ test("matches search text against tag labels", () => {
   );
 });
 
-test("combines tag and category filters", () => {
+test("combines tag filters with search text", () => {
   assert.deepEqual(
     ids(
       filterCustomers(customers, {
-        ...noFilters,
-        category: "smallBusiness",
+        query: "ספורט",
         tagSlugs: new Set(["food", "sports"]),
       }),
     ),
-    ["bakery"],
+    ["pool"],
   );
 });
 

@@ -1,9 +1,6 @@
 import type { Customer, Tag } from "@/lib/generated/prisma/client";
 
-export type {
-  CustomerCategory,
-  DifficultyLevel,
-} from "@/lib/generated/prisma/enums";
+export type { DifficultyLevel } from "@/lib/generated/prisma/enums";
 
 export type TagSummary = Pick<Tag, "slug" | "label">;
 
@@ -15,7 +12,6 @@ export type CustomerSummary = Pick<
   | "businessName"
   | "city"
   | "avatar"
-  | "category"
   | "domain"
   | "difficulty"
   | "rewardCoins"
