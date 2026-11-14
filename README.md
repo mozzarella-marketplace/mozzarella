@@ -31,8 +31,34 @@ Mozzarella stores its data in PostgreSQL through Prisma ORM. The schema, migrati
 
 - `npm run db:migrate` creates and applies migrations during development.
 - `npm run db:deploy` applies committed migrations to a deployed database.
-- `npm run db:seed` inserts or updates 16 mock customers from `prisma/seed.ts`. Fixed IDs keep reruns from creating duplicates.
+- `npm run db:seed` inserts or updates 16 mock customers from `prisma/seed.ts` and the product-thinking tips from `prisma/product-tips.ts`. Fixed IDs and stable tip keys keep reruns from creating duplicates.
 - `npm run db:reset` prompts for confirmation, deletes all application database data, reapplies migrations, and seeds the mock customers. Use only with a development database; `DIRECT_URL` and `DATABASE_URL` must point to the same database. Keycloak is unchanged. Run `npm run keycloak:setup` afterward to restore the example classes and student mappings.
+
+## Product thinking tips
+
+The customer workspace shows one product-thinking tip at the top of the user-story card. Tips teach introductory product-management habits, such as discovery, problem vs. solution, user stories, acceptance criteria, edge cases, MVP and measuring success.
+
+**Content.** The reviewed Hebrew bank lives in `prisma/product-tips.ts`. Each tip has a stable `key`, a short `title`, a one- or two-sentence `body`, and one practical `action` for the current customer. Tip text is database content, separate from the UI strings in `lib/i18n/`. To change the bank:
+
+- Edit a tip's text in `prisma/product-tips.ts` and rerun `npm run db:seed`. Keep the key, which identifies the tip.
+- Add a tip by inserting it in the array; display order is the array position spaced by 10.
+- Retire a tip by setting `is_active = false` in the database. The seed never re-enables a disabled tip, so it stays retired after reruns.
+- Never reuse a key for different content.
+
+**Rotation.** Each student has one cursor per locale in `product_tip_progress`, holding the display order of the last tip they received. A visit shows the next active tip after the cursor, then wraps to the first. As a result:
+
+- Each student sees every active tip once before any repeats, and never the same tip twice in a row while at least two tips are active.
+- Disabled or deleted tips are skipped, and a tip inserted before the cursor appears in the next cycle.
+- With exactly one active tip it is shown every time, because non-repetition is impossible. With no active tips, the card shows an unavailable state.
+- Students progress independently, and progress persists across sessions and devices.
+
+**Delivery.** The card requests a tip with `POST /api/product-tips/next` after it mounts in the browser:
+
+- Server renders and Next.js prefetches never advance a student's rotation, and typing, saving and rerenders don't request again.
+- The endpoint uses the session's student and the server's locale, never browser input. It rejects cross-origin requests and responds with `Cache-Control: no-store`.
+- A transaction locks the student's cursor, so concurrent visits receive different tips.
+
+**Deployment.** Run `npm run db:deploy` to create the tables, then `npm run db:seed` to load or update the bank. Reseeding never resets students' rotation progress.
 
 ## Authentication
 
@@ -92,7 +118,8 @@ Open [http://localhost:3000](http://localhost:3000) in a browser.
 - `npm run format` formats the repository with Oxfmt.
 - `npm run format:check` checks formatting without changing files.
 - `npm run typecheck` runs the strict TypeScript check.
-- `npm test` checks bounded JSON request parsing and login input regression cases.
+- `npm test` checks bounded JSON request parsing, login input regression cases, and product-tip rotation and delivery.
+- `npm run test:db` checks product-tip delivery against a real database: per-student cycling, concurrent deliveries, disabled tips, and zero- or one-tip banks. It is not part of CI. Run it only against a disposable development database, with `DATABASE_URL` and the other required variables set in the shell; it creates and removes its own test data.
 - `postinstall` runs `prisma generate` so the Prisma Client matches the schema.
 
 ## Continuous integration

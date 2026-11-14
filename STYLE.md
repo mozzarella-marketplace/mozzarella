@@ -93,3 +93,4 @@ Mozzarella should feel like a modern learning marketplace: curious, welcoming, a
 - Keep shared primitives focused and composable. Create shared UI components when multiple product surfaces need the same behavior or accessibility contract; do not build a component library speculatively.
 - Keep product rules out of presentational components and keep server/client boundaries explicit.
 - Do not read environment variables or emit application logs from presentational components. Keep deployment configuration and logging in their dedicated server-side boundaries.
+- Learning cards that teach alongside a task, such as the product-thinking tip, sit at the top of the workspace they support. They use the `secondary` background with an inline-start `primary` accent border, a labeled Lucide icon, a heading, and non-italic body text, so emphasis never depends on color alone. Keep them non-modal and non-sticky, and never animate or rotate them on a timer.
