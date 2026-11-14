@@ -1,3 +1,5 @@
+import { defaultLocale } from "../consts/locales";
+import { heProductTips, productTipSpacing } from "./product-tips";
 import { prisma } from "./prisma";
 import type { CustomerSummary } from "../types/customer";
 
@@ -255,4 +257,30 @@ const seedCustomers = async () => {
   }
 };
 
-seedCustomers().finally(() => prisma.$disconnect());
+// Upserts by stable key so reruns never duplicate tips. Activation state and student rotation progress are left
+// untouched, so a tip disabled in the database stays disabled and no student's cycle is reset.
+const seedProductTips = async () => {
+  const locale = defaultLocale.code;
+
+  for (const [index, tip] of heProductTips.entries()) {
+    const displayOrder = (index + 1) * productTipSpacing;
+
+    await prisma.productTip.upsert({
+      where: { locale_key: { locale, key: tip.key } },
+      create: { ...tip, locale, displayOrder },
+      update: {
+        title: tip.title,
+        body: tip.body,
+        action: tip.action,
+        displayOrder,
+      },
+    });
+  }
+};
+
+const seed = async () => {
+  await seedCustomers();
+  await seedProductTips();
+};
+
+seed().finally(() => prisma.$disconnect());
