@@ -19,7 +19,23 @@ const customerSummarySelection = {
   rewardCoins: true,
   topic: true,
   summary: true,
-} as const satisfies Record<keyof CustomerSummary, true>;
+  tags: {
+    select: { tag: { select: { slug: true, label: true } } },
+    orderBy: { tag: { label: "asc" } },
+  },
+} as const satisfies Record<keyof CustomerSummary, unknown>;
+
+type CustomerRecord = Omit<CustomerSummary, "tags"> & {
+  tags: { tag: CustomerSummary["tags"][number] }[];
+};
+
+const toCustomerSummary = ({
+  tags,
+  ...customer
+}: CustomerRecord): CustomerSummary => ({
+  ...customer,
+  tags: tags.map(({ tag }) => tag),
+});
 
 const requireCustomerPageUser = async (returnTo: string) => {
   if (!(await getPageUser(returnTo))) {
@@ -31,11 +47,13 @@ export const getActiveCustomers = async (): Promise<CustomerSummary[]> => {
   await requireCustomerPageUser("/marketplace");
 
   try {
-    return await prisma.customer.findMany({
+    const customers = await prisma.customer.findMany({
       where: { isActive: true },
       select: customerSummarySelection,
       orderBy: { createdAt: "asc" },
     });
+
+    return customers.map(toCustomerSummary);
   } catch (error) {
     logger.error("Marketplace customer query failed");
     throw error;
@@ -48,10 +66,12 @@ export const getActiveCustomer = async (
   await requireCustomerPageUser(`/marketplace/${customerId}`);
 
   try {
-    return await prisma.customer.findFirst({
+    const customer = await prisma.customer.findFirst({
       where: { id: customerId, isActive: true },
       select: customerSummarySelection,
     });
+
+    return customer && toCustomerSummary(customer);
   } catch (error) {
     logger.error("Marketplace customer detail query failed");
     throw error;

@@ -1,8 +1,9 @@
 import { prisma } from "./prisma";
 import type { CustomerSummary } from "../types/customer";
+import { seedCustomerTagSlugs, seedTags } from "./customer-tags";
 
 // Fixed UUIDs keep the seed idempotent: re-running it updates these rows instead of adding new ones.
-const mockCustomers: CustomerSummary[] = [
+const mockCustomers: Omit<CustomerSummary, "tags">[] = [
   {
     id: "00000000-0000-4000-8000-000000000001",
     name: "דני",
@@ -255,4 +256,35 @@ const seedCustomers = async () => {
   }
 };
 
-seedCustomers().finally(() => prisma.$disconnect());
+const seedCustomerTags = async () => {
+  await Promise.all(
+    seedTags.map((tag) =>
+      prisma.tag.upsert({
+        where: { slug: tag.slug },
+        create: tag,
+        update: { label: tag.label },
+      }),
+    ),
+  );
+
+  for (const [customerId, slugs] of Object.entries(seedCustomerTagSlugs)) {
+    await prisma.$transaction([
+      prisma.customerTag.deleteMany({ where: { customerId } }),
+      ...slugs.map((slug) =>
+        prisma.customerTag.create({
+          data: {
+            customer: { connect: { id: customerId } },
+            tag: { connect: { slug } },
+          },
+        }),
+      ),
+    ]);
+  }
+};
+
+const seed = async () => {
+  await seedCustomers();
+  await seedCustomerTags();
+};
+
+seed().finally(() => prisma.$disconnect());
