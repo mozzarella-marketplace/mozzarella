@@ -1,5 +1,5 @@
 import "server-only";
-import { prisma } from "@/lib/db/prisma";
+import { prisma } from "@/prisma/prisma";
 import { redirect } from "next/navigation";
 import { getPageUser } from "@/lib/auth/current-user";
 import { getLoginUrl } from "@/lib/auth/return-to";

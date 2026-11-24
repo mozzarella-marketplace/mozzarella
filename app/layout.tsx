@@ -1,12 +1,12 @@
 import type { FC, ReactNode } from "react";
 import type { Metadata } from "next";
 import { Heebo } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-import { defaultLocale, getLocaleConfig } from "@/consts/locales";
+import { defaultLocale } from "@/consts/locales";
 import { env } from "@/lib/config/env";
 import { getMessages } from "@/lib/i18n/messages";
 
-const locale = getLocaleConfig(defaultLocale);
 const heebo = Heebo({
   subsets: ["hebrew", "latin"],
   variable: "--font-heebo",
@@ -42,11 +42,14 @@ const RootLayout: FC<
 > = ({ children }) => {
   return (
     <html
-      lang={defaultLocale}
-      dir={locale.direction}
+      lang={defaultLocale.code}
+      dir={defaultLocale.direction}
       className={heebo.variable}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 };

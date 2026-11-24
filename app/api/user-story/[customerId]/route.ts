@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { ProgrammingLanguage } from "@/lib/generated/prisma/enums";
-import { prisma } from "@/lib/db/prisma";
+import { prisma } from "@/prisma/prisma";
 import { logger } from "@/lib/logging/logger";
 import { isSameOriginRequest } from "@/lib/auth/csrf";
 import { AuthError, requireAuth } from "@/lib/auth/current-user";
-import { readJsonBody } from "@/lib/json-body";
+import { readJsonBody } from "@/lib/http/json-body";
 import { getMessages } from "@/lib/i18n/messages";
 
 const MAX_REQUEST_BYTES = 65_536;

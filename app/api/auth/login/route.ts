@@ -12,7 +12,7 @@ import {
   setKeycloakTokens,
 } from "@/lib/auth/session";
 import { env } from "@/lib/config/env";
-import { prisma } from "@/lib/db/prisma";
+import { prisma } from "@/prisma/prisma";
 import { getMessages } from "@/lib/i18n/messages";
 import { logger } from "@/lib/logging/logger";
 

@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import { connection } from "next/server";
-import { getActiveCustomers } from "@/lib/customers";
+import { getActiveCustomers } from "@/lib/marketplace/customers";
 import { CustomerEmptyState } from "./customer-empty-state";
 import { CustomerMarketplace } from "./customer-marketplace";
 import { MarketplaceHero } from "./marketplace-hero";

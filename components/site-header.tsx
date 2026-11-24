@@ -1,11 +1,14 @@
 import type { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Leaf } from "lucide-react";
 import { getMessages } from "@/lib/i18n/messages";
 import { LogoutButton } from "./logout-button";
 
+const DEMO_BASIL_LEAF_BALANCE = 240;
+
 export const SiteHeader: FC = () => {
-  const { app, navigation } = getMessages();
+  const { app, navigation, marketplace } = getMessages();
 
   return (
     <header className="border-b border-border bg-background">
@@ -33,19 +36,21 @@ export const SiteHeader: FC = () => {
                 {navigation.marketplace}
               </Link>
             </li>
-            {navigation.upcoming.map((label) => (
-              <li key={label}>
-                <span
-                  aria-disabled="true"
-                  className="block px-3 py-1.5 text-muted"
-                >
-                  {label}
-                </span>
-              </li>
-            ))}
+            <li>
+              <span
+                aria-disabled="true"
+                className="block px-3 py-1.5 text-muted"
+              >
+                {navigation.factoryShop}
+              </span>
+            </li>
           </ul>
         </nav>
-        <div className="ms-auto">
+        <div className="ms-auto flex items-center gap-control">
+          <span className="inline-flex items-center gap-1 rounded-pill bg-success-soft px-3 py-1 text-label font-bold text-success-foreground">
+            <Leaf aria-hidden="true" className="size-4 shrink-0 fill-current" />
+            {marketplace.basilLeaves(DEMO_BASIL_LEAF_BALANCE)}
+          </span>
           <LogoutButton />
         </div>
       </div>

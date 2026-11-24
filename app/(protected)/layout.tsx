@@ -3,7 +3,7 @@ import type { FC, ReactNode } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { defaultLocale, getLocaleConfig } from "@/consts/locales";
+import { defaultLocale } from "@/consts/locales";
 import { getPageUser } from "@/lib/auth/current-user";
 import {
   getLoginUrl,
@@ -22,13 +22,11 @@ const ProtectedLayout: FC<Readonly<{ children: ReactNode }>> = async ({
     redirect(getLoginUrl(returnTo));
   }
 
-  const locale = getLocaleConfig(defaultLocale);
-
   return (
     <div className="flex h-dvh w-full flex-col">
       <SiteHeader />
       <div className="flex min-h-0 w-full grow">
-        <ScrollArea className="size-full" dir={locale.direction}>
+        <ScrollArea className="size-full" dir={defaultLocale.direction}>
           <main>{children}</main>
           <SiteFooter />
         </ScrollArea>

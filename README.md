@@ -27,7 +27,7 @@ npm run db:seed
 
 ## Database
 
-Mozzarella stores its data in PostgreSQL through Prisma ORM. The schema and migrations live in `prisma/`, and `prisma.config.ts` loads `DIRECT_URL` from `.env.local` for the Prisma CLI, which needs an unpooled connection for migrations. The app's own Prisma Client (`lib/db/prisma.ts`) reads the pooled `DATABASE_URL` directly at runtime and does not go through `prisma.config.ts`. The Prisma Client is generated into `lib/generated/prisma/` (ignored by Git) and is used only through `lib/db/prisma.ts`.
+Mozzarella stores its data in PostgreSQL through Prisma ORM. The schema, migrations, seed, and runtime Prisma Client entry point (`prisma/prisma.ts`) live in `prisma/`. `prisma.config.ts` loads `DIRECT_URL` from `.env.local` for the Prisma CLI, which needs an unpooled connection for migrations. The runtime Prisma Client reads the pooled `DATABASE_URL` directly and does not go through `prisma.config.ts`. The generated client lives in `lib/generated/prisma/` (ignored by Git) and is used through `prisma/prisma.ts`.
 
 - `npm run db:migrate` creates and applies migrations during development.
 - `npm run db:deploy` applies committed migrations to a deployed database.
@@ -105,6 +105,8 @@ GitHub Actions runs dependency installation, formatting, Oxlint, TypeScript, and
 
 Connect the GitHub repository to Vercel without adding a `vercel.json` file. Use `main` as the Production Branch; pushes to `dev` and other branches receive Vercel Preview Deployments automatically. Set `DATABASE_URL` and `DIRECT_URL` in every Vercel environment, and run `npm run db:deploy` against a database before deploying code that depends on new migrations. Set `NEXT_PUBLIC_APP_URL` in Vercel's Production environment to the production URL when one is available. Leave it unset for Preview deployments unless each preview needs its own canonical metadata URL.
 
+Web Analytics is enabled in the Vercel project. Deploy and visit the site to collect page views. Content blockers can prevent visits from being recorded.
+
 ## Architecture
 
-The App Router owns routes under `app/` and API handlers under `app/api/`. Shared constants live in `consts/`, shared types in `types/`, environment configuration in `lib/config/`, database access in `lib/db/` with the Prisma schema in `prisma/`, translations in `lib/i18n/`, and application/server logging in `lib/logging/`. Frontend conventions and engineering rules are documented in `STYLE.md` and `AGENTS.md`.
+The App Router owns routes under `app/` and API handlers under `app/api/`. Shared constants live in `consts/`, shared types in `types/`, environment configuration in `lib/config/`, database access and Prisma schema in `prisma/`, translations in `lib/i18n/`, and application/server logging in `lib/logging/`. Frontend conventions and engineering rules are documented in `STYLE.md` and `AGENTS.md`.

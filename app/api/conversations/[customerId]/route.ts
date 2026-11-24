@@ -4,15 +4,16 @@ import { ConversationRole } from "@/lib/generated/prisma/enums";
 import { requireAuth, AuthError } from "@/lib/auth/current-user";
 import { isSameOriginRequest } from "@/lib/auth/csrf";
 import { buildCustomerConversationSystemPrompt } from "@/lib/ai/customer-conversation-prompt";
-import { env } from "@/lib/config/env";
-import { prisma } from "@/lib/db/prisma";
+import { conversationProvider } from "@/lib/ai/conversation-provider";
+import { prisma } from "@/prisma/prisma";
 import { getMessages } from "@/lib/i18n/messages";
 import { logger } from "@/lib/logging/logger";
-import { readJsonBody } from "@/lib/json-body";
+import { readJsonBody } from "@/lib/http/json-body";
 import {
   MAX_CONVERSATION_MESSAGE_LENGTH,
   MAX_DAILY_MESSAGES,
 } from "@/consts/conversation";
+import { defaultLocale } from "@/consts/locales";
 
 const MAX_REQUEST_BYTES = 4_096;
 const MAX_HISTORY_MESSAGES = 20;
@@ -25,16 +26,6 @@ const jsonResponse = (body: object, status: number) =>
 
 const conversationBodySchema = z.object({
   message: z.string().trim().min(1).max(MAX_CONVERSATION_MESSAGE_LENGTH),
-});
-
-const anthropicResponseSchema = z.object({
-  stop_reason: z.string(),
-  content: z.array(
-    z.object({
-      type: z.string(),
-      text: z.string().optional(),
-    }),
-  ),
 });
 
 export const POST = async (
@@ -113,68 +104,36 @@ export const POST = async (
       select: { role: true, content: true },
     });
 
-    let providerResponse: Response;
+    const result = await conversationProvider.generateReply({
+      system: buildCustomerConversationSystemPrompt(customer, defaultLocale),
+      messages: [
+        ...history.reverse().map(({ role, content }) => ({
+          role:
+            role === ConversationRole.user
+              ? ConversationRole.user
+              : ConversationRole.assistant,
+          content,
+        })),
+        { role: ConversationRole.user, content: parsedInput.data.message },
+      ],
+    });
 
-    try {
-      providerResponse = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "anthropic-version": "2023-06-01",
-          "x-api-key": env.ANTHROPIC_API_KEY,
-        },
-        body: JSON.stringify({
-          model: "claude-sonnet-5-5",
-          max_tokens: 1_024,
-          system: buildCustomerConversationSystemPrompt(customer),
-          messages: [
-            ...history.reverse().map(({ role, content }) => ({
-              role,
-              content,
-            })),
-            { role: ConversationRole.user, content: parsedInput.data.message },
-          ],
-        }),
-        signal: AbortSignal.timeout(30_000),
-      });
-    } catch {
-      logger.error("Anthropic messages request failed");
+    if (result.kind === "failure") {
+      const logMessages = {
+        request_failed: "AI provider request failed",
+        upstream_error: "AI provider returned an unsuccessful response",
+        invalid_response: "AI provider returned an invalid response",
+        response_limit: "AI provider response reached the token limit",
+        empty_response: "AI provider returned no text response",
+      } as const;
+
+      logger.error(
+        logMessages[result.reason],
+        result.status ? { status: result.status } : undefined,
+      );
       return jsonResponse({ error: messages.unavailable }, 502);
     }
-
-    if (!providerResponse.ok) {
-      logger.error("Anthropic returned an unsuccessful response", {
-        status: providerResponse.status,
-      });
-      return jsonResponse({ error: messages.unavailable }, 502);
-    }
-
-    let responseBody: unknown;
-
-    try {
-      responseBody = await providerResponse.json();
-    } catch {
-      logger.error("Anthropic returned invalid JSON");
-      return jsonResponse({ error: messages.unavailable }, 502);
-    }
-
-    const parsedResponse = anthropicResponseSchema.safeParse(responseBody);
-    if (
-      parsedResponse.success &&
-      parsedResponse.data.stop_reason === "max_tokens"
-    ) {
-      logger.error("Anthropic customer response reached the token limit");
-      return jsonResponse({ error: messages.unavailable }, 502);
-    }
-
-    const reply = parsedResponse.success
-      ? parsedResponse.data.content.find((block) => block.type === "text")?.text
-      : undefined;
-
-    if (!reply?.trim()) {
-      logger.error("Anthropic returned no text response");
-      return jsonResponse({ error: messages.unavailable }, 502);
-    }
+    const reply = result.reply;
 
     await prisma.$transaction([
       prisma.conversationMessage.create({

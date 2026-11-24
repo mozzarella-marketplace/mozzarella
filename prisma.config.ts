@@ -15,7 +15,7 @@ export default defineConfig({
   },
   datasource: {
     // The CLI (migrate, seed) needs an unpooled connection; the app's own Prisma Client
-    // (lib/db/prisma.ts) reads the pooled DATABASE_URL directly and does not use this config.
+    // (prisma/prisma.ts) reads the pooled DATABASE_URL directly and does not use this config.
     url: env("DIRECT_URL"),
   },
 });

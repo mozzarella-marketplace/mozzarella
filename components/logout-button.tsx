@@ -39,6 +39,7 @@ export const LogoutButton: FC = () => {
         type="button"
         variant="ghost"
         size="icon-sm"
+        className="hover:bg-primary/10 hover:text-primary"
         onClick={logout}
         disabled={isLoggingOut}
         aria-busy={isLoggingOut}

@@ -7,8 +7,8 @@ import { CustomerTags } from "@/components/customer-tags";
 import { UserStoryWorkspace } from "@/components/user-story-workspace";
 import { getPageUser } from "@/lib/auth/current-user";
 import { getLoginUrl } from "@/lib/auth/return-to";
-import { getActiveCustomer } from "@/lib/customers";
-import { prisma } from "@/lib/db/prisma";
+import { getActiveCustomer } from "@/lib/marketplace/customers";
+import { prisma } from "@/prisma/prisma";
 import { getMessages } from "@/lib/i18n/messages";
 import { logger } from "@/lib/logging/logger";
 
