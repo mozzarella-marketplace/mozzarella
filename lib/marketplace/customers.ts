@@ -34,7 +34,7 @@ export const getActiveCustomers = async (): Promise<CustomerSummary[]> => {
     return await prisma.customer.findMany({
       where: { isActive: true },
       select: customerSummarySelection,
-      orderBy: { createdAt: "asc" },
+      orderBy: [{ createdAt: "asc" }, { id: "asc" }],
     });
   } catch (error) {
     logger.error("Marketplace customer query failed");

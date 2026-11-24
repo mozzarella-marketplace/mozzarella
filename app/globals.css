@@ -20,6 +20,8 @@
   --token-color-success: #4e9794;
   --token-color-destructive: #b42318;
   --token-color-destructive-foreground: #ffffff;
+  --token-color-overlay: rgb(15 23 42 / 0.86);
+  --token-color-overlay-muted: #c9d0e3;
 
   --token-font-family-sans: var(--font-heebo), "Segoe UI", sans-serif;
   --token-font-size-caption: 0.75rem;
@@ -28,6 +30,7 @@
   --token-font-size-title: 1.125rem;
   --token-font-size-heading: 1.5rem;
   --token-font-size-display: 2.25rem;
+  --token-font-size-hero: clamp(2.25rem, 4.5vw, 3.5rem);
   --token-font-size-code: 0.875rem;
   --token-font-line-height-body: 1.5;
   --token-font-line-height-heading: 1.25;
@@ -49,6 +52,7 @@
 
   --token-shadow-panel: 0 1px 2px rgb(16 24 40 / 0.04), 0 1px 3px rgb(16 24 40 / 0.06);
   --token-shadow-floating: 0 8px 24px rgb(16 24 40 / 0.12);
+  --token-shadow-stage: 0 24px 64px rgb(0 0 0 / 0.28), 0 8px 24px rgb(0 0 0 / 0.18);
   --token-border-width-default: 1px;
   --token-container-content: 80rem;
   --token-duration-standard: 150ms;

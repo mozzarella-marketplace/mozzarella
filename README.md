@@ -31,8 +31,20 @@ Mozzarella stores its data in PostgreSQL through Prisma ORM. The schema, migrati
 
 - `npm run db:migrate` creates and applies migrations during development.
 - `npm run db:deploy` applies committed migrations to a deployed database.
-- `npm run db:seed` inserts or updates 16 mock customers from `prisma/seed.ts`. Fixed IDs keep reruns from creating duplicates.
+- `npm run db:seed` validates and inserts or updates the 20 Hebrew customer scenarios in `prisma/customers.json`. Fixed UUIDs keep reruns from creating duplicates. It marks only the 16 legacy seed examples inactive, preserving their records and conversations; unrelated customers are unchanged. All catalog changes run in one transaction.
 - `npm run db:reset` prompts for confirmation, deletes all application database data, reapplies migrations, and seeds the mock customers. Use only with a development database; `DIRECT_URL` and `DATABASE_URL` must point to the same database. Keycloak is unchanged. Run `npm run keycloak:setup` afterward to restore the example classes and student mappings.
+
+## Customer scenarios
+
+Each catalog entry includes the customer profile, a concise business request, and a structured `problemBrief` stored in the `customers.problem_brief` JSONB column. Its inputs, outputs, rules, and concrete examples define the complete scope of one short console program. The conversation API validates and supplies this brief to the simulated customer on every request, so requirements remain consistent as the student discovers them through conversation. Responses are in Hebrew. Marketplace cards show the business topic, difficulty, and reward, without naming the programming technique; detailed briefs stay on the server.
+
+All 20 catalog entries also include `problemBrief.background`: a short `currentWorkflow`, `painPoint`, and `communicationStyle` in Hebrew. This context makes the customer conversations more individual without adding requirements to the programming task. It lives inside the existing JSONB value; no additional database column or migration is needed for this enrichment. The seed requires a complete background for every catalog entry, while the runtime still accepts older briefs without one.
+
+Shared character instructions live in `lib/ai/customer-conversation-prompt.ts`. They keep the customer in character, use everyday Hebrew, reveal relevant requirements as the student asks, and prevent invented personal facts, extra features, code, and programming-technique hints. A customer may discuss expected behavior or a hypothetical counterexample but must never claim to have executed or tested the student's program.
+
+Rewards are fixed by difficulty: `beginner` earns 80 coins, `intermediate` 130, and `advanced` 180. The catalog progresses from fixed output and arithmetic to decisions, repeated data processing, and recursive problem solving. These teaching categories are documentation for maintainers, not student-facing scenario text. Example inputs are literal console contents except the explicitly described no-input cases; each example includes its expected output and explanation. All tasks assume valid input within their stated bounds.
+
+After pulling this change, run `npm run db:deploy`, `npx prisma generate`, and `npm run db:seed`, then restart the development server. This preserves existing user data. To edit a seeded scenario, update its JSON entry while retaining its UUID and rerun the seed.
 
 ## Authentication
 
@@ -75,6 +87,8 @@ Apply migrations with `npm run db:deploy` after updating the code, then restart 
 Sending a conversation message immediately adds it to the chat and clears the input. If the customer has not replied after 500 ms, a three-dot typing indicator appears until the reply arrives. Failed requests remove the unsaved message, restore the input for retry, and show an error.
 
 The conversation and user-story workspace sit side by side on desktop screens (1,024 px and wider) and stack on smaller screens.
+
+On the first marketplace visit in a browser, an introduction floats over the darkened home: a customer conversation, a lightbulb moment, and a working solution. The original cheese-and-braces logo stretches and settles into the header before the story starts. The sequence lasts about 12 seconds, then holds on a centered action button with a gentle idle float. Selecting it animates the objects away and removes the scrim to reveal the home. A GSAP timeline coordinates the overlapping scenes, spring-like settling, and word reveals; the animation module is loaded only when the introduction is shown. Visitors can skip or pause it, and playback (including the idle motion) pauses while the tab is hidden. Reduced-motion preferences show a static summary with manual continuation. Continuing or dismissing stores the marker `mozzarella:welcome:v1` in localStorage, so the introduction is shared across accounts in that browser. If storage is blocked, an in-memory marker still prevents repeats during client navigation. To replay it during development, remove that key from the site's localStorage and reload the marketplace.
 
 This local-only command starts Compose, waits for the imported realm and application database, applies application migrations to the configured database, seeds marketplace customers, creates two example classes and five students, and writes the local issuer/client secret into ignored `.env.local` without printing secrets. It preserves existing passwords and unrelated accounts and refuses conflicting mappings. Restart the app afterward. Examples are for development only: class `B001` has students `1001`, `1002`, `1003`; class `B002` has students `2001`, `2002`. New example accounts use `<CLASS_ID>-<USER_ID>` as username and password. Reruns reuse the marked example accounts; they do not reset passwords. Do not point the application database configuration at a production database when running this command.
 
