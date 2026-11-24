@@ -21,7 +21,10 @@ const examples = [
 
 const runCommand = async (command: string, args: string[]) =>
   new Promise<void>((resolve, reject) => {
-    const child = spawn(command, args, { stdio: "ignore" });
+    const child = spawn(command, args, {
+      stdio: "ignore",
+      shell: process.platform === "win32" && command === "npm",
+    });
     child.once("error", () =>
       reject(new SetupError(`Could not start ${command}`)),
     );
